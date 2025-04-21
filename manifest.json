@@ -1,0 +1,11 @@
+{
+    "id": "front-matter-automate",
+    "name": "Front Matter Automate",
+    "version": "0.0.1",
+    "minAppVersion": "0.15.0",
+    "description": "Automatically adds and updates tags based on folder paths",
+    "author": "Christian Meinert",
+    "authorUrl": "",
+	"fundingUrl": "https://obsidian.md/pricing",
+    "isDesktopOnly": false
+}

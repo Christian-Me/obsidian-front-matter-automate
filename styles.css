@@ -1,0 +1,621 @@
+/* styles for property rule table */
+
+.property-setting-row {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border: unset;
+  padding: 2px 0;
+}
+
+.property-setting-row:last-child {
+  border-bottom: 1px;
+}
+
+.property-left-container {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border: 2px solid var(--background-modifier-border);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: 30%;
+  background-color: var(--metadata-divider-color);
+}
+
+.property-right-container {
+  padding-top: 1px;
+  padding-bottom: wpx;
+  border: 2px solid var(--background-modifier-border);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  width: 20px;
+  background-color: var(--metadata-divider-color);
+}
+
+.property-icon {
+  padding-top: 3px;
+  padding-left: 5px;
+}
+.property-search-container input {
+  width: 100%;
+  background-color: var(--metadata-label-background);
+}
+
+.property-search-results {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-l);
+  margin-top: 2px;
+}
+
+.property-value-container input,
+.property-value-container select,
+.property-value-container textarea {
+  width: 100%;
+}
+
+.property-value-container .tri-state-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size); 
+  height: var(--icon-size);
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.property-value-container .tri-state-checkbox[aria-checked="true"] {
+  color: var(--text-accent);
+}
+.property-value-container .tri-state-checkbox[aria-checked="mixed"] {
+  color: var(--text-normal); 
+}
+
+.property-value-container .tri-state-checkbox:hover {
+  color: var(--text-accent-hover); 
+}
+
+.property-delete-button-container{
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border: 2px solid var(--background-modifier-border);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  width: 40px;
+  background-color: var(--metadata-divider-color);
+}
+
+.property-delete-button-container .mod-subtle {
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--text-muted);
+}
+.property-delete-button-container .mod-subtle:hover {
+  /*color: var(--text-error);*/
+  background-color: var(--background-modifier-error-hover);
+}
+
+
+/* styles für directory tree */
+
+.directory-selection-modal .tree-view-container {
+  /* Container for the scrollable tree */
+  margin-bottom: 1em;
+  background-color: var(--background-secondary); /* Use Obsidian's secondary background */
+  border-radius: var(--radius-m); /* Use Obsidian's medium radius */
+}
+
+.directory-selection-modal .tree-root-ul,
+.directory-selection-modal ul {
+    /* Remove default list styling */
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.directory-selection-modal li {
+    /* Spacing between tree items */
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.directory-selection-modal .tree-node-container {
+    /* Flex container for checkbox, icon, label */
+    display: flex;
+    align-items: center;
+    padding: 3px 5px; /* Add some padding inside the node */
+    border-radius: var(--radius-s); /* Small radius for hover effect */
+    transition: background-color 0.1s ease-in-out, opacity 0.2s ease-in-out; /* Smooth hover and opacity transition */
+}
+
+.directory-selection-modal .tree-node-container:hover {
+    background-color: var(--background-modifier-hover); /* Subtle hover effect */
+}
+
+
+.directory-selection-modal label {
+    margin-left: 6px; /* Space between checkbox/icon and label text */
+    cursor: pointer;
+    /* Prevent text selection when clicking label */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    white-space: nowrap; /* Prevent label text from wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis (...) for long names */
+    flex-grow: 1; /* Allow label to take available space */
+    min-width: 0; /* Important for text-overflow with flexbox */
+    transition: text-decoration 0.2s ease-in-out; /* Smooth transition for strikethrough */
+}
+
+/* Style for items visually disabled (greyed out, struck through) */
+.directory-selection-modal .is-disabled > .tree-node-container {
+  opacity: 0.5;
+  /* Optionally remove hover effect for disabled items */
+  /* background-color: transparent !important; */
+}
+
+.directory-selection-modal .is-disabled > .tree-node-container > label {
+  text-decoration: line-through;
+  /* Make label text non-interactive visually */
+  pointer-events: none;
+}
+
+/* --- Specific Styling for Excluded Items (Exclude Mode) --- */
+.directory-selection-modal .is-excluded > .tree-node-container {
+    /* Make exclusion more obvious than just disabled */
+    /* Example: Add a subtle red background tint */
+     background-color: rgba(var(--color-red-rgb), 0.1);
+}
+
+.directory-selection-modal .is-excluded > .tree-node-container > label {
+    /* Ensure text decoration is applied */
+    text-decoration: line-through;
+    /* Optionally make text color slightly different */
+    /* color: var(--text-error); */
+}
+
+/* Style the control area (Mode, Show Files) */
+.directory-selection-modal .modal-controls .setting-item {
+    border-bottom: none; /* Remove default setting border */
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+.directory-selection-modal .modal-controls .setting-item:first-child {
+    padding-top: 0;
+}
+
+
+/* Style the buttons area */
+.directory-selection-modal .modal-buttons {
+  display: flex; /* Use flexbox for alignment */
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Add space between buttons */
+  margin-top: 1.5em; /* Space above buttons */
+}
+
+/* Style for the Reset button (using icon) */
+.directory-selection-modal .modal-buttons button:not(.mod-cta) {
+    /* Style for non-primary buttons like Reset */
+    background-color: var(--background-modifier-border); /* Use a less prominent background */
+}
+.directory-selection-modal .modal-buttons button:not(.mod-cta):hover {
+    background-color: var(--background-modifier-border-hover);
+}
+
+
+/* --- Settings Tab Display --- */
+.settings-selection-info {
+    margin-top: 1.5em;
+    padding: 10px;
+    background-color: var(--background-secondary);
+    border-radius: var(--radius-m);
+    font-size: var(--font-ui-small);
+    opacity: 0.8;
+}
+.settings-selection-info h4 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+.settings-selection-info p {
+    margin-bottom: 0.3em;
+}
+
+
+
+/* Styles für Code Mirror */
+
+.CodeMirror {
+    /* Set height, width, borders, and global font properties here */
+    width: 700px;
+    height: 300px;
+    font-family: monospace;
+    direction: ltr;
+    text-align: start;
+    border: var(--input-border-width) solid var(--background-modifier-border);
+    border-radius: var(--input-radius);
+  }
+  
+  /* PADDING */
+  
+  .CodeMirror-lines {
+    padding: 4px 0; /* Vertical padding around content */
+  }
+  .CodeMirror pre.CodeMirror-line,
+  .CodeMirror pre.CodeMirror-line-like {
+    padding: 0 4px; /* Horizontal padding of content */
+  }
+  
+  .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+    background-color: var(--background-modifier-form-field); /* The little square between H and V scroll bars */
+  }
+  
+  /* GUTTER */
+  
+  .CodeMirror-gutters {
+    border-right: 1px solid #ddd;
+    background-color: var(--background-modifier-border);
+    white-space: nowrap;
+  }
+  .CodeMirror-linenumbers {}
+  .CodeMirror-linenumber {
+    padding: 0 3px 0 5px;
+    min-width: 20px;
+    text-align: right;
+    color: #999;
+    white-space: nowrap;
+  }
+  
+  .CodeMirror-guttermarker { color: black; }
+  .CodeMirror-guttermarker-subtle { color: #999; }
+  
+  /* CURSOR */
+  
+  .CodeMirror-cursor {
+    border-left: 1px solid black;
+    border-right: none;
+    width: 0;
+  }
+  /* Shown when moving in bi-directional text */
+  .CodeMirror div.CodeMirror-secondarycursor {
+    border-left: 1px solid silver;
+  }
+  .cm-fat-cursor .CodeMirror-cursor {
+    width: auto;
+    border: 0 !important;
+    background: #7e7;
+  }
+  .cm-fat-cursor div.CodeMirror-cursors {
+    z-index: 1;
+  }
+  .cm-fat-cursor .CodeMirror-line::selection,
+  .cm-fat-cursor .CodeMirror-line > span::selection, 
+  .cm-fat-cursor .CodeMirror-line > span > span::selection { background: transparent; }
+  .cm-fat-cursor .CodeMirror-line::-moz-selection,
+  .cm-fat-cursor .CodeMirror-line > span::-moz-selection,
+  .cm-fat-cursor .CodeMirror-line > span > span::-moz-selection { background: transparent; }
+  .cm-fat-cursor { caret-color: transparent; }
+  @-moz-keyframes blink {
+    0% {}
+    50% { background-color: transparent; }
+    100% {}
+  }
+  @-webkit-keyframes blink {
+    0% {}
+    50% { background-color: transparent; }
+    100% {}
+  }
+  @keyframes blink {
+    0% {}
+    50% { background-color: transparent; }
+    100% {}
+  }
+  
+  /* Can style cursor different in overwrite (non-insert) mode */
+  .CodeMirror-overwrite .CodeMirror-cursor {}
+  
+  .cm-tab { display: inline-block; text-decoration: inherit; }
+  
+  .CodeMirror-rulers {
+    position: absolute;
+    left: 0; right: 0; top: -50px; bottom: 0;
+    overflow: hidden;
+  }
+  .CodeMirror-ruler {
+    border-left: 1px solid #ccc;
+    top: 0; bottom: 0;
+    position: absolute;
+  }
+  
+  /* DEFAULT THEME */
+  
+  .cm-s-default .cm-header {color: blue;}
+  .cm-s-default .cm-quote {color: #090;}
+  .cm-negative {color: #d44;}
+  .cm-positive {color: #292;}
+  .cm-header, .cm-strong {font-weight: bold;}
+  .cm-em {font-style: italic;}
+  .cm-link {text-decoration: underline;}
+  .cm-strikethrough {text-decoration: line-through;}
+  
+  .cm-s-default .cm-keyword {color: #708;}
+  .cm-s-default .cm-atom {color: #219;}
+  .cm-s-default .cm-number {color: #164;}
+  .cm-s-default .cm-def {color: #00f;}
+  .cm-s-default .cm-variable,
+  .cm-s-default .cm-punctuation,
+  .cm-s-default .cm-property,
+  .cm-s-default .cm-operator {}
+  .cm-s-default .cm-variable-2 {color: #05a;}
+  .cm-s-default .cm-variable-3, .cm-s-default .cm-type {color: #085;}
+  .cm-s-default .cm-comment {color: #a50;}
+  .cm-s-default .cm-string {color: #a11;}
+  .cm-s-default .cm-string-2 {color: #f50;}
+  .cm-s-default .cm-meta {color: #555;}
+  .cm-s-default .cm-qualifier {color: #555;}
+  .cm-s-default .cm-builtin {color: #30a;}
+  .cm-s-default .cm-bracket {color: #997;}
+  .cm-s-default .cm-tag {color: #170;}
+  .cm-s-default .cm-attribute {color: #00c;}
+  .cm-s-default .cm-hr {color: #999;}
+  .cm-s-default .cm-link {color: #00c;}
+  
+  .cm-s-default .cm-error {color: #f00;}
+  .cm-invalidchar {color: #f00;}
+  
+  .CodeMirror-composing { border-bottom: 2px solid; }
+  
+  /* Default styles for common addons */
+  
+  div.CodeMirror span.CodeMirror-matchingbracket {color: #0b0;}
+  div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #a22;}
+  .CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }
+  .CodeMirror-activeline-background {background: #e8f2ff;}
+  
+  /* STOP */
+  
+  /* The rest of this file contains styles related to the mechanics of
+     the editor. You probably shouldn't touch them. */
+  
+  .CodeMirror {
+    position: relative;
+    overflow: hidden;
+    background: var(--background-modifier-form-field);;
+  }
+  
+  .CodeMirror-scroll {
+    overflow: scroll !important; /* Things will break if this is overridden */
+    /* 50px is the magic margin used to hide the element's real scrollbars */
+    /* See overflow: hidden in .CodeMirror */
+    margin-bottom: -50px; margin-right: -50px;
+    padding-bottom: 50px;
+    height: 100%;
+    outline: none; /* Prevent dragging from highlighting the element */
+    position: relative;
+    z-index: 0;
+  }
+  .CodeMirror-sizer {
+    position: relative;
+    border-right: 50px solid transparent;
+  }
+  
+  /* The fake, visible scrollbars. Used to force redraw during scrolling
+     before actual scrolling happens, thus preventing shaking and
+     flickering artifacts. */
+  .CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+    position: absolute;
+    z-index: 6;
+    display: none;
+    outline: none;
+  }
+  .CodeMirror-vscrollbar {
+    right: 0; top: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  .CodeMirror-hscrollbar {
+    bottom: 0; left: 0;
+    overflow-y: hidden;
+    overflow-x: scroll;
+  }
+  .CodeMirror-scrollbar-filler {
+    right: 0; bottom: 0;
+  }
+  .CodeMirror-gutter-filler {
+    left: 0; bottom: 0;
+  }
+  
+  .CodeMirror-gutters {
+    position: absolute; left: 0; top: 0;
+    min-height: 100%;
+    z-index: 3;
+  }
+  .CodeMirror-gutter {
+    white-space: normal;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: -50px;
+  }
+  .CodeMirror-gutter-wrapper {
+    position: absolute;
+    z-index: 4;
+    background: none !important;
+    border: none !important;
+  }
+  .CodeMirror-gutter-background {
+    position: absolute;
+    top: 0; bottom: 0;
+    z-index: 4;
+  }
+  .CodeMirror-gutter-elt {
+    position: absolute;
+    cursor: default;
+    z-index: 4;
+  }
+  .CodeMirror-gutter-wrapper ::selection { background-color: transparent }
+  .CodeMirror-gutter-wrapper ::-moz-selection { background-color: transparent }
+  
+  .CodeMirror-lines {
+    cursor: text;
+    min-height: 1px; /* prevents collapsing before first draw */
+  }
+  .CodeMirror pre.CodeMirror-line,
+  .CodeMirror pre.CodeMirror-line-like {
+    /* Reset some styles that the rest of the page might have set */
+    -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
+    border-width: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    white-space: pre;
+    word-wrap: normal;
+    line-height: inherit;
+    color: inherit;
+    z-index: 2;
+    position: relative;
+    overflow: visible;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-variant-ligatures: contextual;
+    font-variant-ligatures: contextual;
+  }
+  .CodeMirror-wrap pre.CodeMirror-line,
+  .CodeMirror-wrap pre.CodeMirror-line-like {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
+  }
+  
+  .CodeMirror-linebackground {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    z-index: 0;
+  }
+  
+  .CodeMirror-linewidget {
+    position: relative;
+    z-index: 2;
+    padding: 0.1px; /* Force widget margins to stay inside of the container */
+  }
+  
+  .CodeMirror-widget {}
+  
+  .CodeMirror-rtl pre { direction: rtl; }
+  
+  .CodeMirror-code {
+    outline: none;
+  }
+  
+  /* Force content-box sizing for the elements where we expect it */
+  .CodeMirror-scroll,
+  .CodeMirror-sizer,
+  .CodeMirror-gutter,
+  .CodeMirror-gutters,
+  .CodeMirror-linenumber {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+  }
+  
+  .CodeMirror-measure {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+  
+  .CodeMirror-cursor {
+    position: absolute;
+    pointer-events: none;
+  }
+  .CodeMirror-measure pre { position: static; }
+  
+  div.CodeMirror-cursors {
+    visibility: hidden;
+    position: relative;
+    z-index: 3;
+  }
+  div.CodeMirror-dragcursors {
+    visibility: visible;
+  }
+  
+  .CodeMirror-focused div.CodeMirror-cursors {
+    visibility: visible;
+  }
+  
+  .CodeMirror-selected { background: #d9d9d9; }
+  .CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }
+  .CodeMirror-crosshair { cursor: crosshair; }
+  .CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: #d7d4f0; }
+  .CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }
+  
+  .cm-searching {
+    background-color: #ffa;
+    background-color: rgba(255, 255, 0, .4);
+  }
+  
+  /* Used to force a border model for a node */
+  .cm-force-border { padding-right: .1px; }
+  
+  @media print {
+    /* Hide the cursor when printing */
+    .CodeMirror div.CodeMirror-cursors {
+      visibility: hidden;
+    }
+  }
+  
+  /* See issue #2901 */
+  .cm-tab-wrap-hack:after { content: ''; }
+  
+  /* Help users use markselection to safely style text background */
+  span.CodeMirror-selectedtext { background: none; }
+
+.obsidian-f2t-rule-area {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-height: 50px;
+    max-height: 300;
+}
+
+.obsidian-f2t-ruleLine {
+    padding-top: 5px;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    align-content: flex-start;
+    height: 40px;
+}
+
+.obsidian-f2t-actionDropdown {
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    align-content: flex-start;
+    width: 500;
+}
+.obsidian-f2t-ruleOptions {
+    padding-top: 5px;
+    display: flex;
+    min-height: 300px;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    vertical-align: right;
+    align-content: flex-start;
+}
+
+.obsidian-f2t-rule-controls {
+    padding-top: 5px;
+    vertical-align: middle;
+}
+
+.obsidian-f2t-smallButton {
+    padding: 5px;
+}

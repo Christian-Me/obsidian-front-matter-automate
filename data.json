@@ -1,0 +1,174 @@
+{
+  "tagPrefix": "",
+  "excludeRootFolder": false,
+  "tagsPropertyName": "tags",
+  "spaceReplacement": "-",
+  "specialCharReplacement": "-",
+  "lowercaseTags": true,
+  "knownProperties": [],
+  "rules": [
+    {
+      "id": "c37f4b73-e486-482a-874a-d893994c36bf",
+      "active": true,
+      "property": "date created",
+      "customProperty": "",
+      "type": "datetime",
+      "typeProperty": {
+        "name": "date created",
+        "type": "datetime",
+        "count": 0,
+        "source": "registered"
+      },
+      "content": "dateTimeCreated",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire Date and Timer file created\n  const dateTime = new Date(file.stat.ctime);\n  const result = dateTime.toISOString().split('.')[0];\n  return result; // return you result.\n}",
+      "jsCode": "",
+      "showContent": false
+    },
+    {
+      "id": "0444a04e-1531-447b-91cd-dd4b3dcc377d",
+      "active": true,
+      "property": "Modified",
+      "customProperty": "",
+      "type": "datetime",
+      "typeProperty": {
+        "name": "Modified",
+        "type": "datetime",
+        "count": 1,
+        "source": "registered"
+      },
+      "content": "dateTimeModified",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire Date and Timer file modified\n  const dateTime = new Date(file.stat.mtime);\n  const result = dateTime.toISOString(); //.split('.')[0];\n  return result; // return you result.\n}",
+      "jsCode": "",
+      "showContent": true
+    },
+    {
+      "id": "46da58c3-ac5d-4b56-ac66-a546781389fc",
+      "active": true,
+      "property": "path",
+      "customProperty": "",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "count": 1,
+        "source": "registered"
+      },
+      "content": "fullPath",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "type": "text"
+    },
+    {
+      "id": "ea50c8fb-45b2-4dce-862d-eac571ff0ef5",
+      "active": true,
+      "property": "folder-path",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "folder-path",
+        "type": "text",
+        "count": 1,
+        "source": "registered"
+      },
+      "content": "path",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false
+    },
+    {
+      "id": "7b45bbd9-fd1e-4815-891c-5d37af8c5d31",
+      "active": true,
+      "property": "folder",
+      "customProperty": "",
+      "typeProperty": {
+        "name": "folder",
+        "count": 1,
+        "source": "registered"
+      },
+      "content": "folder",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[parts.length-2];\n  }\n  return result;\n}",
+      "jsCode": "",
+      "showContent": true,
+      "type": "text"
+    },
+    {
+      "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
+      "active": true,
+      "property": "root",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "root",
+        "type": "text",
+        "count": 1,
+        "source": "registered"
+      },
+      "content": "rootFolder",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[0];\n  }\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false
+    },
+    {
+      "id": "f542d0a9-b2e4-4a0a-9ca8-70e24ddc83b9",
+      "active": true,
+      "property": "folders",
+      "customProperty": "",
+      "type": "multitext",
+      "typeProperty": {
+        "name": "folders",
+        "type": "multitext",
+        "count": 1,
+        "source": "registered"
+      },
+      "content": "folders",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
+      "jsCode": "",
+      "showContent": true
+    }
+  ],
+  "useTextArea": false,
+  "exclude": {
+    "selectedFolders": [],
+    "selectedFiles": [],
+    "mode": "exclude"
+  },
+  "include": {
+    "selectedFolders": [],
+    "selectedFiles": [
+      "Tiere/Säugetiere/Affen/Affen.md",
+      "Tiere/Fische/Fische.md"
+    ],
+    "mode": "include"
+  },
+  "configuredProperties": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "aliases"
+    },
+    {
+      "name": "this is a datetime"
+    },
+    {
+      "name": "#?:{}\"'"
+    },
+    {
+      "name": "datetimecreated"
+    },
+    {
+      "name": "number"
+    }
+  ],
+  "selectedFolders": [
+    "/Tiere/Säugetiere",
+    "/Tiere/Vögel"
+  ],
+  "selectedFiles": [
+    "Pasted image 20250405063634.png",
+    "Pasted image 20250406221918.jpg"
+  ],
+  "selectionMode": "exclude",
+  "selectionDisplay": "folder",
+  "jsCode": "function testing (a) {\n  if (a) {\n    //something\n  }\n  return 'huray';\n}"
+}
