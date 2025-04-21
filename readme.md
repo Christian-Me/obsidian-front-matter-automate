@@ -41,3 +41,7 @@ The following events will trigger autogenerate of the path tag and the execution
 You can add your own JavaScript function to be executed each time the event is triggered
 
 ***WARNING*** by using scriptis you have access to the complete app object = obsidian 
+
+## Changelog
+
+* 0.0.2 Fix double / multiple and empty folder tags

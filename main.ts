@@ -263,12 +263,23 @@ export default class FolderTagPlugin extends Plugin {
         if (oldPath) { 
             if (frontmatter.tags.includes(oldPathTag)) {
                 let index = frontmatter.tags.indexOf(oldPathTag);
-                frontmatter.tags.splice(frontmatter.tags.indexOf(oldPathTag),1,currentPathTag); // replace the tag
+                if (currentPathTag!=='') {
+                    frontmatter.tags.splice(frontmatter.tags.indexOf(oldPathTag),1,currentPathTag); // replace the tag
+                } else {
+                    frontmatter.tags.splice(frontmatter.tags.indexOf(oldPathTag),1); // delete the tag
+                }
+                console.log(`replace Tag "${oldPathTag}" by "${currentPathTag}"`);
             } else {
-                frontmatter.tags.push(currentPathTag); // add the tag
+                if (currentPathTag!=='') frontmatter.tags.push(currentPathTag); // add the tag
+                console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`);
             }
         } else {
-            frontmatter.tags.push(currentPathTag); // add the tag
+            if (currentPathTag!=='') {
+                if (frontmatter.tags.indexOf(currentPathTag)<0){
+                    frontmatter.tags.push(currentPathTag); // add the tag
+                    console.log(`add Tag "${currentPathTag}"`);
+                }
+            }
         }
 
         // rebuild frontmatter YAML
