@@ -15,7 +15,7 @@ export default class FolderTagPlugin extends Plugin {
     async onload() {
         await this.loadSettings();
         this.tools = new ScriptingTools(this.settings);
-        let noticeMessage = 'Property Updater Tools\n loading ...';
+        let noticeMessage = 'Front Matter Automate 0.0.3\n loading ...';
         const loadingNotice = new Notice(noticeMessage,0)
         /*
         // Store initial folder paths for all files
@@ -260,22 +260,25 @@ export default class FolderTagPlugin extends Plugin {
         // update folder tag
         if (!frontmatter.hasOwnProperty('tags')) frontmatter.tags = [];
         if (frontmatter.tags === null) frontmatter.tags = [];
+        let indexOldPath = frontmatter.tags.indexOf(oldPathTag);
+        let indexNewPath = frontmatter.tags.indexOf(currentPathTag);
         if (oldPath) { 
             if (frontmatter.tags.includes(oldPathTag)) {
-                let index = frontmatter.tags.indexOf(oldPathTag);
                 if (currentPathTag!=='') {
-                    frontmatter.tags.splice(frontmatter.tags.indexOf(oldPathTag),1,currentPathTag); // replace the tag
+                    frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
                 } else {
-                    frontmatter.tags.splice(frontmatter.tags.indexOf(oldPathTag),1); // delete the tag
+                    frontmatter.tags.splice(indexOldPath,1); // delete the tag
                 }
                 console.log(`replace Tag "${oldPathTag}" by "${currentPathTag}"`);
             } else {
-                if (currentPathTag!=='') frontmatter.tags.push(currentPathTag); // add the tag
-                console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`);
+                if (currentPathTag!=='' && indexNewPath===-1) {
+                    frontmatter.tags.push(currentPathTag); // add the tag
+                    console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`);
+                }
             }
         } else {
             if (currentPathTag!=='') {
-                if (frontmatter.tags.indexOf(currentPathTag)<0){
+                if (indexNewPath<0){ // new path doesn't exist
                     frontmatter.tags.push(currentPathTag); // add the tag
                     console.log(`add Tag "${currentPathTag}"`);
                 }

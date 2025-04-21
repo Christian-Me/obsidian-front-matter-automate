@@ -27,7 +27,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
         const { containerEl } = this;
 
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'Folder Path Tag Settings' });
+        containerEl.createEl('h2', { text: 'Front matter automate V0.0.3 alpha' });
 
         new Setting(containerEl)
             .setName('Tag prefix')
