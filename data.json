@@ -55,7 +55,7 @@
       "content": "fullPath",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
       "jsCode": "",
-      "showContent": false,
+      "showContent": true,
       "type": "text"
     },
     {
@@ -124,6 +124,23 @@
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
       "jsCode": "",
       "showContent": true
+    },
+    {
+      "id": "fde12cea-877e-42fe-9a33-d42f7ff33b81",
+      "active": true,
+      "property": "this is a datetime",
+      "customProperty": "",
+      "type": "datetime",
+      "typeProperty": {
+        "name": "this is a datetime",
+        "type": "datetime",
+        "count": 2,
+        "source": "registered"
+      },
+      "content": "dateTimeModified",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;\n  const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
+      "jsCode": "",
+      "showContent": false
     }
   ],
   "useTextArea": false,

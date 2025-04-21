@@ -255,7 +255,7 @@ export default class FolderTagPlugin extends Plugin {
                         //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
                     }
                 }
-                frontmatter[rule.content] = fxResult; // update or add the new value
+                frontmatter[rule.property] = fxResult; // update or add the new value
                 parameterTypes[rule.property] = rule.type; // add types to parameter list.
             })
 
@@ -269,27 +269,28 @@ export default class FolderTagPlugin extends Plugin {
                     if (frontmatter.tags.includes(oldPathTag)) {
                         if (currentPathTag!=='') {
                             frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
-                            console.log(`replace Tag "${oldPathTag}" [${indexOldPath}] by "${currentPathTag}"`,frontmatter.tags);
+                            //console.log(`replace Tag "${oldPathTag}" [${indexOldPath}] by "${currentPathTag}"`,frontmatter.tags);
                         } else {
                             frontmatter.tags.splice(indexOldPath,1); // delete the tag
-                            console.log(`delete Tag "${oldPathTag}" [${indexOldPath}]`,frontmatter.tags);
+                            //console.log(`delete Tag "${oldPathTag}" [${indexOldPath}]`,frontmatter.tags);
                         }
                     } else {
                         if (currentPathTag!=='' && indexNewPath===-1) {
                             frontmatter.tags.push(currentPathTag); // add the tag
-                            console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
+                            //console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
                         }
                     }
                 } else {
                     if (currentPathTag!=='') {
                         if (indexNewPath<0){ // new path doesn't exist
                             frontmatter.tags.push(currentPathTag); // add the tag
-                            console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
+                            //console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
                         }
                     }
                 }
                 frontmatter.tags = this.tools.removeDuplicateStrings(frontmatter.tags);
             }
+            console.log(`Frontmatter File ${file.path} update`, frontmatter);
         },{'mtime':file.stat.mtime}); // do not change the modify time.
         /*
         // rebuild frontmatter YAML
