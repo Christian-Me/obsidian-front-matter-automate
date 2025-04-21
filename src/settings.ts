@@ -2,7 +2,7 @@ import { App, ButtonComponent, DropdownComponent, PluginSettingTab, Setting, Tex
 import * as fmTools from './frontmatter-tools';
 import { parseJSCode, ScriptingTools } from './tools';
 import { getRuleFunctionById, ruleFunctions, RuleFunction } from './rules';
-import { FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo} from './types';
+import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo} from './types';
 import { AlertModal } from './alertBox';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal'; // Adjust path as needed
 import { randomUUID } from 'crypto';
@@ -27,7 +27,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
         const { containerEl } = this;
 
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'Front matter automate V0.0.4 alpha' });
+        containerEl.createEl('h2', { text: `Front matter automate V${versionString}` });
 
         new Setting(containerEl)
             .setName('Tag prefix')

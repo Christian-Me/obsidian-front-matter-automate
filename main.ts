@@ -61,9 +61,9 @@ export default class FolderTagPlugin extends Plugin {
         this.registerEvent(
             this.app.workspace.on('active-leaf-change', (leaf) => {
                 if (leaf?.view instanceof MarkdownView) {
-                    const previousFile = this.app.workspace.getActiveFile();
-                    console.log(`closing file: `, previousFile?.path);
-                    if (previousFile) this.updateFrontmatterParameters(previousFile, this.settings.rules);
+                    const activeFile = this.app.workspace.getActiveFile();
+                    console.log(`closing file: `, activeFile?.path);
+                    if (activeFile) this.updateFrontmatterParameters(activeFile, this.settings.rules);
                 }
             })
         );
@@ -305,7 +305,7 @@ export default class FolderTagPlugin extends Plugin {
 
         let endOfFrontmatter = content.indexOf('---\n',3);
         content = newFrontmatter + content.slice(endOfFrontmatter+4);
-        //console.log(content);
+        console.log(`modifying file ${file.path}`,{'yaml': content});
         await this.app.vault.modify(file, content);
     }
 
