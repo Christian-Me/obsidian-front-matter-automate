@@ -383,4 +383,10 @@ export function cleanCodeString(codeString: string): string {
         currentPathParts.pop(); // remove File name;
         return currentPathParts.join(separator);
     }
+    
+    removeDuplicateStrings(stringArray: string[]): string[] {
+      if (!stringArray) return [];
+      const uniqueStringsSet = new Set<string>(stringArray);
+      return [...uniqueStringsSet];
+    }
   }

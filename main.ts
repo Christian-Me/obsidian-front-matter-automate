@@ -4,7 +4,7 @@ import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
 import { ruleFunctions } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
-import { FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
+import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
 import { runInContext } from 'vm';
 
 export default class FolderTagPlugin extends Plugin {
@@ -15,7 +15,7 @@ export default class FolderTagPlugin extends Plugin {
     async onload() {
         await this.loadSettings();
         this.tools = new ScriptingTools(this.settings);
-        let noticeMessage = 'Front Matter Automate 0.0.3\n loading ...';
+        let noticeMessage = `Front Matter Automate ${versionString}\n loading ...`;
         const loadingNotice = new Notice(noticeMessage,0)
         /*
         // Store initial folder paths for all files
@@ -31,7 +31,7 @@ export default class FolderTagPlugin extends Plugin {
                 if (file instanceof TFile && file.extension === 'md') {
                     //this.oldFolderPaths.set(file.path, this.getFolderPathForTag(file));
                     //this.updateFileTag(file);
-                    this.updateFrontmatterParameters(file, this.settings.rules);
+                    this.updateFrontmatterParameters('create', file, this.settings.rules);
                 }
             })
         );
@@ -43,7 +43,7 @@ export default class FolderTagPlugin extends Plugin {
                     //const oldTagPath = this.oldFolderPaths.get(oldPath) ?? null;
                     //const newTagPath = this.getFolderPathForTag(file);
                     //this.oldFolderPaths.set(file.path, newTagPath);
-                    this.updateFrontmatterParameters(file, this.settings.rules, oldPath);
+                    this.updateFrontmatterParameters('rename', file, this.settings.rules, oldPath);
                     
                     /*
                     // Always update when moving to/from root folder
@@ -63,7 +63,7 @@ export default class FolderTagPlugin extends Plugin {
                 if (leaf?.view instanceof MarkdownView) {
                     const activeFile = this.app.workspace.getActiveFile();
                     console.log(`closing file: `, activeFile?.path);
-                    if (activeFile) this.updateFrontmatterParameters(activeFile, this.settings.rules);
+                    if (activeFile) this.updateFrontmatterParameters('active-leaf-change', activeFile, this.settings.rules);
                 }
             })
         );
@@ -76,6 +76,7 @@ export default class FolderTagPlugin extends Plugin {
             //this.updateFileTag(file);
             //this.updateFrontmatterParameters(file, this.settings.rules);
         });
+
         noticeMessage = noticeMessage + '\ndone!';
         loadingNotice.setMessage(noticeMessage);
         setTimeout(()=>{
@@ -224,7 +225,7 @@ export default class FolderTagPlugin extends Plugin {
         }
     }
 
-    async updateFrontmatterParameters(file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
+    async updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
 
         if (!this.checkIfFileAllowed(file)) {
             console.log(`file ${file.path} rejected!`)
@@ -258,31 +259,34 @@ export default class FolderTagPlugin extends Plugin {
         })
 
         // update folder tag
-        if (!frontmatter.hasOwnProperty('tags')) frontmatter.tags = [];
-        if (frontmatter.tags === null) frontmatter.tags = [];
-        let indexOldPath = frontmatter.tags.indexOf(oldPathTag);
-        let indexNewPath = frontmatter.tags.indexOf(currentPathTag);
-        if (oldPath) { 
-            if (frontmatter.tags.includes(oldPathTag)) {
-                if (currentPathTag!=='') {
-                    frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
+        if (eventName === 'create' || eventName === 'rename') {
+            if (!frontmatter.hasOwnProperty('tags')) frontmatter.tags = [];
+            if (frontmatter.tags === null) frontmatter.tags = [];
+            let indexOldPath = frontmatter.tags.indexOf(oldPathTag);
+            let indexNewPath = frontmatter.tags.indexOf(currentPathTag);
+            if (oldPath) { 
+                if (frontmatter.tags.includes(oldPathTag)) {
+                    if (currentPathTag!=='') {
+                        frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
+                    } else {
+                        frontmatter.tags.splice(indexOldPath,1); // delete the tag
+                    }
+                    console.log(`replace Tag "${oldPathTag}" by "${currentPathTag}"`,frontmatter.tags);
                 } else {
-                    frontmatter.tags.splice(indexOldPath,1); // delete the tag
+                    if (currentPathTag!=='' && indexNewPath===-1) {
+                        frontmatter.tags.push(currentPathTag); // add the tag
+                        console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
+                    }
                 }
-                console.log(`replace Tag "${oldPathTag}" by "${currentPathTag}"`,frontmatter.tags);
             } else {
-                if (currentPathTag!=='' && indexNewPath===-1) {
-                    frontmatter.tags.push(currentPathTag); // add the tag
-                    console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
+                if (currentPathTag!=='') {
+                    if (indexNewPath<0){ // new path doesn't exist
+                        frontmatter.tags.push(currentPathTag); // add the tag
+                        console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
+                    }
                 }
             }
-        } else {
-            if (currentPathTag!=='') {
-                if (indexNewPath<0){ // new path doesn't exist
-                    frontmatter.tags.push(currentPathTag); // add the tag
-                    console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
-                }
-            }
+            frontmatter.tags = this.tools.removeDuplicateStrings(frontmatter.tags);
         }
 
         // rebuild frontmatter YAML
@@ -305,7 +309,7 @@ export default class FolderTagPlugin extends Plugin {
 
         let endOfFrontmatter = content.indexOf('---\n',3);
         content = newFrontmatter + content.slice(endOfFrontmatter+4);
-        console.log(`modifying file ${file.path}`,{'yaml': content});
+        console.log(`[${eventName}] modifying file ${file.path}`,{'yaml': content});
         await this.app.vault.modify(file, content);
     }
 

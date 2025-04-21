@@ -1,6 +1,6 @@
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.5";
+export const versionString = "0.0.6";
 
 export interface FolderTagSettings {
     tagPrefix: string;
