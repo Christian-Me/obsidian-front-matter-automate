@@ -135,25 +135,23 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'dateTimeCreated',
-    description: 'Date (and Time) created', // TODO Check time zones. 
-    source: "function (app, file, tools) { // do not change this line!\n  // acquire Date and Timer file created\n  const dateTime = new Date(file.stat.ctime);\n  const result = dateTime.toISOString().split('.')[0];\n  return result; // return you result.\n}",
+    description: 'Date (and Time) created',
+    source: "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset\n  const result = new Date(file.stat.ctime-timeOffset);\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
     fx:function (app: App, file:TFile, tools:ScriptingTools) { 
-        // acquire Date and Timer file created
-        const dateTime = new Date(file.stat.ctime);
-        const result = dateTime.toISOString().split('.')[0];
-        return result; // return you result.
+        const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset
+        const result = new Date(file.stat.ctime-timeOffset);
+        return result.toISOString().split('Z')[0]; // remove UTC symbol
       }
 });
 
 ruleFunctions.push({
     id:'dateTimeModified',
-    description: 'Date (and Time) modified', //FIXME keep Date and time untouched when editing frontmatter properties
-    source: "function (app, file, tools) { // do not change this line!\n  // acquire Date and Timer file modified\n  const dateTime = new Date(file.stat.mtime);\n  const result = dateTime.toISOString().split('.')[0];\n  return result; // return you result.\n}",
+    description: 'Date (and Time) modified',
+    source: "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;\n  const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
     fx:function (app: App, file:TFile, tools:ScriptingTools) { 
-        // acquire Date and Timer file created
-        const dateTime = new Date(file.stat.mtime);
-        const result = dateTime.toISOString().split('.')[0];
-        return result; // return you result.
+        const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;
+        const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp
+        return result.toISOString().split('Z')[0]; // remove UTC symbol
       }
 });
 

@@ -384,9 +384,15 @@ export function cleanCodeString(codeString: string): string {
         return currentPathParts.join(separator);
     }
     
+    /**
+     * removes duplicate strings in an array and deletes empty strings
+     * @param stringArray 
+     * @returns 
+     */
     removeDuplicateStrings(stringArray: string[]): string[] {
       if (!stringArray) return [];
       const uniqueStringsSet = new Set<string>(stringArray);
+      uniqueStringsSet.delete(''); // remove empty strings
       return [...uniqueStringsSet];
     }
   }

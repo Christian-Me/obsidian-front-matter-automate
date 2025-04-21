@@ -1,4 +1,4 @@
-import { App, Plugin, MarkdownView, PluginManifest, TFile, TFolder, Vault, TextComponent, DropdownComponent, Notice} from 'obsidian';
+import { App, Plugin, MarkdownView, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
 import * as fmTools from './src/frontmatter-tools';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
@@ -236,59 +236,62 @@ export default class FolderTagPlugin extends Plugin {
         if (oldPathTag) console.log(`update file: "${oldPathTag}" to "${currentPathTag}"`);
         let content = await this.app.vault.read(file);
         const cache = this.app.metadataCache.getFileCache(file);
-        const frontmatter = cache?.frontmatter || {};
-        let fxResult:any;
-        const parameterTypes = {}
+        //const frontmatter = cache?.frontmatter || {};
+        this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+            let fxResult:any;
+            const parameterTypes = {}
 
-        // apply all rules to frontmatter
-        rules.forEach(rule => {
-            if (rule.content === 'script') {
-                const ruleFunction = parseJSCode(rule.jsCode);
-                if (typeof ruleFunction !== 'function') return;
-                fxResult = ruleFunction(this.app, file, this.tools);
-            } else {
-                const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
-                if (functionIndex!==-1){
-                    //console.log(`execute rule for ${rule.property} ${rule.content} for file ${file.path}`);
-                    fxResult = ruleFunctions[functionIndex].fx(this.app, file, this.tools);
-                    //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
-                }
-            }
-            frontmatter[rule.content] = fxResult; // update or add the new value
-            parameterTypes[rule.property] = rule.type; // add types to parameter list.
-        })
-
-        // update folder tag
-        if (eventName === 'create' || eventName === 'rename') {
-            if (!frontmatter.hasOwnProperty('tags')) frontmatter.tags = [];
-            if (frontmatter.tags === null) frontmatter.tags = [];
-            let indexOldPath = frontmatter.tags.indexOf(oldPathTag);
-            let indexNewPath = frontmatter.tags.indexOf(currentPathTag);
-            if (oldPath) { 
-                if (frontmatter.tags.includes(oldPathTag)) {
-                    if (currentPathTag!=='') {
-                        frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
-                    } else {
-                        frontmatter.tags.splice(indexOldPath,1); // delete the tag
-                    }
-                    console.log(`replace Tag "${oldPathTag}" by "${currentPathTag}"`,frontmatter.tags);
+            // apply all rules to frontmatter
+            rules.forEach(rule => {
+                if (rule.content === 'script') {
+                    const ruleFunction = parseJSCode(rule.jsCode);
+                    if (typeof ruleFunction !== 'function') return;
+                    fxResult = ruleFunction(this.app, file, this.tools);
                 } else {
-                    if (currentPathTag!=='' && indexNewPath===-1) {
-                        frontmatter.tags.push(currentPathTag); // add the tag
-                        console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
+                    const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
+                    if (functionIndex!==-1){
+                        //console.log(`execute rule for ${rule.property} ${rule.content} for file ${file.path}`);
+                        fxResult = ruleFunctions[functionIndex].fx(this.app, file, this.tools);
+                        //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
                     }
                 }
-            } else {
-                if (currentPathTag!=='') {
-                    if (indexNewPath<0){ // new path doesn't exist
-                        frontmatter.tags.push(currentPathTag); // add the tag
-                        console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
-                    }
-                }
-            }
-            frontmatter.tags = this.tools.removeDuplicateStrings(frontmatter.tags);
-        }
+                frontmatter[rule.content] = fxResult; // update or add the new value
+                parameterTypes[rule.property] = rule.type; // add types to parameter list.
+            })
 
+            // update folder tag
+            if (eventName === 'create' || eventName === 'rename') {
+                if (!frontmatter.hasOwnProperty('tags')) frontmatter.tags = [];
+                if (frontmatter.tags === null) frontmatter.tags = [];
+                let indexOldPath = frontmatter.tags.indexOf(oldPathTag);
+                let indexNewPath = frontmatter.tags.indexOf(currentPathTag);
+                if (oldPath) { 
+                    if (frontmatter.tags.includes(oldPathTag)) {
+                        if (currentPathTag!=='') {
+                            frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
+                            console.log(`replace Tag "${oldPathTag}" [${indexOldPath}] by "${currentPathTag}"`,frontmatter.tags);
+                        } else {
+                            frontmatter.tags.splice(indexOldPath,1); // delete the tag
+                            console.log(`delete Tag "${oldPathTag}" [${indexOldPath}]`,frontmatter.tags);
+                        }
+                    } else {
+                        if (currentPathTag!=='' && indexNewPath===-1) {
+                            frontmatter.tags.push(currentPathTag); // add the tag
+                            console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
+                        }
+                    }
+                } else {
+                    if (currentPathTag!=='') {
+                        if (indexNewPath<0){ // new path doesn't exist
+                            frontmatter.tags.push(currentPathTag); // add the tag
+                            console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
+                        }
+                    }
+                }
+                frontmatter.tags = this.tools.removeDuplicateStrings(frontmatter.tags);
+            }
+        },{'mtime':file.stat.mtime}); // do not change the modify time.
+        /*
         // rebuild frontmatter YAML
         let newFrontmatter = '---\n';
         Object.keys(frontmatter).forEach(key => {
@@ -311,6 +314,7 @@ export default class FolderTagPlugin extends Plugin {
         content = newFrontmatter + content.slice(endOfFrontmatter+4);
         console.log(`[${eventName}] modifying file ${file.path}`,{'yaml': content});
         await this.app.vault.modify(file, content);
+        */
     }
 
     private async updateFrontmatterTags(file: TFile, newTag: string | null, oldTagToRemove?: string) {
