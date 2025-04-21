@@ -1,4 +1,7 @@
 # Front Matter Automate
+*Titelei automat*
+
+**This Plugin is an Alpha Version! Best to test on a copy of your vault!**
 
 ## What does it do
 
@@ -11,7 +14,7 @@ A core feature is to create a tag to represent the current location (path) of th
 
 ### Rules
 A set of rule can be defined to create and update front matter properties.
-There are a number of prebuild functions available
+There are a number of pre-build functions available
 
 * Full path and filename
 * Full path

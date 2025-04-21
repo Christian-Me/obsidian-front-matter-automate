@@ -96,6 +96,10 @@
   /*color: var(--text-error);*/
   background-color: var(--background-modifier-error-hover);
 }
+.property-plus-button {
+  /*color: var(--text-error);*/
+  background-color: var(--background-modifier-error-hover);
+}
 
 
 /* styles für directory tree */
