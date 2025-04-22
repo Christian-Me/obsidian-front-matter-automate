@@ -2,7 +2,7 @@ import { App, Plugin, MarkdownView, PluginManifest, TFile, TFolder, Vault, parse
 import * as fmTools from './src/frontmatter-tools';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
-import { ruleFunctions } from './src/rules';
+import { executeRule, ruleFunctions } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
 import { runInContext } from 'vm';
@@ -238,25 +238,9 @@ export default class FolderTagPlugin extends Plugin {
         const cache = this.app.metadataCache.getFileCache(file);
         //const frontmatter = cache?.frontmatter || {};
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-            let fxResult:any;
-            const parameterTypes = {}
-
-            // apply all rules to frontmatter
+           // apply all rules to frontmatter
             rules.forEach(rule => {
-                if (rule.content === 'script') {
-                    const ruleFunction = parseJSCode(rule.jsCode);
-                    if (typeof ruleFunction !== 'function') return;
-                    fxResult = ruleFunction(this.app, file, this.tools);
-                } else {
-                    const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
-                    if (functionIndex!==-1){
-                        //console.log(`execute rule for ${rule.property} ${rule.content} for file ${file.path}`);
-                        fxResult = ruleFunctions[functionIndex].fx(this.app, file, this.tools);
-                        //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
-                    }
-                }
-                frontmatter[rule.property] = fxResult; // update or add the new value
-                parameterTypes[rule.property] = rule.type; // add types to parameter list.
+                frontmatter[rule.property] = executeRule(this.app, this.settings, file, frontmatter[rule.property], rule, oldPath);
             })
 
             // update folder tag

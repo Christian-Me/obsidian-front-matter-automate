@@ -1,7 +1,22 @@
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.8";
+export const versionString = "0.0.9";
 
+export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
+
+export interface FilterFilesAndFolders {
+    selectedFolders: string[],
+    selectedFiles: string[],
+    mode: 'include' | 'exclude',
+    display: 'folders' | 'files'
+}
+
+export const DEFAULT_FILTER_FILES_AND_FOLDERS = {
+    selectedFolders: [],
+    selectedFiles: [],
+    mode: 'exclude',
+    display: 'folders',
+}
 export interface FolderTagSettings {
     tagPrefix: string;
     excludeRootFolder: boolean;
@@ -12,18 +27,8 @@ export interface FolderTagSettings {
     knownProperties: PropertyTypeInfo[];
     rules: FolderTagRuleDefinition[];
     useTextArea: boolean;
-    exclude: {
-        selectedFolders: string[],
-        selectedFiles: string[],
-        mode: 'include' | 'exclude',
-        display: 'folder' | 'files'
-    };
-    include: {
-        selectedFolders: string[],
-        selectedFiles: string[],
-        mode: 'include' | 'exclude',
-        display: 'folder' | 'files'
-    };
+    exclude: FilterFilesAndFolders;
+    include: FilterFilesAndFolders;
     configuredProperties: Array<{ name: string; value: any }>;
 }
 
@@ -41,41 +46,62 @@ export const DEFAULT_SETTINGS: FolderTagSettings = {
         selectedFolders: [],
         selectedFiles: [],
         mode: 'exclude',
-        display: 'folder',
+        display: 'folders',
     },
     include: {
         selectedFolders: [],
         selectedFiles: [],
         mode: 'include',
-        display: 'folder',
+        display: 'folders',
     },
     configuredProperties: [],
+    
 };
 
 export interface FolderTagRuleDefinition {
     id: string;
     active: boolean;
+    addContent: 'overwrite' | 'start' | 'end';
+    asLink: boolean;
     property: string;
+    value: string | number | boolean;
     customProperty: string;
-    type: string | undefined;
+    type: ObsidianPropertyTypes;
     typeProperty: PropertyTypeInfo | undefined;
     content: string;
     buildInCode: string;
     jsCode: string;
     showContent: boolean;
+    exclude: FilterFilesAndFolders;
+    include: FilterFilesAndFolders;
 }
 
 export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
     id: '',
     active : true,
+    asLink: false,
+    addContent: 'overwrite',
     property : '',
+    value: '',
     customProperty : '',
-    type: 'string',
+    type: 'text',
     typeProperty: {name:'',type:'', source:'registered'},
     content: '',
     buildInCode: '',
     jsCode: '',
     showContent: false,
+    exclude: {
+        selectedFolders: [],
+        selectedFiles: [],
+        mode: 'exclude',
+        display: 'folders',
+    },
+    include: {
+        selectedFolders: [],
+        selectedFiles: [],
+        mode: 'include',
+        display: 'folders',
+    },
 }
 
 export type PropertyTypeInfo = {

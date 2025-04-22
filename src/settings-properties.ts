@@ -1,4 +1,9 @@
-import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon } from 'obsidian';
+import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion } from 'obsidian';
+import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
+import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, DEFAULT_FILTER_FILES_AND_FOLDERS} from './types';
+import { getRuleFunctionById, ruleFunctions, RuleFunction, executeRule } from './rules';
+import { AlertModal } from './alertBox';
+import { randomUUID } from 'crypto';
 
 export type PropertyInfo = {
     name: string;
@@ -6,13 +11,17 @@ export type PropertyInfo = {
     count?: number;
 };
 
-export class FolderTagSettingTab extends PluginSettingTab {
+export class RulesTable extends PluginSettingTab {
     plugin: any;
     knownProperties: Record<string, PropertyInfo> = {}; // Cache für gefundene Properties
+    container: HTMLDivElement;
+    settingsParameter: string;
 
-    constructor(app: App, plugin: any) {
+    constructor(app: App, plugin: any, container: HTMLDivElement, settingsParameter: string) {
         super(app, plugin);
         this.plugin = plugin;
+        this.container = container;
+        this.settingsParameter = settingsParameter;
     }
 
     // Funktion zum Abrufen und Speichern der bekannten Properties (async)
@@ -21,14 +30,18 @@ export class FolderTagSettingTab extends PluginSettingTab {
         this.knownProperties = Object.fromEntries(
             Object.entries(this.knownProperties).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
         );
+        console.log(this.knownProperties);
     }
 
     // Helper zum Rendern EINER Eigenschaftszeile
-    renderPropertyRow(containerEl: HTMLElement, propertyConfig: { name: string; value: any }, index: number) {
+    renderPropertyRow(containerEl: HTMLElement, rule: FolderTagRuleDefinition, index: number) {
+        
+        const activeFile = this.app.workspace.getActiveFile();
+
         // Verwende createDiv statt Setting für volle Layout-Kontrolle und kompakteres Aussehen
         const rowEl = containerEl.createDiv({ cls: 'property-setting-row setting-item' }); // Füge 'setting-item' für Standard-Styling hinzu
         const controlEl = rowEl.createDiv({ cls: 'setting-item-control' }); // Container für alle Controls
-
+        controlEl.style.gap = '0px';
         // --- Linker Teil: Icon & Durchsuchbare Eigenschaftsauswahl ---
         const leftContainer = controlEl.createDiv({ cls: 'property-left-container' });
         const iconEl = leftContainer.createSpan({ cls: 'property-icon setting-item-icon' }); // Standard-Icon-Klasse
@@ -40,7 +53,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
         // Textfeld für die Suche/Anzeige des aktuellen Namens
         const nameInput = new TextComponent(searchContainer)
             .setPlaceholder('Eigenschaft suchen...')
-            .setValue(propertyConfig.name || '')
+            .setValue(rule.property || '')
             .onChange(async (value) => {
                 // Direkte Änderung hier nicht speichern, Auswahl erfolgt über Ergebnisliste
                 this.renderSearchResults(searchContainer, value, index);
@@ -68,48 +81,232 @@ export class FolderTagSettingTab extends PluginSettingTab {
 
 
         // Setze initiales Icon basierend auf gespeichertem Namen
-        const currentPropertyInfo = this.knownProperties[propertyConfig.name];
+        const currentPropertyInfo = this.knownProperties[rule.property];
         if (currentPropertyInfo) {
             this.updatePropertyIcon(iconEl, currentPropertyInfo.type);
-        } else if (propertyConfig.name) {
+        } else if (rule.property) {
             setIcon(iconEl, 'alert-circle'); // Warn-Icon, falls Name ungültig
         }
 
         // --- Mittlerer Teil: Werte-Eingabefeld ---
-        const valueContainer = controlEl.createDiv({ cls: 'property-value-container' });
-        this.renderValueInput(valueContainer, currentPropertyInfo, propertyConfig.value, index);
+        const middleContainer = controlEl.createDiv({ cls: 'property-middle-container' });
+        const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
+        if (activeFile) rule.value = executeRule(this.app, this.plugin.settings, activeFile, '', rule);
+        let returnComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
 
-        // --- Rechter Teil: Löschen-Button ---
+        const propertyDevDropdown =  new DropdownComponent(middleContainer);
+            propertyDevDropdown.selectEl.setAttribute('style','width:50%');
+            propertyDevDropdown.addOption("", "Select a content");
+            for (let ruleFunction of ruleFunctions) {
+                console.log(rule.type);
+                if (ruleFunction.type.contains(rule.type)) {
+                    propertyDevDropdown.addOption(ruleFunction.id, ruleFunction.description);
+                }
+            }
+            propertyDevDropdown.addOption("script", "JavaScript script");
+            propertyDevDropdown.setValue(rule.content);
+            propertyDevDropdown.onChange(async (value) => {
+                let jsCode = '';
+                if (value !== '') {
+                    if (value !== 'script') {
+                        let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
+                        if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
+                            const shouldProceed = await new AlertModal(
+                                    this.app,
+                                    'Overwrite existing code?',
+                                    'I sees like you have custom code for this rule! Should this be overwritten by default code for this parameter?',
+                                    'Yes', 'No'
+                                ).openAndGetValue();
+                            if (shouldProceed) {
+                                jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source; // 
+                            } else {
+                                jsCode = rule.buildInCode; // keep the existing code
+                            }
+                            //cmEditor?.setValue(jsCode);
+                            await this.plugin.saveSettings();
+                        } else {
+                            jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                            //cmEditor?.setValue(jsCode);
+                            await this.plugin.saveSettings();
+                        }
+                    } else {
+                        //cmEditor?.setValue(rule.jsCode!=='' ? rule.jsCode : ruleFunctions[0].source);
+                    }
+                    rule.content = value;
+                    if (activeFile) {
+                        let ruleResult = executeRule(this.app, this.plugin.settings, activeFile, '', rule);
+                        console.log(`Rule result "${ruleResult}"`,activeFile,ruleResult);
+                        switch (typeof ruleResult) {
+                            case 'object':
+                                returnComponent.inputEl.value = ruleResult.toString();
+                                break;
+                            default:
+                                returnComponent.inputEl.value = ruleResult;
+                                break;
+
+                        }
+                    }
+                    //ruleOptionsDiv.style.display = `${(rule.content === 'script') ? 'flex' : 'none'}`;
+                    //showJsFunctionButton(rule.content);
+                    await this.plugin.saveSettings();
+                }
+            });
+            //ruleOptionsDiv.style.display = `${(rule.content === 'script') && (rule.showContent) ? 'flex' : 'none'}`;
+
+        new ButtonComponent(middleContainer)
+        .setIcon('gear')
+        .setTooltip('settings')
+        .setClass('property-icon-button')
+        .onClick(async () => {
+            let settingsContainers = containerEl.getElementsByClassName('property-options-container');
+            for (let container of settingsContainers) {
+                if (container.getAttribute('id') !== rule.id) container.setAttribute('style','display: none;');
+            }
+            optionEL.style.display = optionEL.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // --- right part: erase rule ---
         const deleteButtonContainer = controlEl.createDiv({ cls: 'property-delete-button-container' });
         new ButtonComponent(deleteButtonContainer)
             .setIcon('trash-2')
-            .setTooltip('Diese Eigenschaft entfernen')
-            .setClass('mod-subtle') // Kompakteres Button-Styling
+            .setTooltip('remove this rule')
+            .setClass('mod-subtle')
             .onClick(async () => {
-                this.plugin.settings.configuredProperties.splice(index, 1);
+                this.plugin.settings[this.settingsParameter].splice(index, 1);
                 await this.plugin.saveSettings();
                 this.display(); // Re-render the settings tab
             });
 
-        // Styling / Layout via Flexbox (angewendet auf controlEl)
         controlEl.style.display = 'flex';
         controlEl.style.alignItems = 'center';
         controlEl.style.justifyContent = 'space-between';
         controlEl.style.width = '100%';
-        controlEl.style.gap = '10px'; // Abstand zwischen Elementen
 
         leftContainer.style.display = 'flex';
         leftContainer.style.alignItems = 'center';
-        //leftContainer.style.flexGrow = '1'; // Nimmt verfügbaren Platz
-        leftContainer.style.minWidth = '200px'; // Mindestbreite für linke Seite
+        leftContainer.style.minWidth = '200px'; 
         iconEl.style.marginRight = '8px';
 
-        searchContainer.style.position = 'relative'; // Für absolute Positionierung der Ergebnisse
+        searchContainer.style.position = 'relative'; 
         searchContainer.style.flexGrow = '1';
 
-        valueContainer.style.flexGrow = '2'; // Nimmt mehr Platz
+        valueContainer.style.flexGrow = '2'; 
 
-        deleteButtonContainer.style.marginLeft = 'auto'; // Schiebt Button nach rechts
+        deleteButtonContainer.style.marginLeft = 'auto'; 
+
+        const optionEL = containerEl.createDiv({ cls: 'property-options-container' }); // options container
+        optionEL.id = rule.id;
+        optionEL.style.display = 'none';
+        new Setting(optionEL)
+            .setName('Rule active')
+            .setDesc('If enabled, the rule will be executed')
+            .addToggle(toggle => toggle
+                .setValue(rule.active)
+                .onChange(async (value) => {
+                    rule.active = value;
+                    await this.plugin.saveSettings();
+                })
+            );
+        new Setting(optionEL)
+            .setName('Result as Link')
+            .setDesc('Format Result as Link')
+            .addToggle(toggle => toggle
+                .setValue(rule.asLink)
+                .onChange(async (value) => {
+                    rule.asLink = value;
+                    await this.plugin.saveSettings();
+                })
+            );
+        if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+            new Setting(optionEL)
+                .setName('Add content')
+                .setDesc('select how the content should be stored')
+                .addDropdown(dropdown => dropdown
+                    .addOption("overwrite", "replace content")
+                    .addOption("start", "place on start")
+                    .addOption("end", "place on end")
+                    .setValue(rule.addContent)
+                    .onChange(async (value) => {
+                        if (value !== '') {
+                            rule.addContent = value === 'overwrite' ? 'overwrite' : value === 'start' ? 'start' : 'end';
+                            await this.plugin.saveSettings();
+                        }
+                    })
+                );
+        }
+        new Setting(optionEL)
+        .setName('Exclude Files and Folders from this rule')
+        .setDesc(`Currently ${this.plugin.settings.exclude.selectedFolders.length} folders and ${this.plugin.settings.exclude.selectedFiles.length} files will be ${this.plugin.settings.exclude.mode}d.`)
+        .addButton(button => {
+            button
+                .setIcon('folder-x')
+                .setButtonText('Exclude')
+                .setCta() // Makes the button more prominent
+                .onClick(() => {
+                    openDirectorySelectionModal(
+                        this.app,
+                        rule.exclude?.selectedFolders || [],
+                        rule.exclude?.selectedFiles || [],
+                        'exclude',
+                        rule.exclude?.display || 'folders',
+                        false, // include, exclude option hidden
+                        (result: DirectorySelectionResult | null) => {
+                            if (!result) return;
+                            if (!rule.exclude) {
+                                rule.exclude=Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
+                                    mode : 'include',
+                                });
+                            };
+                            rule.exclude.selectedFolders = result.folders;
+                            rule.exclude.selectedFiles = result.files;
+                            rule.exclude.display = result.display;
+                            this.plugin.saveSettings(); 
+                            //this.display();
+                        }
+                    );
+                });
+        });          
+
+        new Setting(optionEL)
+        .setName('Include Files and Folders for this rule ')
+        .setDesc(`Currently ${this.plugin.settings.include.selectedFolders.length} folders and ${this.plugin.settings.include.selectedFiles.length} files will be ${this.plugin.settings.include.mode}d even when in excluded Folders.`)
+        .addButton(button => {
+            button
+                .setIcon('folder-check')
+                .setButtonText('Include')
+                .setCta() // Makes the button more prominent
+                .onClick(() => {
+                    openDirectorySelectionModal(
+                        this.app,
+                        rule.include?.selectedFolders || [],
+                        rule.include?.selectedFiles || [],
+                        'include',
+                        rule.include?.display || 'folders',
+                        false, // include, include option hidden
+                        (result: DirectorySelectionResult | null) => {
+                            if (!result) return;
+                            if (!rule.include) {
+                                rule.include=Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
+                                    mode : 'include',
+                                });
+                            };
+                            rule.include.selectedFolders = result.folders;
+                            rule.include.selectedFiles = result.files;
+                            rule.include.display = result.display;
+                            this.plugin.saveSettings(); 
+                            //this.display();
+                        }
+                    );
+                });
+        });
+        new Setting(optionEL)
+            .setName('Script')
+            .setDesc('edit the script for own modifications')
+            .addButton(button => button
+                .setButtonText('JS Editor')
+                .onClick(() => {
+                })
+            )
     }
 
     // Helper zum Rendern der Suchergebnisliste
@@ -147,9 +344,10 @@ export class FolderTagSettingTab extends PluginSettingTab {
             itemEl.addEventListener('mousedown', async (e) => {
                 e.preventDefault(); // Verhindert Blur-Event des Inputs vor dem Klick
                 // Eigenschaft auswählen
-                this.plugin.settings.configuredProperties[rowIndex].name = name;
+                this.plugin.settings[this.settingsParameter][rowIndex].property = name;
+                this.plugin.settings[this.settingsParameter][rowIndex].type = info.type;
                 // Wert zurücksetzen, da Typ wechseln kann (optional)
-                this.plugin.settings.configuredProperties[rowIndex].value = undefined;
+                this.plugin.settings[this.settingsParameter][rowIndex].value = undefined;
                 await this.plugin.saveSettings();
                 this.clearSearchResults(searchContainerEl);
                 this.display(); // Neu rendern
@@ -168,6 +366,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
 
     // Helper zum Rendern des passenden Eingabefelds für den Wert
     renderValueInput(containerEl: HTMLElement, propertyInfo: PropertyInfo | undefined, currentValue: any, index: number) {
+        let returnComponent;
         containerEl.empty(); // Vorheriges Feld löschen
 
         if (!propertyInfo) {
@@ -180,19 +379,20 @@ export class FolderTagSettingTab extends PluginSettingTab {
 
         switch (type) {
             case 'number':
-                new TextComponent(containerEl)
+                returnComponent = new TextComponent(containerEl)
                     .setPlaceholder('Zahlenwert')
                     .setValue(currentValue !== undefined && currentValue !== null ? String(currentValue) : '')
                     .onChange(async (value) => {
                         const numValue = value === '' ? undefined : parseFloat(value);
-                        this.plugin.settings.configuredProperties[index].value = isNaN(numValue as number) ? undefined : numValue;
+                        this.plugin.settings[this.settingsParameter][index].value = isNaN(numValue as number) ? undefined : numValue;
                         await this.plugin.saveSettings();
                     })
-                    .inputEl.type = 'number';
+                    returnComponent.inputEl.type = 'number';
                 break;
             case 'checkbox':
                 // Erstelle ein klickbares Div für die Tri-State-Checkbox
                 const checkboxEl = containerEl.createDiv({ cls: 'tri-state-checkbox clickable-icon' });
+                returnComponent = checkboxEl;
                 checkboxEl.setAttribute('aria-label', 'Checkbox Status ändern');
                 checkboxEl.setAttribute('role', 'checkbox');
 
@@ -233,7 +433,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
                     }
 
                     // Update Plugin Settings
-                    this.plugin.settings.configuredProperties[index].value = nextState;
+                    this.plugin.settings[this.settingsParameter][index].value = nextState;
                     await this.plugin.saveSettings();
 
                     // Update Visuals
@@ -242,50 +442,48 @@ export class FolderTagSettingTab extends PluginSettingTab {
 
                 break;
             case 'date':
-                new TextComponent(containerEl)
+                returnComponent = new TextComponent(containerEl)
                     .setPlaceholder('YYYY-MM-DD')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
-                        this.plugin.settings.configuredProperties[index].value = value || undefined;
+                        this.plugin.settings[this.settingsParameter][index].value = value || undefined;
                         await this.plugin.saveSettings();
                     })
-                     .inputEl.type = 'date';
+                    returnComponent.inputEl.type = 'date';
                 break;
             case 'datetime':
-                 new TextComponent(containerEl)
+                returnComponent = new TextComponent(containerEl)
                     .setPlaceholder('YYYY-MM-DDTHH:mm')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
-                        this.plugin.settings.configuredProperties[index].value = value || undefined;
+                        this.plugin.settings[this.settingsParameter][index].value = value || undefined;
                         await this.plugin.saveSettings();
                     })
-                    .inputEl.type = 'datetime-local';
+                    returnComponent.inputEl.type = 'datetime-local';
                 break;
+            case 'tags':
             case 'multitext':
-                 new TextComponent(containerEl)
+                returnComponent = new TextComponent(containerEl)
                     .setPlaceholder('Werte (kommagetrennt)')
                     .setValue(Array.isArray(currentValue) ? currentValue.join(', ') : (currentValue || ''))
                     .onChange(async (value) => {
                         const arrayValue = value.split(',').map(s => s.trim()).filter(s => s);
-                        this.plugin.settings.configuredProperties[index].value = arrayValue.length > 0 ? arrayValue : undefined;
+                        this.plugin.settings[this.settingsParameter][index].value = arrayValue.length > 0 ? arrayValue : undefined;
                         await this.plugin.saveSettings();
                     });
                 break;
             case 'text':
             default:
-                new TextComponent(containerEl)
+                returnComponent = new TextComponent(containerEl)
                     .setPlaceholder('Wert')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
-                        this.plugin.settings.configuredProperties[index].value = value || undefined;
+                        this.plugin.settings[this.settingsParameter][index].value = value || undefined;
                         await this.plugin.saveSettings();
                     });
                 break;
         }
-         const input = containerEl.querySelector('input, select, textarea');
-         if (input) {
-             input.style.width = '100%';
-         }
+        return returnComponent;
     }
 
     // Helper zum Aktualisieren des Icons basierend auf dem Typ
@@ -306,16 +504,14 @@ export class FolderTagSettingTab extends PluginSettingTab {
 
     // display() muss async sein
     async display(): Promise<void> {
-        const { containerEl } = this;
+        const containerEl = this.container;
         containerEl.empty();
-
-        containerEl.createEl('h2', { text: 'Konfiguration der Eigenschaften' });
 
         await this.fetchKnownProperties();
 
         const propertiesListEl = containerEl.createDiv('properties-list');
 
-        this.plugin.settings.configuredProperties.forEach((propConfig, index) => {
+        this.plugin.settings.rules.forEach((propConfig, index) => {
             this.renderPropertyRow(propertiesListEl, propConfig, index);
         });
 
@@ -328,7 +524,10 @@ export class FolderTagSettingTab extends PluginSettingTab {
             .setCta()
             .onClick(async () => {
                 const defaultName = ''; //Object.keys(this.knownProperties)[0] || '';
-                this.plugin.settings.configuredProperties.push({ name: defaultName, value: undefined });
+                // this.plugin.settings[this.settingsParameter].push({ name: defaultName, value: undefined });
+                this.plugin.settings[this.settingsParameter].push(Object.assign({}, DEFAULT_RULE_DEFINITION, {
+                    id: randomUUID().toString(),
+                }));
                 await this.plugin.saveSettings();
                 this.display();
             })

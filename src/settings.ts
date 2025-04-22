@@ -4,12 +4,14 @@ import { parseJSCode, ScriptingTools } from './tools';
 import { getRuleFunctionById, ruleFunctions, RuleFunction } from './rules';
 import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo} from './types';
 import { AlertModal } from './alertBox';
-import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal'; // Adjust path as needed
+import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
 import { randomUUID } from 'crypto';
+import { RulesTable } from './settings-properties';
 
 export class FolderTagSettingTab extends PluginSettingTab {
     plugin: any; //FolderTagPlugin;
     rulesDiv: HTMLDivElement;
+    rulesContainer: HTMLDivElement;
     rulesControl: HTMLDivElement;
     knownProperties: PropertyTypeInfo[];
     knownTypes: any;
@@ -149,11 +151,11 @@ export class FolderTagSettingTab extends PluginSettingTab {
                         }
                     );
                 });
-        });          
-                
+        });      
         new Setting(containerEl)
-            .setName('Rules')
-            .setDesc('add rules to update selected parameters');
+        .setName('Rules')
+        .setDesc('add rules to update selected parameters');
+        /*
 
         this.rulesDiv = containerEl.createDiv({ cls: "obsidian-f2t-rule-area" })
         this.rulesControl = containerEl.createDiv({ cls: "obsidian-f2t-rule-controls" })
@@ -180,6 +182,10 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 });
             });
             */
+        
+        this.rulesContainer = containerEl.createDiv('properties-list');
+        const rulesTable = new RulesTable(this.app, this.plugin,this.rulesContainer,'rules');
+        rulesTable.display();
     }
 
     addRule(divEl: HTMLDivElement, ruleUUID = '') {
@@ -367,19 +373,6 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 for (let rule of ruleFunctions) {
                     dropdown.addOption(rule.id, rule.description);
                 }
-                /*
-                dropdown.addOption("fullPath", "Full path and filename");
-                dropdown.addOption("path", "Full path");
-                dropdown.addOption("folder", "Folder");
-                dropdown.addOption("rootFolder", "Root Folder");
-                dropdown.addOption("name", "Filename");
-                dropdown.addOption("nameExt", "Filename with Extension");
-                dropdown.addOption("aliasFromPath", "add an Alias form full path");
-                dropdown.addOption("dateTimeCreated", "Date (and Time) created");
-                dropdown.addOption("dateTimeModified", "Date (and Time) modified");
-                dropdown.addOption("fileSizeBytes", "File Size in Bytes");
-                dropdown.addOption("fileSizeString", "File Size as Text");
-                */
                 dropdown.addOption("script", "JavaScript script");
                 dropdown.setValue(rule.content);
                 dropdown.onChange(async (value) => {
@@ -440,12 +433,12 @@ export class FolderTagSettingTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 });
             });
-        showJsFunctionButton(rule.content);
-        divEl.style.removeProperty('border-top');
-    }
-
-    removeRule(rulesDiv: HTMLDivElement) {
-        rulesDiv.remove();
-    }
+            showJsFunctionButton(rule.content);
+            divEl.style.removeProperty('border-top');
+        }
+        
+        removeRule(rulesDiv: HTMLDivElement) {
+            rulesDiv.remove();
+        }
 
 }

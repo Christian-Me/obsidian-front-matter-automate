@@ -20,31 +20,30 @@
         "source": "registered"
       },
       "content": "dateTimeCreated",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire Date and Timer file created\n  const dateTime = new Date(file.stat.ctime);\n  const result = dateTime.toISOString().split('.')[0];\n  return result; // return you result.\n}",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset\n  const result = new Date(file.stat.ctime-timeOffset);\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
       "jsCode": "",
-      "showContent": false
-    },
-    {
-      "id": "0444a04e-1531-447b-91cd-dd4b3dcc377d",
-      "active": true,
-      "property": "Modified",
-      "customProperty": "",
-      "type": "datetime",
-      "typeProperty": {
-        "name": "Modified",
-        "type": "datetime",
-        "count": 1,
-        "source": "registered"
+      "showContent": false,
+      "addContent": "end",
+      "include": {
+        "selectedFolders": [
+          "/Tiere"
+        ],
+        "selectedFiles": [],
+        "mode": "include"
       },
-      "content": "dateTimeModified",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire Date and Timer file modified\n  const dateTime = new Date(file.stat.mtime);\n  const result = dateTime.toISOString(); //.split('.')[0];\n  return result; // return you result.\n}",
-      "jsCode": "",
-      "showContent": true
+      "exclude": {
+        "selectedFolders": [
+          "/Another Folder"
+        ],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "value": "2025-03-26T00:54:01.339"
     },
     {
       "id": "46da58c3-ac5d-4b56-ac66-a546781389fc",
       "active": true,
-      "property": "path",
+      "property": "fullpath",
       "customProperty": "",
       "typeProperty": {
         "name": "",
@@ -56,7 +55,9 @@
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
       "jsCode": "",
       "showContent": true,
-      "type": "text"
+      "type": "text",
+      "addContent": "overwrite",
+      "value": "Tiere/Säugetiere/Beuteltiere in Australien/Welcome.md"
     },
     {
       "id": "ea50c8fb-45b2-4dce-862d-eac571ff0ef5",
@@ -73,7 +74,9 @@
       "content": "path",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
-      "showContent": false
+      "showContent": false,
+      "addContent": "overwrite",
+      "value": "Tiere/Säugetiere/Beuteltiere in Australien"
     },
     {
       "id": "7b45bbd9-fd1e-4815-891c-5d37af8c5d31",
@@ -89,7 +92,9 @@
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[parts.length-2];\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": true,
-      "type": "text"
+      "type": "text",
+      "addContent": "overwrite",
+      "value": "Beuteltiere in Australien"
     },
     {
       "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
@@ -106,7 +111,9 @@
       "content": "rootFolder",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[0];\n  }\n  return result;\n}",
       "jsCode": "",
-      "showContent": false
+      "showContent": false,
+      "addContent": "overwrite",
+      "value": "Tiere"
     },
     {
       "id": "f542d0a9-b2e4-4a0a-9ca8-70e24ddc83b9",
@@ -123,7 +130,13 @@
       "content": "folders",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
       "jsCode": "",
-      "showContent": true
+      "showContent": true,
+      "addContent": "start",
+      "value": [
+        "Tiere",
+        "Säugetiere",
+        "Beuteltiere in Australien"
+      ]
     },
     {
       "id": "fde12cea-877e-42fe-9a33-d42f7ff33b81",
@@ -140,7 +153,49 @@
       "content": "dateTimeModified",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;\n  const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
       "jsCode": "",
-      "showContent": false
+      "showContent": false,
+      "addContent": "end",
+      "value": "2025-04-21T15:35:44.546"
+    },
+    {
+      "id": "9dbdba02-9a28-4c15-af94-de057dbb3624",
+      "active": true,
+      "property": "isroot",
+      "customProperty": "",
+      "type": "checkbox",
+      "typeProperty": {
+        "name": "",
+        "type": "",
+        "source": "registered"
+      },
+      "content": "isRoot",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "addContent": "end",
+      "value": false
+    },
+    {
+      "id": "37b34872-bd6a-4c5e-9b6d-3689c37e9001",
+      "active": true,
+      "addContent": "end",
+      "property": "tags",
+      "customProperty": "",
+      "type": "tags",
+      "typeProperty": {
+        "name": "",
+        "type": "",
+        "source": "registered"
+      },
+      "content": "folders",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "value": [
+        "Tiere",
+        "Säugetiere",
+        "Beuteltiere in Australien"
+      ]
     }
   ],
   "useTextArea": false,
@@ -159,22 +214,7 @@
   },
   "configuredProperties": [
     {
-      "name": "date"
-    },
-    {
-      "name": "aliases"
-    },
-    {
-      "name": "this is a datetime"
-    },
-    {
-      "name": "#?:{}\"'"
-    },
-    {
-      "name": "datetimecreated"
-    },
-    {
-      "name": "number"
+      "name": ""
     }
   ],
   "selectedFolders": [

@@ -5,6 +5,7 @@
   margin-bottom: 2px;
   border: unset;
   padding: 2px 0;
+  gap: 0px;
 }
 
 .property-setting-row:last-child {
@@ -21,14 +22,31 @@
   background-color: var(--metadata-divider-color);
 }
 
+.property-middle-container {
+  display: flex;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-top: 2px solid var(--background-modifier-border);
+  border-bottom: 2px solid var(--background-modifier-border);
+  width: 100%;
+  text-align: left;
+  align-items: center;
+}
+
 .property-right-container {
   padding-top: 1px;
-  padding-bottom: wpx;
+  padding-bottom: 1px;
   border: 2px solid var(--background-modifier-border);
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   width: 20px;
   background-color: var(--metadata-divider-color);
+}
+.property-options-container {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: var(--metadata-label-background);
+  margin-left: 10px;
 }
 
 .property-icon {
@@ -51,15 +69,14 @@
 .property-value-container input,
 .property-value-container select,
 .property-value-container textarea {
-  width: 100%;
+  width: 90%;
+  border: 0px;
 }
 
 .property-value-container .tri-state-checkbox {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--icon-size); 
-  height: var(--icon-size);
+  align-items: left;
+  justify-content: left;
   cursor: pointer;
   color: var(--text-muted);
 }
@@ -75,8 +92,15 @@
   color: var(--text-accent-hover); 
 }
 
+.property-icon-button {
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+  color: var(--text-muted);
+}
+
 .property-delete-button-container{
-  padding-top: 2px;
   padding-bottom: 2px;
   border: 2px solid var(--background-modifier-border);
   border-top-right-radius: 10px;
