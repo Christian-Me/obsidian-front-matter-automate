@@ -38,7 +38,8 @@
         "selectedFiles": [],
         "mode": "include"
       },
-      "value": "2025-03-26T00:54:01.339"
+      "value": "2025-04-13T01:15:48.506",
+      "asLink": false
     },
     {
       "id": "46da58c3-ac5d-4b56-ac66-a546781389fc",
@@ -57,7 +58,7 @@
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "Tiere/Säugetiere/Beuteltiere in Australien/Welcome.md"
+      "value": "Tiere/Vögel/Ente.md"
     },
     {
       "id": "ea50c8fb-45b2-4dce-862d-eac571ff0ef5",
@@ -76,7 +77,8 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "Tiere/Säugetiere/Beuteltiere in Australien"
+      "value": "[[Tiere/Vögel]]",
+      "asLink": true
     },
     {
       "id": "7b45bbd9-fd1e-4815-891c-5d37af8c5d31",
@@ -94,7 +96,7 @@
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "Beuteltiere in Australien"
+      "value": "Vögel"
     },
     {
       "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
@@ -113,7 +115,9 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "Tiere"
+      "value": "[[Tiere]]",
+      "asLink": true,
+      "lowercaseTags": false
     },
     {
       "id": "f542d0a9-b2e4-4a0a-9ca8-70e24ddc83b9",
@@ -134,9 +138,10 @@
       "addContent": "start",
       "value": [
         "Tiere",
-        "Säugetiere",
-        "Beuteltiere in Australien"
-      ]
+        "Vögel"
+      ],
+      "asLink": false,
+      "lowercaseTags": false
     },
     {
       "id": "fde12cea-877e-42fe-9a33-d42f7ff33b81",
@@ -155,7 +160,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-04-21T15:35:44.546"
+      "value": "2025-04-22T23:31:41.861"
     },
     {
       "id": "9dbdba02-9a28-4c15-af94-de057dbb3624",
@@ -193,8 +198,133 @@
       "showContent": false,
       "value": [
         "Tiere",
-        "Säugetiere",
-        "Beuteltiere in Australien"
+        "Vögel"
+      ],
+      "spaceReplacement": "_",
+      "specialCharReplacement": "-",
+      "lowercaseTags": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include"
+      }
+    },
+    {
+      "id": "d2bb5e1f-e614-4b01-ab3a-9659f7953afd",
+      "active": true,
+      "asLink": false,
+      "addContent": "start",
+      "property": "tags",
+      "customProperty": "",
+      "type": "tags",
+      "typeProperty": {
+        "name": "",
+        "type": "",
+        "source": "registered"
+      },
+      "content": "path",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "_",
+      "specialCharReplacement": "-",
+      "lowercaseTags": true,
+      "value": [
+        "tiere/vögel"
+      ]
+    },
+    {
+      "id": "a627a29d-42ea-4899-92f1-790316408124",
+      "active": true,
+      "asLink": false,
+      "addContent": "end",
+      "property": "aliases",
+      "value": [
+        "#tiere",
+        "#vögel"
+      ],
+      "customProperty": "",
+      "type": "aliases",
+      "typeProperty": {
+        "name": "",
+        "type": "",
+        "source": "registered"
+      },
+      "content": "folders",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "#",
+      "spaceReplacement": "_",
+      "specialCharReplacement": "-",
+      "lowercaseTags": true
+    },
+    {
+      "id": "258b39fb-4b3f-4190-814a-7eacae5c4841",
+      "active": true,
+      "asLink": true,
+      "addContent": "start",
+      "property": "link",
+      "customProperty": "",
+      "type": "multitext",
+      "typeProperty": {
+        "name": "",
+        "type": "",
+        "source": "registered"
+      },
+      "content": "propertyValueAsLink",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name;\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "_",
+      "specialCharReplacement": "-",
+      "lowercaseTags": false,
+      "inputProperty": "title",
+      "value": [
+        "[[Alle_meine_Entchen]]"
       ]
     }
   ],

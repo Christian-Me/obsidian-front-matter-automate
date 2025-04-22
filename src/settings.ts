@@ -31,17 +31,8 @@ export class FolderTagSettingTab extends PluginSettingTab {
         containerEl.empty();
         containerEl.createEl('h2', { text: `Front matter automate V${versionString}` });
 
-        new Setting(containerEl)
-            .setName('Tag prefix')
-            .setDesc('Optional prefix to add before folder path tags')
-            .addText(text => text
-                .setPlaceholder('prefix/')
-                .setValue(this.plugin.settings.tagPrefix)
-                .onChange(async (value) => {
-                    this.plugin.settings.tagPrefix = value;
-                    await this.plugin.saveSettings();
-                }));
 
+        /*
         new Setting(containerEl)
             .setName('Exclude root folder')
             .setDesc('If enabled, the root folder name will be excluded from the tag')
@@ -51,7 +42,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
                     this.plugin.settings.excludeRootFolder = value;
                     await this.plugin.saveSettings();
                 }));
-
+        */
         new Setting(containerEl)
             .setName('Tags property name')
             .setDesc('Frontmatter property name to store tags (default: "tags")')
@@ -60,38 +51,6 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 .setValue(this.plugin.settings.tagsPropertyName)
                 .onChange(async (value) => {
                     this.plugin.settings.tagsPropertyName = value || 'tags';
-                    await this.plugin.saveSettings();
-                }));
-
-        new Setting(containerEl)
-            .setName('Space replacement')
-            .setDesc('Character to replace spaces in folder names (default: "_")')
-            .addText(text => text
-                .setPlaceholder('_')
-                .setValue(this.plugin.settings.spaceReplacement)
-                .onChange(async (value) => {
-                    this.plugin.settings.spaceReplacement = value || '_';
-                    await this.plugin.saveSettings();
-                }));
-
-        new Setting(containerEl)
-            .setName('Special character replacement')
-            .setDesc('Character to replace special characters (default: "_") - preserves letters with diacritics')
-            .addText(text => text
-                .setPlaceholder('_')
-                .setValue(this.plugin.settings.specialCharReplacement)
-                .onChange(async (value) => {
-                    this.plugin.settings.specialCharReplacement = value || '_';
-                    await this.plugin.saveSettings();
-                }));
-
-        new Setting(containerEl)
-            .setName('Convert to lowercase')
-            .setDesc('Convert all tags to lowercase')
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.lowercaseTags)
-                .onChange(async (value) => {
-                    this.plugin.settings.lowercaseTags = value;
                     await this.plugin.saveSettings();
                 }));
 

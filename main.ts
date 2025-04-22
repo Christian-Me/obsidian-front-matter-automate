@@ -2,7 +2,7 @@ import { App, Plugin, MarkdownView, PluginManifest, TFile, TFolder, Vault, parse
 import * as fmTools from './src/frontmatter-tools';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
-import { executeRule, ruleFunctions } from './src/rules';
+import { executeRule, removeRule, ruleFunctions } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
 import { runInContext } from 'vm';
@@ -226,7 +226,6 @@ export default class FolderTagPlugin extends Plugin {
     }
 
     async updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
-
         if (!this.checkIfFileAllowed(file)) {
             console.log(`file ${file.path} rejected!`)
             return;
@@ -240,66 +239,30 @@ export default class FolderTagPlugin extends Plugin {
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
            // apply all rules to frontmatter
             rules.forEach(rule => {
-                frontmatter[rule.property] = executeRule(this.app, this.settings, file, frontmatter[rule.property], rule, oldPath);
+                frontmatter[rule.property] = executeRule(this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
             })
-
-            // update folder tag
-            if (eventName === 'create' || eventName === 'rename') {
-                if (!frontmatter.hasOwnProperty('tags')) frontmatter.tags = [];
-                if (frontmatter.tags === null) frontmatter.tags = [];
-                let indexOldPath = frontmatter.tags.indexOf(oldPathTag);
-                let indexNewPath = frontmatter.tags.indexOf(currentPathTag);
-                if (oldPath) { 
-                    if (frontmatter.tags.includes(oldPathTag)) {
-                        if (currentPathTag!=='') {
-                            frontmatter.tags.splice(indexOldPath,1,currentPathTag); // replace the tag
-                            //console.log(`replace Tag "${oldPathTag}" [${indexOldPath}] by "${currentPathTag}"`,frontmatter.tags);
-                        } else {
-                            frontmatter.tags.splice(indexOldPath,1); // delete the tag
-                            //console.log(`delete Tag "${oldPathTag}" [${indexOldPath}]`,frontmatter.tags);
-                        }
-                    } else {
-                        if (currentPathTag!=='' && indexNewPath===-1) {
-                            frontmatter.tags.push(currentPathTag); // add the tag
-                            //console.log(`add Tag "${currentPathTag}" can't find "${oldPathTag}"`,frontmatter.tags);
-                        }
-                    }
-                } else {
-                    if (currentPathTag!=='') {
-                        if (indexNewPath<0){ // new path doesn't exist
-                            frontmatter.tags.push(currentPathTag); // add the tag
-                            //console.log(`add Tag "${currentPathTag}"`,frontmatter.tags);
-                        }
-                    }
-                }
-                frontmatter.tags = this.tools.removeDuplicateStrings(frontmatter.tags);
-            }
-            console.log(`Frontmatter File ${file.path} update`, frontmatter);
         },{'mtime':file.stat.mtime}); // do not change the modify time.
-        /*
-        // rebuild frontmatter YAML
-        let newFrontmatter = '---\n';
-        Object.keys(frontmatter).forEach(key => {
-            if (typeof frontmatter[key] === 'object') {
-                if (Array.isArray(frontmatter[key])) {
-                    newFrontmatter += `${this.tools.toYamlSafeString(key)}:\n`;
-                    for (let item of frontmatter[key]) {
-                        newFrontmatter += `  - ${this.formatValue(item, parameterTypes[key])}\n`;
-                    }
-                } else {
-                    console.error("Can't write objects to YAML",key, frontmatter[key]);
-                }
-            } else {
-                newFrontmatter += `${this.tools.toYamlSafeString(key)}: ${this.formatValue(frontmatter[key], parameterTypes[key])}\n`
-            }
-        })
-        newFrontmatter += '---\n';
+    }
+    
+    async removeFrontmatterParamsFromAllFiles(rule: FolderTagRuleDefinition){
+        let count = {files:0, items: 0}
+        this.app.vault.getMarkdownFiles().forEach(file => {
+            count.files++;
+            this.removeFrontmatterParameter(file, rule, count);
+        });
+        return count;
+    }
 
-        let endOfFrontmatter = content.indexOf('---\n',3);
-        content = newFrontmatter + content.slice(endOfFrontmatter+4);
-        console.log(`[${eventName}] modifying file ${file.path}`,{'yaml': content});
-        await this.app.vault.modify(file, content);
-        */
+    async removeFrontmatterParameter(file: TFile, rule: FolderTagRuleDefinition, count) {
+        if (!this.checkIfFileAllowed(file)) return;
+        const currentPathTag = this.formatTagName(this.tools.getFoldersFromPath(file.path));
+        let content = await this.app.vault.read(file);
+        this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+            if (Array.isArray(frontmatter[rule.property])) count.items += frontmatter[rule.property].length;
+            frontmatter[rule.property] = removeRule(this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter);
+            if (Array.isArray(frontmatter[rule.property])) count.items -= frontmatter[rule.property].length;
+        },{'mtime':file.stat.mtime}); // do not change the modify time.
+        return count;
     }
 
     private async updateFrontmatterTags(file: TFile, newTag: string | null, oldTagToRemove?: string) {
