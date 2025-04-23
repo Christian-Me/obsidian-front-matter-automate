@@ -2,7 +2,7 @@ import { App, ButtonComponent, DropdownComponent, PluginSettingTab, Setting, Tex
 import * as fmTools from './frontmatter-tools';
 import { parseJSCode, ScriptingTools } from './tools';
 import { getRuleFunctionById, ruleFunctions, RuleFunction } from './rules';
-import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo} from './types';
+import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes} from './types';
 import { AlertModal } from './alertBox';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
 import { randomUUID } from 'crypto';
@@ -22,7 +22,17 @@ export class FolderTagSettingTab extends PluginSettingTab {
         this.plugin = plugin;
         this.scriptingTools = new ScriptingTools(this.plugin.settings);
     }
-
+    hide(): void {
+        this.plugin.settings.liveRules=[];
+        this.plugin.settings.rules.forEach(rule => {
+            let ruleFunction = getRuleFunctionById(rule.content);
+            if (!ruleFunction) return;
+            if (ruleFunction.inputProperty) {
+                this.plugin.settings.liveRules.push(rule);
+            }
+        })
+        this.plugin.saveSettings();
+    }
     display(): void {
         this.knownProperties = fmTools.getPropertiesFromMetadataManager(this.app);
         this.knownTypes = fmTools.getTypesFromMetadataManager(this.app);
@@ -42,7 +52,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
                     this.plugin.settings.excludeRootFolder = value;
                     await this.plugin.saveSettings();
                 }));
-        */
+    
         new Setting(containerEl)
             .setName('Tags property name')
             .setDesc('Frontmatter property name to store tags (default: "tags")')
@@ -53,7 +63,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
                     this.plugin.settings.tagsPropertyName = value || 'tags';
                     await this.plugin.saveSettings();
                 }));
-
+        */
         new Setting(containerEl)
         .setName('Exclude Files and Folders')
         .setDesc(`Currently ${this.plugin.settings.exclude.selectedFolders.length} folders and ${this.plugin.settings.exclude.selectedFiles.length} files will be ${this.plugin.settings.exclude.mode}d.`)
@@ -320,7 +330,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 //dropdown.setDisabled(true);
                 dropdown.onChange(async (value) => {
                     if (value !== '') {
-                        rule.type = value;
+                        rule.type = value as ObsidianPropertyTypes;
                         await this.plugin.saveSettings();
                     }
                 });
@@ -396,8 +406,8 @@ export class FolderTagSettingTab extends PluginSettingTab {
             divEl.style.removeProperty('border-top');
         }
         
-        removeRule(rulesDiv: HTMLDivElement) {
-            rulesDiv.remove();
-        }
+    removeRule(rulesDiv: HTMLDivElement) {
+        rulesDiv.remove();
+    }
 
 }

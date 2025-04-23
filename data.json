@@ -25,20 +25,16 @@
       "showContent": false,
       "addContent": "end",
       "include": {
-        "selectedFolders": [
-          "/Tiere"
-        ],
+        "selectedFolders": [],
         "selectedFiles": [],
         "mode": "include"
       },
       "exclude": {
-        "selectedFolders": [
-          "/Another Folder"
-        ],
+        "selectedFolders": [],
         "selectedFiles": [],
         "mode": "include"
       },
-      "value": "2025-04-13T01:15:48.506",
+      "value": "2025-04-19T15:27:34.084",
       "asLink": false
     },
     {
@@ -53,12 +49,21 @@
         "source": "registered"
       },
       "content": "fullPath",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "Tiere/Vögel/Ente.md"
+      "value": "Tiere/Vögel/Neues Dokument",
+      "exclude": {
+        "selectedFolders": [
+          "/Another Folder",
+          "/Ordner"
+        ],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "lowercaseTags": false
     },
     {
       "id": "ea50c8fb-45b2-4dce-862d-eac571ff0ef5",
@@ -90,13 +95,18 @@
         "count": 1,
         "source": "registered"
       },
-      "content": "folder",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[parts.length-2];\n  }\n  return result;\n}",
+      "content": "pathFolderNotes",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "Vögel"
+      "value": "Tiere/Vögel",
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude"
+      }
     },
     {
       "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
@@ -160,7 +170,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-04-22T23:31:41.861"
+      "value": "2025-04-23T22:40:09.078"
     },
     {
       "id": "9dbdba02-9a28-4c15-af94-de057dbb3624",
@@ -254,12 +264,12 @@
     {
       "id": "a627a29d-42ea-4899-92f1-790316408124",
       "active": true,
-      "asLink": false,
+      "asLink": true,
       "addContent": "end",
       "property": "aliases",
       "value": [
-        "#tiere",
-        "#vögel"
+        "[[#tiere]]",
+        "[[#vögel]]"
       ],
       "customProperty": "",
       "type": "aliases",
@@ -279,20 +289,21 @@
         "display": "folders"
       },
       "include": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/Tiere/Säugetiere/Affen"
+        ],
         "selectedFiles": [],
-        "mode": "include",
-        "display": "folders"
+        "mode": "include"
       },
       "prefix": "#",
-      "spaceReplacement": "_",
-      "specialCharReplacement": "-",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
       "lowercaseTags": true
     },
     {
       "id": "258b39fb-4b3f-4190-814a-7eacae5c4841",
       "active": true,
-      "asLink": true,
+      "asLink": false,
       "addContent": "start",
       "property": "link",
       "customProperty": "",
@@ -302,8 +313,8 @@
         "type": "",
         "source": "registered"
       },
-      "content": "propertyValueAsLink",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name;\n  return result;\n}",
+      "content": "linkToFile",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -319,15 +330,16 @@
         "display": "folders"
       },
       "prefix": "",
-      "spaceReplacement": "_",
-      "specialCharReplacement": "-",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
       "lowercaseTags": false,
       "inputProperty": "title",
       "value": [
-        "[[Alle_meine_Entchen]]"
+        "[[Tiere/Vögel/Neues Dokument|Neues Dokument]]"
       ]
     }
   ],
+  "liveRules": [],
   "useTextArea": false,
   "exclude": {
     "selectedFolders": [],
@@ -336,10 +348,7 @@
   },
   "include": {
     "selectedFolders": [],
-    "selectedFiles": [
-      "Tiere/Säugetiere/Affen/Affen.md",
-      "Tiere/Fische/Fische.md"
-    ],
+    "selectedFiles": [],
     "mode": "include"
   },
   "configuredProperties": [

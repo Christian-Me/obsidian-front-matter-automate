@@ -1,6 +1,6 @@
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.10";
+export const versionString = "0.0.11";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 
@@ -11,7 +11,7 @@ export interface FilterFilesAndFolders {
     display: 'folders' | 'files'
 }
 
-export const DEFAULT_FILTER_FILES_AND_FOLDERS = {
+export const DEFAULT_FILTER_FILES_AND_FOLDERS: FilterFilesAndFolders = {
     selectedFolders: [],
     selectedFiles: [],
     mode: 'exclude',
@@ -26,6 +26,7 @@ export interface FolderTagSettings {
     lowercaseTags: boolean;
     knownProperties: PropertyTypeInfo[];
     rules: FolderTagRuleDefinition[];
+    liveRules: FolderTagRuleDefinition[];
     useTextArea: boolean;
     exclude: FilterFilesAndFolders;
     include: FilterFilesAndFolders;
@@ -41,6 +42,7 @@ export const DEFAULT_SETTINGS: FolderTagSettings = {
     lowercaseTags: false,
     knownProperties: [],
     rules: [],
+    liveRules: [],
     useTextArea: false,
     exclude: {
         selectedFolders: [],
@@ -90,7 +92,7 @@ export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
     value: '',
     customProperty : '',
     type: 'text',
-    typeProperty: {name:'',type:'', source:'registered'},
+    typeProperty: {name:'',type:'text', source:'registered'},
     content: '',
     buildInCode: '',
     jsCode: '',
@@ -116,7 +118,7 @@ export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
 
 export type PropertyTypeInfo = {
     name: string;
-    type: string;
+        type: ObsidianPropertyTypes;
     count?: number;
     isArray?: boolean;
     values?: string[];

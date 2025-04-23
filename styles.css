@@ -125,6 +125,13 @@
   background-color: var(--background-modifier-error-hover);
 }
 
+/* styles for editor Modal */
+.codeEditorModal .codeEditor-container{
+  /* Container for the scrollable tree */
+  margin-bottom: 1em;
+  background-color: var(--background-secondary); /* Use Obsidian's secondary background */
+  border-radius: var(--radius-m); /* Use Obsidian's medium radius */
+}
 
 /* styles für directory tree */
 

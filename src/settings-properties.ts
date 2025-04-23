@@ -1,13 +1,14 @@
 import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion } from 'obsidian';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
-import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, DEFAULT_FILTER_FILES_AND_FOLDERS} from './types';
+import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS} from './types';
 import { getRuleFunctionById, ruleFunctions, RuleFunction, executeRule } from './rules';
 import { AlertModal } from './alertBox';
 import { randomUUID } from 'crypto';
+import { codeEditorModal, codeEditorModalResult, openCodeEditorModal } from './editorModal';
 
 export type PropertyInfo = {
     name: string;
-    type: string;
+    type: ObsidianPropertyTypes;
     count?: number;
 };
 
@@ -99,51 +100,51 @@ export class RulesTable extends PluginSettingTab {
         let previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
 
         const propertyDevDropdown =  new DropdownComponent(middleContainer);
-            propertyDevDropdown.selectEl.setAttribute('style','width:50%');
-            propertyDevDropdown.addOption("", "Select a content");
-            for (let ruleFunction of ruleFunctions) {
-                console.log(rule.type);
-                if (ruleFunction.type.contains(rule.type)) {
-                    propertyDevDropdown.addOption(ruleFunction.id, ruleFunction.description);
-                }
+        propertyDevDropdown.selectEl.setAttribute('style','width:50%');
+        propertyDevDropdown.addOption("", "Select a content");
+        for (let ruleFunction of ruleFunctions) {
+            console.log(rule.type);
+            if (ruleFunction.type.contains(rule.type)) {
+                propertyDevDropdown.addOption(ruleFunction.id, ruleFunction.description);
             }
-            propertyDevDropdown.addOption("script", "JavaScript script");
-            propertyDevDropdown.setValue(rule.content);
-            propertyDevDropdown.onChange(async (value) => {
-                let jsCode = '';
-                if (value !== '') {
-                    if (value !== 'script') {
-                        let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
-                        if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
-                            const shouldProceed = await new AlertModal(
-                                    this.app,
-                                    'Overwrite existing code?',
-                                    'I sees like you have custom code for this rule! Should this be overwritten by default code for this parameter?',
-                                    'Yes', 'No'
-                                ).openAndGetValue();
-                            if (shouldProceed) {
-                                jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source; // 
-                            } else {
-                                jsCode = rule.buildInCode; // keep the existing code
-                            }
-                            //cmEditor?.setValue(jsCode);
-                            await this.plugin.saveSettings();
+        }
+        propertyDevDropdown.addOption("script", "JavaScript script");
+        propertyDevDropdown.setValue(rule.content);
+        propertyDevDropdown.onChange(async (value) => {
+            let jsCode = '';
+            if (value !== '') {
+                if (value !== 'script') {
+                    let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
+                    if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
+                        const shouldProceed = await new AlertModal(
+                                this.app,
+                                'Overwrite existing code?',
+                                'I sees like you have custom code for this rule! Should this be overwritten by default code for this parameter?',
+                                'Yes', 'No'
+                            ).openAndGetValue();
+                        if (shouldProceed) {
+                            jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source; // 
                         } else {
-                            jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
-                            //cmEditor?.setValue(jsCode);
-                            await this.plugin.saveSettings();
+                            jsCode = rule.buildInCode; // keep the existing code
                         }
+                        //cmEditor?.setValue(jsCode);
+                        await this.plugin.saveSettings();
                     } else {
-                        //cmEditor?.setValue(rule.jsCode!=='' ? rule.jsCode : ruleFunctions[0].source);
+                        jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                        //cmEditor?.setValue(jsCode);
+                        await this.plugin.saveSettings();
                     }
-                    rule.content = value;
-                    //ruleOptionsDiv.style.display = `${(rule.content === 'script') ? 'flex' : 'none'}`;
-                    //showJsFunctionButton(rule.content);
-                    await this.plugin.saveSettings();
-                    this.updatePreview(activeFile, rule, previewComponent.inputEl);
+                } else {
+                    //cmEditor?.setValue(rule.jsCode!=='' ? rule.jsCode : ruleFunctions[0].source);
                 }
-            });
-            //ruleOptionsDiv.style.display = `${(rule.content === 'script') && (rule.showContent) ? 'flex' : 'none'}`;
+                rule.content = value;
+                //ruleOptionsDiv.style.display = `${(rule.content === 'script') ? 'flex' : 'none'}`;
+                //showJsFunctionButton(rule.content);
+                await this.plugin.saveSettings();
+                this.updatePreview(activeFile, rule, previewComponent.inputEl);
+            }
+        });
+        //ruleOptionsDiv.style.display = `${(rule.content === 'script') && (rule.showContent) ? 'flex' : 'none'}`;
 
         new ButtonComponent(middleContainer)
         .setIcon('gear')
@@ -247,9 +248,9 @@ export class RulesTable extends PluginSettingTab {
             if (rule.type === 'tags' || rule.type === 'aliases') {
                 new Setting(optionEL)
                 .setName('Prefix')
-                .setDesc('Optional prefix to add before the content')
+                .setDesc('Optional prefix to add before the content (i.e. "prefix/")')
                 .addText(text => text
-                    .setPlaceholder('prefix/')
+                    .setPlaceholder('no prefix')
                     .setValue(rule.prefix)
                     .onChange(async (value) => {
                         rule.prefix = value;
@@ -263,7 +264,7 @@ export class RulesTable extends PluginSettingTab {
             .setName('Space replacement')
             .setDesc('Character to replace spaces in folder names (suggested: "_")')
             .addText(text => text
-                .setPlaceholder('_')
+                .setPlaceholder('no replacement')
                 .setValue(rule.spaceReplacement)
                 .onChange(async (value) => {
                     rule.spaceReplacement = value;
@@ -275,7 +276,7 @@ export class RulesTable extends PluginSettingTab {
                 .setName('Special character replacement')
                 .setDesc('Character to replace special characters (suggested: "-") - preserves letters with diacritics')
                 .addText(text => text
-                    .setPlaceholder('-')
+                    .setPlaceholder('no replacement')
                     .setValue(rule.specialCharReplacement)
                     .onChange(async (value) => {
                         rule.specialCharReplacement = value;
@@ -324,9 +325,9 @@ export class RulesTable extends PluginSettingTab {
                     })
                 );
         }
-        new Setting(optionEL)
+        const excludeEL = new Setting(optionEL)
         .setName('Exclude Files and Folders from this rule')
-        .setDesc(`Currently ${this.plugin.settings.exclude.selectedFolders.length} folders and ${this.plugin.settings.exclude.selectedFiles.length} files will be ${this.plugin.settings.exclude.mode}d.`)
+        .setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
         .addButton(button => {
             button
                 .setIcon('folder-x')
@@ -344,22 +345,22 @@ export class RulesTable extends PluginSettingTab {
                             if (!result) return;
                             if (!rule.exclude) {
                                 rule.exclude=Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
-                                    mode : 'include',
+                                    mode : 'exclude'
                                 });
                             };
                             rule.exclude.selectedFolders = result.folders;
                             rule.exclude.selectedFiles = result.files;
                             rule.exclude.display = result.display;
                             this.plugin.saveSettings(); 
-                            //this.display();
+                            excludeEL.setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
                         }
                     );
                 });
         });          
 
-        new Setting(optionEL)
+        const includeEL = new Setting(optionEL)
         .setName('Include Files and Folders for this rule ')
-        .setDesc(`Currently ${this.plugin.settings.include.selectedFolders.length} folders and ${this.plugin.settings.include.selectedFiles.length} files will be ${this.plugin.settings.include.mode}d even when in excluded Folders.`)
+        .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even when in excluded Folders.`)
         .addButton(button => {
             button
                 .setIcon('folder-check')
@@ -383,8 +384,8 @@ export class RulesTable extends PluginSettingTab {
                             rule.include.selectedFolders = result.folders;
                             rule.include.selectedFiles = result.files;
                             rule.include.display = result.display;
-                            this.plugin.saveSettings(); 
-                            //this.display();
+                            this.plugin.saveSettings();
+                            includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even when in excluded Folders.`)
                         }
                     );
                 });
@@ -395,6 +396,16 @@ export class RulesTable extends PluginSettingTab {
             .addButton(button => button
                 .setButtonText('JS Editor')
                 .onClick(() => {
+                    openCodeEditorModal(
+                        this.app,
+                        rule.jsCode,
+                        rule.typeProperty?.type || 'text',
+                        (result: codeEditorModalResult | null) => {
+                            if (!result) return;
+                            rule.jsCode = result.code;
+                            this.plugin.saveSettings();
+                        }
+                    );
                 })
             )
     }
@@ -536,10 +547,11 @@ export class RulesTable extends PluginSettingTab {
                     })
                     returnComponent.inputEl.type = 'datetime-local';
                 break;
+            case 'aliases':
             case 'tags':
             case 'multitext':
                 returnComponent = new TextComponent(containerEl)
-                    .setPlaceholder('Werte (kommagetrennt)')
+                    .setPlaceholder('values (divided by comma)')
                     .setValue(Array.isArray(currentValue) ? currentValue.join(', ') : (currentValue || ''))
                     .onChange(async (value) => {
                         const arrayValue = value.split(',').map(s => s.trim()).filter(s => s);
@@ -550,7 +562,7 @@ export class RulesTable extends PluginSettingTab {
             case 'text':
             default:
                 returnComponent = new TextComponent(containerEl)
-                    .setPlaceholder('Wert')
+                    .setPlaceholder('value')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
                         this.plugin.settings[this.settingsParameter][index].value = value || undefined;

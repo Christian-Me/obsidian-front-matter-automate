@@ -1,11 +1,9 @@
 import { App, Plugin, MarkdownView, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
-import * as fmTools from './src/frontmatter-tools';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
 import { executeRule, removeRule, ruleFunctions } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
-import { runInContext } from 'vm';
 
 export default class FolderTagPlugin extends Plugin {
     settings: FolderTagSettings;
@@ -17,20 +15,13 @@ export default class FolderTagPlugin extends Plugin {
         this.tools = new ScriptingTools(this.settings);
         let noticeMessage = `Front Matter Automate ${versionString}\n loading ...`;
         const loadingNotice = new Notice(noticeMessage,0)
-        /*
-        // Store initial folder paths for all files
-        this.app.vault.getMarkdownFiles().forEach(file => {
-            this.oldFolderPaths.set(file.path, this.getFolderPathForTag(file));
-        });
-        */
+
         noticeMessage = noticeMessage + '\n register events ...';
         loadingNotice.setMessage(noticeMessage);
         // File creation handler
         this.registerEvent(
             this.app.vault.on('create', (file) => {
                 if (file instanceof TFile && file.extension === 'md') {
-                    //this.oldFolderPaths.set(file.path, this.getFolderPathForTag(file));
-                    //this.updateFileTag(file);
                     this.updateFrontmatterParameters('create', file, this.settings.rules);
                 }
             })
@@ -40,19 +31,7 @@ export default class FolderTagPlugin extends Plugin {
         this.registerEvent(
             this.app.vault.on('rename', (file, oldPath) => {
                 if (file instanceof TFile && file.extension === 'md') {
-                    //const oldTagPath = this.oldFolderPaths.get(oldPath) ?? null;
-                    //const newTagPath = this.getFolderPathForTag(file);
-                    //this.oldFolderPaths.set(file.path, newTagPath);
                     this.updateFrontmatterParameters('rename', file, this.settings.rules, oldPath);
-                    
-                    /*
-                    // Always update when moving to/from root folder
-                    if (oldTagPath !== newTagPath || 
-                        (oldTagPath !== null && newTagPath === null) || 
-                        (oldTagPath === null && newTagPath !== null)) {
-                        //this.updateFileTag(file, oldTagPath);
-                    }
-                    */
                 }
             })
         );
@@ -68,14 +47,24 @@ export default class FolderTagPlugin extends Plugin {
             })
         );
 
+        // Metadata changed handler
+        this.registerEvent(
+            this.app.metadataCache.on('changed', (file, data, cache) => {
+                if (cache.frontmatter && Array.isArray(this.settings.liveRules)) {
+                    this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+                    // apply all live rules to frontmatter
+                    this.settings.liveRules.forEach(rule => {
+                        if (cache.frontmatter)
+                            frontmatter[rule.property] = executeRule(this.app, this.settings, file, cache.frontmatter[rule.property], rule, cache.frontmatter);
+                            console.log(frontmatter[rule.property]);
+                        })
+                     },{'mtime':file.stat.mtime}); // do not change the modify time.
+                };
+            })
+        );
+            
         noticeMessage = noticeMessage + '\n initial processing ...';
         loadingNotice.setMessage(noticeMessage);
-
-        // Initial processing of existing files
-        this.app.vault.getMarkdownFiles().forEach(file => {
-            //this.updateFileTag(file);
-            //this.updateFrontmatterParameters(file, this.settings.rules);
-        });
 
         noticeMessage = noticeMessage + '\ndone!';
         loadingNotice.setMessage(noticeMessage);
@@ -112,46 +101,6 @@ export default class FolderTagPlugin extends Plugin {
         }
         
         return formatted;
-    }
-
-    private async updateFileTag(file: TFile, oldTagPath?: string | null) {
-        const newTagPath = this.getFolderPathForTag(file);
-        const formattedNewPath = newTagPath ? this.formatTagName(newTagPath) : null;
-        
-        // If moving to root, newTag will be null
-        const newTag = formattedNewPath ? this.settings.tagPrefix + formattedNewPath : null;
-        
-        // Format the old tag for removal
-        let oldTagToRemove: string | undefined;
-        if (oldTagPath) {
-            const formattedOldPath = this.formatTagName(oldTagPath);
-            if (formattedOldPath) {
-                oldTagToRemove = this.settings.tagPrefix + formattedOldPath;
-            }
-        }
-
-        await this.updateFrontmatterTags(file, newTag, oldTagToRemove);
-    }
-
-    private getFolderPathForTag(file: TFile): string | null {
-        const folder = file.parent;
-        if (!folder || folder === this.app.vault.getRoot()) {
-            return null;
-        }
-
-        let pathParts: string[] = [];
-        let currentFolder: TFolder | null = folder;
-
-        while (currentFolder && currentFolder !== this.app.vault.getRoot()) {
-            pathParts.unshift(currentFolder.name);
-            currentFolder = currentFolder.parent;
-        }
-
-        if (this.settings.excludeRootFolder && pathParts.length > 0) {
-            pathParts = pathParts.slice(1);
-        }
-
-        return pathParts.length > 0 ? pathParts.join('/') : null;
     }
 
     /**
@@ -263,83 +212,5 @@ export default class FolderTagPlugin extends Plugin {
             if (Array.isArray(frontmatter[rule.property])) count.items -= frontmatter[rule.property].length;
         },{'mtime':file.stat.mtime}); // do not change the modify time.
         return count;
-    }
-
-    private async updateFrontmatterTags(file: TFile, newTag: string | null, oldTagToRemove?: string) {
-        let content = await this.app.vault.read(file);
-        const cache = this.app.metadataCache.getFileCache(file);
-        const frontmatter = cache?.frontmatter;
-        
-        // Get existing tags (handling both array and string formats)
-        let existingTags: string[] = [];
-        if (frontmatter && frontmatter[this.settings.tagsPropertyName]) {
-            const tagsValue = frontmatter[this.settings.tagsPropertyName];
-            if (Array.isArray(tagsValue)) {
-                existingTags = tagsValue.filter(tag => tag != null).map(tag => String(tag));
-            } else if (typeof tagsValue === 'string') {
-                existingTags = tagsValue.split(/,\s*/)
-                    .map(tag => tag.trim())
-                    .filter(tag => tag.length > 0);
-            }
-        }
-
-        // Remove any existing folder path tags (with current prefix)
-        existingTags = existingTags.filter(tag => {
-            if (tag == null) return false;
-            if (!tag.startsWith(this.settings.tagPrefix)) return true;
-            const tagWithoutPrefix = tag.slice(this.settings.tagPrefix.length);
-            return !tagWithoutPrefix.includes('/');
-        });
-
-        // Specifically remove the old tag if provided
-        if (oldTagToRemove) {
-            existingTags = existingTags.filter(tag => tag !== oldTagToRemove);
-        }
-
-        // Add the new tag if provided and not already present
-        if (newTag && !existingTags.includes(newTag)) {
-            existingTags.push(newTag);
-        }
-        
-        // Update or create frontmatter
-        let newFrontmatter: any = {};
-        if (frontmatter) {
-            newFrontmatter = {...frontmatter};
-            // Remove the old tags property to ensure proper formatting
-            delete newFrontmatter[this.settings.tagsPropertyName];
-        }
-        
-        // Reconstruct the frontmatter with proper YAML format
-        let newContent = '';
-        if (content.startsWith('---')) {
-            // Replace existing frontmatter
-            const frontmatterEnd = content.indexOf('---', 3) + 3;
-            const bodyContent = content.slice(frontmatterEnd);
-            
-            // Build new frontmatter content
-            let frontmatterContent = Object.entries(newFrontmatter)
-                .map(([key, value]) => `${key}: ${value}`)
-                .join('\n');
-            
-            // Add tags in proper YAML array format if we have any
-            if (existingTags.length > 0) {
-                frontmatterContent += `\n${this.settings.tagsPropertyName}:\n` +
-                    existingTags.map(tag => `  - ${tag}`).join('\n');
-            }
-            
-            newContent = `---\n${frontmatterContent}\n---${bodyContent}`;
-        } else {
-            // Only create frontmatter if we have tags to add
-            if (existingTags.length > 0) {
-                newContent = `---\n${this.settings.tagsPropertyName}:\n` +
-                    existingTags.map(tag => `  - ${tag}`).join('\n') +
-                    `\n---\n\n${content}`;
-            } else {
-                // No tags to add, return original content
-                return;
-            }
-        }
-        
-        await this.app.vault.modify(file, newContent);
     }
 }

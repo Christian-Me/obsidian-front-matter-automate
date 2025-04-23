@@ -4,7 +4,7 @@ import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon } fr
 interface TreeNode {
     path: string;
     name: string;
-    type: 'folder' | 'file';
+    type: string; // 'folder' | 'file';
     children?: TreeNode[];
     element: HTMLElement; // Reference to the list item element (li)
     checkbox: HTMLInputElement;

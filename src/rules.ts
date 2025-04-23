@@ -86,6 +86,7 @@ export function executeRule (app, settings, currentFile: TFile, returnResult: an
           break;
       case 'end':
           if (rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+              if (!fxResult) fxResult = [];
               if (typeof fxResult === 'string') fxResult = [fxResult]; // convert string to array 
               if (!Array.isArray(returnResult)) returnResult = [returnResult];
               if (!Array.isArray(oldResult)) oldResult = [oldResult];
@@ -99,6 +100,7 @@ export function executeRule (app, settings, currentFile: TFile, returnResult: an
           break;
       case 'start':
           if (rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+              if (!fxResult) fxResult = [];
               if (typeof fxResult === 'string') fxResult = [fxResult]; // convert string to array 
               if (!Array.isArray(returnResult)) returnResult = [returnResult];
               if (!Array.isArray(oldResult)) oldResult = [oldResult];
@@ -138,6 +140,7 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
           break;
       case 'end':
           if (rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+              if (!fxResult) fxResult = [];
               if (typeof fxResult === 'string') fxResult = [fxResult]; // convert string to array 
               if (!Array.isArray(returnResult)) returnResult = [returnResult];
               if (!Array.isArray(fxResult)) fxResult = [fxResult];
@@ -150,6 +153,7 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
           break;
       case 'start':
           if (rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+              if (!fxResult) fxResult = [];
               if (typeof fxResult === 'string') fxResult = [fxResult]; // convert string to array 
               if (!Array.isArray(returnResult)) returnResult = [returnResult];
               if (!Array.isArray(fxResult)) fxResult = [fxResult];
@@ -177,8 +181,21 @@ ruleFunctions.push({
 });
 
 ruleFunctions.push({
-    id:'fullPath',
-    description: 'Full path and filename',
+  id:'fullPath',
+  description: 'Full path, filename',
+  source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+  type: ['text', 'tags', 'aliases','multitext'],
+  fx:function (app: App, file:TFile, tools:ScriptingTools){
+      let parts = file.path.split('/');
+      parts.pop();
+      parts.push(file.basename);
+      return parts.join('/');
+  }
+});
+
+ruleFunctions.push({
+    id:'fullPathExt',
+    description: 'Full path, filename and Extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
     fx: function (app: App, file:TFile, tools:ScriptingTools){
@@ -215,6 +232,60 @@ ruleFunctions.push({
     fx:function (app: App, file:TFile, tools:ScriptingTools){
         let parts = file.path.split('/');
         parts.pop();
+        return parts.join('/');
+    }
+});
+
+ruleFunctions.push({
+    id:'linkToFile',
+    description: 'Link to file',
+    source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+    type: ['text', 'tags', 'aliases','multitext'],
+    fx:function (app: App, file:TFile, tools:ScriptingTools){
+        let parts = file.path.split('/');
+        parts.pop();
+        if (parts[parts.length-1] === file.basename) parts.pop();
+        return `[[${parts.join('/')}/${file.basename}|${file.basename}]]`;
+    }
+});
+
+ruleFunctions.push({
+    id:'pathFolderNotes',
+    description: 'Path (folder notes)',
+    source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+    type: ['text', 'tags', 'aliases','multitext'],
+    fx:function (app: App, file:TFile, tools:ScriptingTools){
+        let parts = file.path.split('/');
+        parts.pop();
+        if (parts[parts.length-1] === file.basename) parts.pop(); // remove parent folder if same name as the file
+        return parts.join('/');
+    }
+});
+
+ruleFunctions.push({
+  id:'fullPathFolderNotes',
+  description: 'Full Path (comply with "folder notes")',
+  source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+  type: ['text', 'tags', 'aliases'],
+  fx:function (app: App, file:TFile, tools:ScriptingTools){
+      let parts = file.path.split('/');
+      parts.pop(); // remove file name
+      if (parts[parts.length-1] === file.basename) parts.pop(); // remove parent folder if same name as the file
+      parts.push(file.basename); // add the file name back
+      return parts.join('/');
+  }
+});
+
+ruleFunctions.push({
+    id:'fullPathExtFolderNotes',
+    description: 'Full Path with Extension (comply with "folder notes")',
+    source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+    type: ['text', 'tags', 'aliases'],
+    fx:function (app: App, file:TFile, tools:ScriptingTools){
+        let parts = file.path.split('/');
+        parts.pop(); // remove file name
+        if (parts[parts.length-1] === file.basename) parts.pop(); // remove parent folder if same name as the file
+        parts.push(file.name); // add the file name back
         return parts.join('/');
     }
 });
@@ -305,10 +376,10 @@ ruleFunctions.push({
 });
 
 ruleFunctions.push({
-    id:'propertyValueAsLink',
-    description: 'Formats an Property as Link',
+    id:'getProperty',
+    description: 'Get a property',
     inputProperty: true,
-    source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name;\n  return result;\n}",
+    source: "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
     type: ['text', 'multitext', 'tags', 'aliases'],
     fx:function (app, file, tools:ScriptingTools, input?) { // do not change this line!
         const result = input;
