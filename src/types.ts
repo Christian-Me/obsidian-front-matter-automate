@@ -1,6 +1,6 @@
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.13";
+export const versionString = "0.0.14";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 
@@ -81,6 +81,7 @@ export interface FolderTagRuleDefinition {
     lowercaseTags: boolean;
     inputProperty: string;
     onlyModify: boolean;
+    useCustomCode: boolean;
 }
 
 export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
@@ -115,6 +116,7 @@ export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
     lowercaseTags: false,
     inputProperty: '',
     onlyModify: true,
+    useCustomCode: false,
 }
 
 export type PropertyTypeInfo = {

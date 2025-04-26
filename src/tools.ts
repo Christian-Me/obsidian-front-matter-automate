@@ -1,3 +1,4 @@
+import { App } from 'obsidian';
 import { FolderTagSettings } from './types'
 /**
  * Parse a JavaScript function, clean comments and define the function 
@@ -178,10 +179,14 @@ export function cleanCodeString(codeString: string): string {
   export class ScriptingTools {
     settings: FolderTagSettings | undefined;
     frontmatter: any;
+    app: App | undefined;
+    plugin : any;
 
-    constructor(settings?: FolderTagSettings | undefined, frontmatter?: any) {
-        this.settings = settings;
+    constructor(app?:App, plugin?:any, frontmatter?: any) {
+        this.app = app;
+        this.settings = plugin ? plugin.settings as FolderTagSettings : undefined;
         this.frontmatter = frontmatter;
+        this.plugin = plugin;
     }
     /**
      * Check if a string complies with ISO Standard

@@ -12,7 +12,7 @@ export default class FolderTagPlugin extends Plugin {
 
     async onload() {
         await this.loadSettings();
-        this.tools = new ScriptingTools(this.settings);
+        this.tools = new ScriptingTools(this.app, this);;
         let noticeMessage = `Front Matter Automate ${versionString}\n loading ...`;
         const loadingNotice = new Notice(noticeMessage,0)
 
@@ -41,7 +41,7 @@ export default class FolderTagPlugin extends Plugin {
             this.app.workspace.on('active-leaf-change', (leaf) => {
                 if (leaf?.view instanceof MarkdownView) {
                     const activeFile = this.app.workspace.getActiveFile();
-                    console.log(`closing file: `, activeFile?.path);
+                    // console.log(`closing file: `, activeFile?.path);
                     if (activeFile) this.updateFrontmatterParameters('active-leaf-change', activeFile, this.settings.rules);
                 }
             })
@@ -57,7 +57,7 @@ export default class FolderTagPlugin extends Plugin {
                         if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
                         if (cache.frontmatter)
                             frontmatter[rule.property] = executeRule(this.app, this.settings, file, cache.frontmatter[rule.property], rule, cache.frontmatter);
-                            console.log(frontmatter[rule.property]);
+                            //console.log(frontmatter[rule.property]);
                         })
                      },{'mtime':file.stat.mtime}); // do not change the modify time.
                 };
@@ -133,8 +133,8 @@ export default class FolderTagPlugin extends Plugin {
         }
         const currentPathTag = this.formatTagName(this.tools.getFoldersFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFoldersFromPath(oldPath))
-        if (oldPathTag) console.log(`update file: "${oldPathTag}" to "${currentPathTag}"`);
-        let content = await this.app.vault.read(file);
+        // if (oldPathTag) console.log(`update file: "${oldPathTag}" to "${currentPathTag}"`);
+        // let content = await this.app.vault.read(file);
         // const cache = this.app.metadataCache.getFileCache(file);
 
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {

@@ -41,7 +41,7 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
 
 export function executeRule (app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
   if (!rule.active) return returnResult;
-  const tools = new ScriptingTools(settings, frontMatter);
+  const tools = new ScriptingTools(app, settings, frontMatter);
   let fxResult:any;
   let oldResult:any;
   let oldFile:TFile | undefined = undefined;
@@ -57,32 +57,48 @@ export function executeRule (app, settings, currentFile: TFile, returnResult: an
       parent: currentFile.parent
     }
   }
-  if (rule.content === 'script') {
-    const ruleFunction = parseJSCode(rule.jsCode);
-    if (typeof ruleFunction !== 'function') return;
-    fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
-    if (oldFile) {
-      oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
-    }
-  } else {
-      const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
-      if (functionIndex!==-1){
-          //console.log(`execute rule for ${rule.property} ${rule.content} for file ${file.path}`);
-          if (ruleFunctions[functionIndex].inputProperty) {
-            fxResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, currentFile, tools, frontMatter[rule.inputProperty]), rule);
-          } else {
-            fxResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, currentFile, tools), rule);
-          }
-          //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
-          if (oldFile) {
-              if (ruleFunctions[functionIndex].inputProperty) {
-                oldResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, oldFile, tools, frontMatter[rule.inputProperty]), rule);
-              } else {
-                oldResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, oldFile, tools), rule);
-              }
-          }
+
+  try {
+    if (rule.content === 'script') {
+      const ruleFunction = parseJSCode(rule.jsCode);
+      if (typeof ruleFunction !== 'function') return;
+      fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
+      if (oldFile) {
+        oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
       }
+    } else {
+        const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
+        if (functionIndex!==-1){
+            const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctions[functionIndex].fx;
+            if (typeof ruleFunction !== 'function') {
+              console.error(`Could not parse custom function for ${rule.content}!`);
+              return;
+            }
+            //console.log(`execute rule for ${rule.property} ${rule.content} for file ${file.path}`);
+            if (ruleFunctions[functionIndex].inputProperty) {
+              fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools, frontMatter[rule.inputProperty]), rule);
+            } else {
+              fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
+            }
+            //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
+            if (oldFile) {
+                if (ruleFunctions[functionIndex].inputProperty) {
+                  oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools, frontMatter[rule.inputProperty]), rule);
+                } else {
+                  oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
+                }
+            }
+        } else {
+            console.error(`Rule function ${rule.content} not found!`);
+            return returnResult; // return the original value if the function is not found
+        }
+    }
   }
+  catch (error) {
+    console.error(`Error executing rule ${rule.property}|${rule.content} for file ${currentFile.path}: ${error}`);
+    return returnResult; // return the original value if there is an error
+  }
+
   if (rule.type === 'number' || rule.type === 'checkbox' || rule.type === 'date' || rule.type === 'datetime') {
       return fxResult;
   }
@@ -124,7 +140,7 @@ export function executeRule (app, settings, currentFile: TFile, returnResult: an
 }
 
 export function removeRule (app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter) {
-  const tools = new ScriptingTools(settings);
+  const tools = new ScriptingTools(app, settings, frontMatter);
   let fxResult:any;
   if (rule.content === 'script') {
       const ruleFunction = parseJSCode(rule.jsCode);
@@ -133,10 +149,15 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
   } else {
       const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
       if (functionIndex!==-1){
+          const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctions[functionIndex].fx;
+          if (typeof ruleFunction !== 'function') {
+            console.error(`Could not parse custom function for ${rule.content}!`);
+            return;
+          }
           if (ruleFunctions[functionIndex].inputProperty) {
-            fxResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, currentFile, tools, frontMatter[rule.inputProperty]), rule);
+            fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools, frontMatter[rule.inputProperty]), rule);
           } else {
-            fxResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, currentFile, tools), rule);
+            fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
           }
       }
   }
@@ -208,7 +229,7 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
       if (!file) return false;
       if (settings) {
         try {
-          console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
+          //console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
           if (settings.include.selectedFiles.length>0) { // there are files in the include files list
               result = filterFile(file, settings, 'include', 'files');
           }
@@ -228,7 +249,7 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
       }
       if(rule) {
         try {
-          console.log(`check file ${file.path} against rule`, rule.include, rule.exclude);
+          //console.log(`check file ${file.path} against rule`, rule.include, rule.exclude);
           if (rule.include.selectedFiles.length>0) { // there are files in the include files list
               result = filterFile(file, rule, 'include', 'files');
           }
@@ -396,6 +417,25 @@ ruleFunctions.push({
         }
         return result;
       }
+});
+
+ruleFunctions.push({
+    id:'folderFolderNotes',
+    description: 'Parent Folder (complies with "folder notes")',
+    source: "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}",
+    type: ['text', 'tags'],
+    fx:function (app, file, tools) { // do not change this line!
+      const parts = file.path.split('/');
+      let index = parts.length-2; // index of parent folder
+      if (parts[parts.length-2]===file.basename) {
+          index--; // folder note parent is the child
+      }
+      if (index >= 0) {
+        return parts[index]; // file in folder
+      } else {
+        return tools.app?.vault?.getName() || 'Vault'; // file in root = vault
+      }
+    }
 });
 
 ruleFunctions.push({

@@ -123,7 +123,6 @@ export class RulesTable extends PluginSettingTab {
         propertyDevDropdown.selectEl.setAttribute('style','width:35%');
         propertyDevDropdown.addOption("", "Select a content");
         for (let ruleFunction of ruleFunctions) {
-            console.log(rule.type);
             if (ruleFunction.type.contains(rule.type)) {
                 propertyDevDropdown.addOption(ruleFunction.id, ruleFunction.description);
             }
@@ -143,13 +142,15 @@ export class RulesTable extends PluginSettingTab {
                                 'Yes', 'No'
                             ).openAndGetValue();
                         if (shouldProceed) {
-                            rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source; // 
+                            rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                            rule.useCustomCode = false;
                         } else {
                             rule.buildInCode; // keep the existing code
                         }
                         await this.plugin.saveSettings();
                     } else {
                         rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                        rule.useCustomCode = false;
                         await this.plugin.saveSettings();
                     }
                 } else {
@@ -429,7 +430,7 @@ export class RulesTable extends PluginSettingTab {
         new Setting(optionEL)
             .setName('Script')
             .setDesc('edit the script for own modifications')
-            .addButton(button => button
+            .addButton(button => { button
                 .setButtonText('JS Editor')
                 .onClick(() => {
                     openCodeEditorModal(
@@ -443,14 +444,23 @@ export class RulesTable extends PluginSettingTab {
                             if (!result) return;
                             if (rule.content === 'script') {
                                 rule.jsCode = result.code;
+                                rule.useCustomCode = false;
                             } else {
                                 rule.buildInCode = result.code;
+                                rule.useCustomCode = true;
+                                button.setCta();
                             }
                             this.plugin.saveSettings();
+                            this.updatePreview(activeFile, rule, previewComponent.inputEl);
                         }
                     );
-                })
-            )
+                });
+                if (rule.useCustomCode) {
+                    button.setCta(); // Makes the button more prominent
+                } else {
+                    button.removeCta(); // Makes the button less prominent
+                }
+            });
     }
 
     renderSearchResults(searchContainerEl: HTMLElement, searchTerm: string, rowIndex: number) {

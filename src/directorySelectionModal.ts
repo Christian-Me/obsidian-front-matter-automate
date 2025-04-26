@@ -221,7 +221,7 @@ export class DirectorySelectionModal extends Modal {
         const cancelButton = buttonsEl.createEl('button', { text: 'Cancel' });
         cancelButton.ariaLabel = 'close and discard changes'; // Accessibility
         cancelButton.onclick = () => {
-            console.log("Cancel Clicked - Returning"); // Debug log
+            // console.log("Cancel Clicked - Returning"); // Debug log
             this.okCallback( null ); // Pass the final selection back
             this.close();
         };
@@ -626,7 +626,7 @@ export class DirectorySelectionModal extends Modal {
      * Combines building the tree data, rendering the DOM, and applying initial appearance.
      */
     private buildAndRenderTree() {
-        console.log('Building and rendering tree...');
+        // console.log('Building and rendering tree...');
         this.renderTree(); // Build data and render DOM elements
         this.updateTreeAppearance(); // Apply styles based on current mode/selection
     }
@@ -643,7 +643,7 @@ export class DirectorySelectionModal extends Modal {
             mode: this.currentMode,
             display: this.currentDisplay,
         };
-        console.log("OK Clicked - Returning Result:", result); // Debug log
+        // console.log("OK Clicked - Returning Result:", result); // Debug log
         this.okCallback(result); // Pass the final selection back
         const { contentEl } = this;
         contentEl.empty(); // Clear the modal's content

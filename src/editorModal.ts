@@ -72,7 +72,7 @@ export class codeEditorModal extends Modal {
         this.currentCode = initialCode; // Initialize current code to initial code
 
         this.plugin = plugin;
-        this.scriptingTools= new ScriptingTools(this.plugin.settings, this.frontmatter);
+        this.scriptingTools= new ScriptingTools(app, this.plugin, this.frontmatter);
         this.okCallback = okCallback;
 
         // Initialize current state from initial state for editing

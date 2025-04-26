@@ -395,9 +395,9 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "getProperty",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
-      "jsCode": "",
+      "content": "folderFolderNotes",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index];\n  } else {\n    return '/'; // root = vault\n  }\n}",
       "showContent": false,
       "exclude": {
         "selectedFolders": [],
@@ -405,7 +405,9 @@
         "mode": "exclude"
       },
       "include": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/Tiere"
+        ],
         "selectedFiles": [],
         "mode": "include"
       },
@@ -414,7 +416,8 @@
       "specialCharReplacement": "",
       "lowercaseTags": false,
       "inputProperty": "this a date",
-      "onlyModify": true
+      "onlyModify": false,
+      "value": "Affen"
     },
     {
       "id": "54218a08-e3ea-4b75-970f-70d1d2e252c0",
@@ -422,7 +425,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullpath",
-      "value": "Tiere/Säugetiere/Affen/Schimpanse",
+      "value": "",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -430,9 +433,9 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "fullPath",
+      "content": "path",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
-      "jsCode": "",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = 'wwww';\n  return result; // return you result.\n}",
       "showContent": false,
       "exclude": {
         "selectedFolders": [
@@ -455,45 +458,11 @@
       "specialCharReplacement": "",
       "lowercaseTags": false,
       "inputProperty": "",
-      "onlyModify": true
+      "onlyModify": true,
+      "useCustomCode": true
     }
   ],
-  "liveRules": [
-    {
-      "id": "a984e4ac-7be3-4847-bc66-821d2d6c8332",
-      "active": true,
-      "asLink": false,
-      "addContent": "overwrite",
-      "property": "#?:{}\"'",
-      "customProperty": "",
-      "type": "text",
-      "typeProperty": {
-        "name": "",
-        "type": "text",
-        "source": "registered"
-      },
-      "content": "getProperty",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
-      "jsCode": "",
-      "showContent": false,
-      "exclude": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "exclude"
-      },
-      "include": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "include"
-      },
-      "prefix": "",
-      "spaceReplacement": "",
-      "specialCharReplacement": "",
-      "lowercaseTags": false,
-      "inputProperty": "this a date",
-      "onlyModify": true
-    }
-  ],
+  "liveRules": [],
   "useTextArea": false,
   "exclude": {
     "selectedFolders": [],
@@ -501,7 +470,9 @@
     "mode": "exclude"
   },
   "include": {
-    "selectedFolders": [],
+    "selectedFolders": [
+      "/"
+    ],
     "selectedFiles": [],
     "mode": "include"
   },
