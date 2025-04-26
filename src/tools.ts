@@ -177,9 +177,11 @@ export function cleanCodeString(codeString: string): string {
 
   export class ScriptingTools {
     settings: FolderTagSettings | undefined;
+    frontmatter: any;
 
-    constructor(settings?: FolderTagSettings | undefined) {
+    constructor(settings?: FolderTagSettings | undefined, frontmatter?: any) {
         this.settings = settings;
+        this.frontmatter = frontmatter;
     }
     /**
      * Check if a string complies with ISO Standard

@@ -18,7 +18,7 @@
   border: 2px solid var(--background-modifier-border);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  width: 30%;
+  width: 20%;
   background-color: var(--metadata-divider-color);
 }
 
@@ -39,7 +39,20 @@
   border: 2px solid var(--background-modifier-border);
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  width: 20px;
+  width: 10px;
+  background-color: var(--metadata-divider-color);
+}
+.property-icons-container {
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-right: 8px;
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-bottom: 1px;
+  border: 2px solid var(--background-modifier-border);
+  border-radius: 5px;
+  height: 30px;
+  align-items: center;
   background-color: var(--metadata-divider-color);
 }
 .property-options-container {
@@ -64,6 +77,14 @@
   border-radius: var(--radius-m);
   box-shadow: var(--shadow-l);
   margin-top: 2px;
+}
+
+.property-search-is-active {
+  background-color: var(--background-modifier-accent); /* Highlight background */
+  color: var(--text-accent); /* Highlight text color */
+  font-weight: bold; /* Make the text bold */
+  border-radius: var(--radius-s); /* Add rounded corners */
+  padding: 5px; /* Add some padding for better visibility */
 }
 
 .property-value-container input,
@@ -92,9 +113,15 @@
   color: var(--text-accent-hover); 
 }
 
+.property-value-textComponent {
+  background-color: transparent !important;
+  border: none;
+  box-shadow: none !important;
+}
+
 .property-icon-button {
   padding: 10px;
-  background-color: transparent;
+  background-color: transparent !important;
   border: none;
   box-shadow: none !important;
   color: var(--text-muted);
@@ -127,10 +154,16 @@
 
 /* styles for editor Modal */
 .codeEditorModal .codeEditor-container{
-  /* Container for the scrollable tree */
+  /* Container for the editor */
   margin-bottom: 1em;
-  background-color: var(--background-secondary); /* Use Obsidian's secondary background */
-  border-radius: var(--radius-m); /* Use Obsidian's medium radius */
+  border: none;
+}
+
+.codeEditor-options {
+  padding-top: 5px;
+  display: flex;
+  vertical-align: middle;
+  align-content: flex-start;
 }
 
 /* styles für directory tree */
@@ -265,8 +298,6 @@
 
 .CodeMirror {
     /* Set height, width, borders, and global font properties here */
-    width: 700px;
-    height: 300px;
     font-family: monospace;
     direction: ltr;
     text-align: start;

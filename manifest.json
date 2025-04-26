@@ -1,7 +1,7 @@
 {
     "id": "front-matter-automate",
     "name": "Front Matter Automate",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "minAppVersion": "0.15.0",
     "description": "Automatically adds and updates tags based on folder paths",
     "author": "Christian Meinert",

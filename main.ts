@@ -1,4 +1,4 @@
-import { App, Plugin, MarkdownView, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
+import { App, Editor, Plugin, MarkdownView, MarkdownPostProcessor, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
 import { executeRule, removeRule, ruleFunctions } from './src/rules';
@@ -54,6 +54,7 @@ export default class FolderTagPlugin extends Plugin {
                     this.app.fileManager.processFrontMatter(file, (frontmatter) => {
                     // apply all live rules to frontmatter
                     this.settings.liveRules.forEach(rule => {
+                        if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
                         if (cache.frontmatter)
                             frontmatter[rule.property] = executeRule(this.app, this.settings, file, cache.frontmatter[rule.property], rule, cache.frontmatter);
                             console.log(frontmatter[rule.property]);
@@ -188,6 +189,7 @@ export default class FolderTagPlugin extends Plugin {
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
            // apply all rules to frontmatter
             rules.forEach(rule => {
+                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
                 frontmatter[rule.property] = executeRule(this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
             })
         },{'mtime':file.stat.mtime}); // do not change the modify time.

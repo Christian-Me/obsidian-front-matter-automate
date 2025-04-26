@@ -158,7 +158,6 @@ export class FolderTagSettingTab extends PluginSettingTab {
     }
 
     addRule(divEl: HTMLDivElement, ruleUUID = '') {
-        let cmEditor: CodeMirror.Editor | null = null;
         if (ruleUUID === ''){
             ruleUUID = randomUUID().toString();
             this.plugin.settings.rules.push(Object.assign({}, DEFAULT_RULE_DEFINITION, {
@@ -180,105 +179,6 @@ export class FolderTagSettingTab extends PluginSettingTab {
         //ruleOptionsDiv.style.width= '700px'
         ruleOptionsDiv.style.height= '350px;';
         ruleOptionsDiv.style.alignItems= 'flex-end';
-        if (this.plugin.settings.useTextArea) {
-            const ruleOptionsSettings = new Setting(ruleOptionsDiv)
-                .addTextArea(textArea => {
-                    textArea.setPlaceholder('ender valid JS Code');
-                    textArea.inputEl.setAttribute('style', `height:190px; width:80%;`);
-                    textArea.onChange(async (value) => {
-                        if (functionTestButton) functionTestButton.buttonEl.addClass('mod-warning');
-                        rule.jsCode = value;
-                        await this.plugin.saveSettings();
-                    })
-                })
-        } else {
-            // Initialize CodeMirror 5
-            let jsCode = rule.jsCode;
-            if (rule.content !== 'script') {
-                if (rule.buildInCode === '') {
-                    rule.buildInCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
-                }
-                jsCode = rule.buildInCode;
-            }
-            cmEditor = (window as any).CodeMirror(ruleOptionsDiv, {
-                value: jsCode || "function (app, file, tools) { // do not change this line!\n\n  return result; // return you result.\n}",
-                mode: "javascript",
-                lineNumbers: true,
-                // theme: "obsidian",
-                indentUnit: 2,  
-                lineWrapping: false,
-                readOnly: false,  
-            });
-            if (cmEditor) {
-                cmEditor.on('change', (cmEditor: CodeMirror.Editor) => {
-                    if (functionTestButton) functionTestButton.buttonEl.addClass('mod-warning');
-                });
-                cmEditor.on('blur', (cmEditor: CodeMirror.Editor) => {
-                    if (rule.content === 'script') {
-                        rule.jsCode = cmEditor.getValue();
-                    } else {
-                        rule.buildInCode = cmEditor.getValue();
-                    }
-                    this.plugin.saveSettings();
-                });
-            };
-    
-            // Add a button to save the code
-            new Setting(ruleOptionsDiv)
-                .addButton((button) => {
-                    functionTestButton = button;
-                    button
-                    .setWarning()
-                    .setButtonText("Save & Test")
-                    .onClick(async () => {
-                        if (cmEditor) {
-                            let jsCode = '';
-                            if (rule.content === 'script') {
-                                rule.jsCode = cmEditor.getValue();
-                                jsCode = rule.jsCode;
-                            } else {
-                                rule.buildInCode = cmEditor.getValue();
-                                jsCode = rule.buildInCode;
-                            }
-
-                            await this.plugin.saveSettings();
-                            let userFunction =  parseJSCode(jsCode);
-                            if (typeof userFunction === 'string') {
-                                let errorHint = "See console for details!";
-                                if (userFunction.contains('Unexpected token')) {
-                                    errorHint = "Did you missed a semicolon (;)?";
-                                }
-                                if (functionResultTextComponent) functionResultTextComponent.setValue(`Syntax error: ${userFunction}! ${errorHint}`);
-                            } else {
-                                if (userFunction) {
-                                    try {
-                                        const files = this.app.vault.getMarkdownFiles();
-                                        const result = userFunction(this.app, files[8], this.scriptingTools);
-                                        if (functionResultTextComponent) functionResultTextComponent.setValue(result.toString());
-                                        button.buttonEl.removeClass('mod-warning');
-                                    }
-                                    catch (e) {
-                                        if (functionResultTextComponent) {
-                                            functionResultTextComponent.setValue(`Syntax error: ${e.message}! See console for details!`);
-                                        }
-                                        console.error("Syntax error. ", e, jsCode, userFunction);
-                                    }
-                                } else {
-                                    console.error("syntax error");
-                                }
-                            }
-                        }
-                    });
-                })
-                .addText((text) => {
-                    functionResultTextComponent = text;
-                    text
-                    .setPlaceholder('function result')
-                    .setDisabled(true)
-                    functionResultTextComponent.inputEl.style.width = '600px';
-
-                }) 
-        }
 
         function showJsFunctionButton(ruleId:string) {
             const showCodeButton:boolean = 
@@ -361,15 +261,15 @@ export class FolderTagSettingTab extends PluginSettingTab {
                                 } else {
                                     jsCode = rule.buildInCode; // keep the existing code
                                 }
-                                cmEditor?.setValue(jsCode);
+                                //cmEditor?.setValue(jsCode);
                                 //await this.plugin.saveSettings();
                             } else {
                                 jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
-                                cmEditor?.setValue(jsCode);
+                                //cmEditor?.setValue(jsCode);
                                 //await this.plugin.saveSettings();
                             }
                         } else {
-                            cmEditor?.setValue(rule.jsCode!=='' ? rule.jsCode : ruleFunctions[0].source);
+                            //cmEditor?.setValue(rule.jsCode!=='' ? rule.jsCode : ruleFunctions[0].source);
                         }
                         rule.content = value;
                         //ruleOptionsDiv.style.display = `${(rule.content === 'script') ? 'flex' : 'none'}`;

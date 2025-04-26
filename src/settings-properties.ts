@@ -25,9 +25,35 @@ export class RulesTable extends PluginSettingTab {
         this.settingsParameter = settingsParameter;
     }
 
-    // Funktion zum Abrufen und Speichern der bekannten Properties (async)
+    /**
+     * * Fetches custom property information from all markdown files in the vault.
+     *
+     * @return {*} 
+     */
+    fetchCustomPropertyInfos() {
+        const propertyInfos: Record<string, PropertyInfo> = {};
+
+        const files = this.app.vault.getMarkdownFiles(); // Retrieve all markdown files
+        files.forEach(file => {
+            const metadata = this.app.metadataCache.getFileCache(file);
+            if (metadata?.frontmatter) {
+                Object.keys(metadata.frontmatter).forEach(key => {
+                    if (!propertyInfos[key]) {
+                        propertyInfos[key] = { name: key, type: 'text' }; // Default type as 'text'
+                    }
+                });
+            }
+        });
+
+        return propertyInfos;
+    }
+
     async fetchKnownProperties() {
-        this.knownProperties = await this.app.metadataCache.getAllPropertyInfos();
+        if (typeof this.app.metadataCache.getAllPropertyInfos === 'function') {
+            this.knownProperties = this.app.metadataCache.getAllPropertyInfos();
+        } else {
+            this.knownProperties = this.fetchCustomPropertyInfos();
+        }
         this.knownProperties = Object.fromEntries(
             Object.entries(this.knownProperties).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
         );
@@ -39,39 +65,32 @@ export class RulesTable extends PluginSettingTab {
         
         const activeFile = this.app.workspace.getActiveFile();
 
-        // Verwende createDiv statt Setting für volle Layout-Kontrolle und kompakteres Aussehen
-        const rowEl = containerEl.createDiv({ cls: 'property-setting-row setting-item' }); // Füge 'setting-item' für Standard-Styling hinzu
-        const controlEl = rowEl.createDiv({ cls: 'setting-item-control' }); // Container für alle Controls
+        const rowEl = containerEl.createDiv({ cls: 'property-setting-row setting-item' });
+        const controlEl = rowEl.createDiv({ cls: 'setting-item-control' }); 
         controlEl.style.gap = '0px';
-        // --- Linker Teil: Icon & Durchsuchbare Eigenschaftsauswahl ---
         const leftContainer = controlEl.createDiv({ cls: 'property-left-container' });
-        const iconEl = leftContainer.createSpan({ cls: 'property-icon setting-item-icon' }); // Standard-Icon-Klasse
+        const iconEl = leftContainer.createSpan({ cls: 'property-icon setting-item-icon' }); 
         setIcon(iconEl, 'hash'); // Standard-Icon
 
-        // Container für das Suchfeld und die Ergebnisliste
+
         const searchContainer = leftContainer.createDiv({ cls: 'property-search-container' });
 
-        // Textfeld für die Suche/Anzeige des aktuellen Namens
         const nameInput = new TextComponent(searchContainer)
             .setPlaceholder('Select property...')
             .setValue(rule.property || '')
             .onChange(async (value) => {
-                // Direkte Änderung hier nicht speichern, Auswahl erfolgt über Ergebnisliste
                 this.renderSearchResults(searchContainer, value, index);
             });
 
-        // Event Listener für Fokus und Input, um Ergebnisse anzuzeigen/filtern
         nameInput.inputEl.addEventListener('focus', () => {
             this.renderSearchResults(searchContainer, nameInput.getValue(), index);
         });
         nameInput.inputEl.addEventListener('input', () => {
             this.renderSearchResults(searchContainer, nameInput.getValue(), index);
         });
-        // Schließe die Ergebnisliste bei Klick außerhalb (vereinfacht)
+
          nameInput.inputEl.addEventListener('blur', (event) => {
-             // Kleine Verzögerung, damit Klick auf Ergebnisliste noch funktioniert
              setTimeout(() => {
-                // Prüfen ob das neue Fokus-Element Teil der Ergebnisliste ist
                  const relatedTarget = event.relatedTarget as Node;
                  const resultsEl = searchContainer.querySelector('.property-search-results');
                  if (!resultsEl || !resultsEl.contains(relatedTarget)) {
@@ -80,16 +99,13 @@ export class RulesTable extends PluginSettingTab {
              }, 100);
          });
 
-
-        // Setze initiales Icon basierend auf gespeichertem Namen
         const currentPropertyInfo = this.knownProperties[rule.property];
         if (currentPropertyInfo) {
-            this.updatePropertyIcon(iconEl, currentPropertyInfo.type);
+            updatePropertyIcon(iconEl, currentPropertyInfo.type);
         } else if (rule.property) {
-            setIcon(iconEl, 'alert-circle'); // Warn-Icon, falls Name ungültig
+            setIcon(iconEl, 'alert-circle'); 
         }
 
-        // --- Mittlerer Teil: Werte-Eingabefeld ---
         const middleContainer = controlEl.createDiv({ cls: 'property-middle-container' });
         const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
         if (activeFile) {
@@ -100,7 +116,7 @@ export class RulesTable extends PluginSettingTab {
         let previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
 
         const propertyDevDropdown =  new DropdownComponent(middleContainer);
-        propertyDevDropdown.selectEl.setAttribute('style','width:50%');
+        propertyDevDropdown.selectEl.setAttribute('style','width:35%');
         propertyDevDropdown.addOption("", "Select a content");
         for (let ruleFunction of ruleFunctions) {
             console.log(rule.type);
@@ -108,10 +124,10 @@ export class RulesTable extends PluginSettingTab {
                 propertyDevDropdown.addOption(ruleFunction.id, ruleFunction.description);
             }
         }
-        propertyDevDropdown.addOption("script", "JavaScript script");
+        propertyDevDropdown.addOption("script", "JavaScript function (advanced)");
         propertyDevDropdown.setValue(rule.content);
         propertyDevDropdown.onChange(async (value) => {
-            let jsCode = '';
+
             if (value !== '') {
                 if (value !== 'script') {
                     let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
@@ -123,15 +139,13 @@ export class RulesTable extends PluginSettingTab {
                                 'Yes', 'No'
                             ).openAndGetValue();
                         if (shouldProceed) {
-                            jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source; // 
+                            rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source; // 
                         } else {
-                            jsCode = rule.buildInCode; // keep the existing code
+                            rule.buildInCode; // keep the existing code
                         }
-                        //cmEditor?.setValue(jsCode);
                         await this.plugin.saveSettings();
                     } else {
-                        jsCode = rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
-                        //cmEditor?.setValue(jsCode);
+                        rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
                         await this.plugin.saveSettings();
                     }
                 } else {
@@ -144,11 +158,10 @@ export class RulesTable extends PluginSettingTab {
                 this.updatePreview(activeFile, rule, previewComponent.inputEl);
             }
         });
-        //ruleOptionsDiv.style.display = `${(rule.content === 'script') && (rule.showContent) ? 'flex' : 'none'}`;
 
         new ButtonComponent(middleContainer)
         .setIcon('gear')
-        .setTooltip('settings')
+        .setTooltip('open settings')
         .setClass('property-icon-button')
         .onClick(async () => {
             let settingsContainers = containerEl.getElementsByClassName('property-options-container');
@@ -177,7 +190,7 @@ export class RulesTable extends PluginSettingTab {
 
         leftContainer.style.display = 'flex';
         leftContainer.style.alignItems = 'center';
-        leftContainer.style.minWidth = '200px'; 
+        leftContainer.style.minWidth = '150px'; 
         iconEl.style.marginRight = '8px';
 
         searchContainer.style.position = 'relative'; 
@@ -219,8 +232,18 @@ export class RulesTable extends PluginSettingTab {
                 })
             );
 
-        if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+        new Setting(optionEL)
+        .setName('Modify only')
+        .setDesc('Only modify existing properties')
+        .addToggle(toggle => toggle
+            .setValue(rule.onlyModify)
+            .onChange(async (value) => {
+                rule.onlyModify = value;
+                await this.plugin.saveSettings();
+                this.updatePreview(activeFile, rule, previewComponent.inputEl);
+            }));
 
+        if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
             const ruleFunction = ruleFunctions.find(item => item.id === rule.content)
             if (ruleFunction && ruleFunction.inputProperty !== undefined) {
                 let inputPropertiesDropdown;
@@ -398,11 +421,18 @@ export class RulesTable extends PluginSettingTab {
                 .onClick(() => {
                     openCodeEditorModal(
                         this.app,
-                        rule.jsCode,
+                        this.plugin,
+                        rule.content === 'script' ? rule.jsCode : rule.buildInCode,
                         rule.typeProperty?.type || 'text',
+                        activeFile,
+                        activeFile ? this.app.metadataCache.getFileCache(activeFile)?.frontmatter || {} : {},
                         (result: codeEditorModalResult | null) => {
                             if (!result) return;
-                            rule.jsCode = result.code;
+                            if (rule.content === 'script') {
+                                rule.jsCode = result.code;
+                            } else {
+                                rule.buildInCode = result.code;
+                            }
                             this.plugin.saveSettings();
                         }
                     );
@@ -420,34 +450,70 @@ export class RulesTable extends PluginSettingTab {
             return;
         }
         if (filteredProperties.length === 0 && !searchTerm) {
-             return;
+            return;
         }
-
 
         const resultsEl = searchContainerEl.createDiv({ cls: 'property-search-results menu' });
         resultsEl.style.position = 'absolute';
         resultsEl.style.top = '100%';
         resultsEl.style.left = '0';
-        resultsEl.style.width = 'calc(100% + 20px)';
+        resultsEl.style.width = 'calc(100% + 100px)';
         resultsEl.style.zIndex = '10';
         resultsEl.style.maxHeight = '200px';
         resultsEl.style.overflowY = 'auto';
 
-        filteredProperties.forEach(([name, info]) => {
-            const itemEl = resultsEl.createDiv({ cls: 'menu-item' });
-            const itemIcon = itemEl.createSpan({ cls: 'menu-item-icon' });
-            this.updatePropertyIcon(itemIcon, info.type);
-            itemEl.createSpan({ text: name });
+        let activeIndex = -1;
 
-            itemEl.addEventListener('mousedown', async (e) => {
-                e.preventDefault(); 
+        const updateActiveItem = (newIndex: number) => {
+            const items = resultsEl.querySelectorAll('.menu-item');
+            items.forEach((item, index) => {
+                if (index === newIndex) {
+                    item.addClass('property-search-is-active');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.removeClass('property-search-is-active');
+                }
+            });
+            activeIndex = newIndex;
+        };
+
+        const selectActiveItem = async () => {
+            if (activeIndex >= 0 && activeIndex < filteredProperties.length) {
+                const [name, info] = filteredProperties[activeIndex];
                 this.plugin.settings[this.settingsParameter][rowIndex].property = name;
                 this.plugin.settings[this.settingsParameter][rowIndex].type = info.type;
                 this.plugin.settings[this.settingsParameter][rowIndex].value = undefined;
                 await this.plugin.saveSettings();
                 this.clearSearchResults(searchContainerEl);
-                this.display(); // Neu rendern
+                this.display(); // Re-render
+            }
+        };
+
+        filteredProperties.forEach(([name, info], index) => {
+            const itemEl = resultsEl.createDiv({ cls: 'menu-item' });
+            const itemIcon = itemEl.createSpan({ cls: 'menu-item-icon' });
+            updatePropertyIcon(itemIcon, info.type);
+            itemEl.createSpan({ text: name });
+
+            itemEl.addEventListener('mousedown', async (e) => {
+                e.preventDefault();
+                activeIndex = index;
+                await selectActiveItem();
             });
+        });
+
+        searchContainerEl.addEventListener('keydown', async (e) => {
+            const items = resultsEl.querySelectorAll('.menu-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                updateActiveItem((activeIndex + 1) % items.length);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                updateActiveItem((activeIndex - 1 + items.length) % items.length);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                await selectActiveItem();
+            }
         });
     }
 
@@ -473,7 +539,7 @@ export class RulesTable extends PluginSettingTab {
         switch (type) {
             case 'number':
                 returnComponent = new TextComponent(containerEl)
-                    .setPlaceholder('Zahlenwert')
+                    .setPlaceholder('Numeric Value')
                     .setValue(currentValue !== undefined && currentValue !== null ? String(currentValue) : '')
                     .onChange(async (value) => {
                         const numValue = value === '' ? undefined : parseFloat(value);
@@ -483,10 +549,9 @@ export class RulesTable extends PluginSettingTab {
                     returnComponent.inputEl.type = 'number';
                 break;
             case 'checkbox':
-                const checkboxEl = containerEl.createDiv({ cls: 'tri-state-checkbox clickable-icon' });
-                returnComponent = checkboxEl;
-                checkboxEl.setAttribute('aria-label', 'Checkbox Status ändern');
-                checkboxEl.setAttribute('role', 'checkbox');
+                returnComponent = containerEl.createDiv({ cls: 'tri-state-checkbox clickable-icon' });
+                returnComponent.setAttribute('aria-label', 'Checkbox change state');
+                returnComponent.setAttribute('role', 'checkbox');
 
                 const updateCheckboxVisual = (state: boolean | undefined) => {
                     let iconName: string;
@@ -501,15 +566,15 @@ export class RulesTable extends PluginSettingTab {
                         iconName = 'minus-square';
                         ariaState = 'mixed';
                     }
-                    setIcon(checkboxEl, iconName);
-                    checkboxEl.setAttribute('aria-checked', ariaState);
-                    checkboxEl.dataset.state = String(state);
+                    setIcon(returnComponent, iconName);
+                    returnComponent.setAttribute('aria-checked', ariaState);
+                    returnComponent.dataset.state = String(state);
                 };
 
                 updateCheckboxVisual(currentValue);
 
-                checkboxEl.addEventListener('click', async () => {
-                    let currentState = checkboxEl.dataset.state;
+                returnComponent.addEventListener('click', async () => {
+                    let currentState = returnComponent.dataset.state;
                     let nextState: boolean | undefined;
 
                     if (currentState === 'false') {
@@ -569,25 +634,13 @@ export class RulesTable extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     });
                 break;
+            }
+        if (type !== 'checkbox') {
+            returnComponent.inputEl.style.backgroundColor = 'transparent'; // make it invisible
+            returnComponent.inputEl.style.width = '100%';
+            returnComponent.inputEl.style.border = 'none';
         }
         return returnComponent;
-    }
-
-    updatePropertyIcon(iconEl: HTMLElement, type: string | undefined) {
-        let iconName = 'hash';
-        switch (type) {
-            case 'text': iconName = 'align-left'; break;
-            case 'number': iconName = 'binary'; break;
-            case 'multitext': iconName = 'list'; break;
-            case 'date': iconName = 'calendar'; break;
-            case 'datetime': iconName = 'clock'; break;
-            case 'checkbox': iconName = 'check-square'; break;
-            case 'tags': iconName = 'tags'; break;
-            case 'aliases': iconName = 'forward'; break;
-     
-            default: iconName = 'help-circle';
-        }
-        setIcon(iconEl, iconName);
     }
 
     async updatePreview(activeFile, rule, componentEl) {
@@ -639,4 +692,22 @@ export class RulesTable extends PluginSettingTab {
             })
             .buttonEl.className='property-plus-button';
     }
+}
+
+
+export function updatePropertyIcon(iconEl: HTMLElement, type: ObsidianPropertyTypes | undefined) {
+    let iconName = 'hash';
+    switch (type) {
+        case 'text': iconName = 'align-left'; break;
+        case 'number': iconName = 'binary'; break;
+        case 'multitext': iconName = 'list'; break;
+        case 'date': iconName = 'calendar'; break;
+        case 'datetime': iconName = 'clock'; break;
+        case 'checkbox': iconName = 'check-square'; break;
+        case 'tags': iconName = 'tags'; break;
+        case 'aliases': iconName = 'forward'; break;
+ 
+        default: iconName = 'help-circle';
+    }
+    setIcon(iconEl, iconName);
 }

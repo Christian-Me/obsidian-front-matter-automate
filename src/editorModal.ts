@@ -1,5 +1,13 @@
-import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon } from 'obsidian'; // Added setIcon
+
+import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon,ButtonComponent, TextComponent, Constructor } from 'obsidian'; // Added setIcon
+//import 'codemirror/mode/javascript/javascript';
 import { ObsidianPropertyTypes } from './types';
+import { parseJSCode, ScriptingTools } from './tools';
+import { updatePropertyIcon } from './settings-properties';
+//import { chdir } from 'node:process';
+//import { EditorView } from '@codemirror/view';
+//import { EditorState } from '@codemirror/state';
+
 
 // Define the result structure returned by the modal
 export interface codeEditorModalResult {
@@ -15,35 +23,56 @@ export class codeEditorModal extends Modal {
     // Initial state passed to the modal (stored for reset functionality)
     private readonly initialCode: string;
     private readonly okCallback: (result: codeEditorModalResult | null) => void;
+    private scriptingTools: ScriptingTools;
+    private plugin: any;
 
     // Current state being modified within the modal
     private currentCode: string;
     private expectedType: ObsidianPropertyTypes;
     private currentType: ObsidianPropertyTypes;
     private checkedSuccessfully : boolean;
+    private useTextArea : boolean;
+    private activeFile: TFile | TFolder | null
+    private frontmatter: any; // Frontmatter data for the active file
 
     // UI Elements
-    private editorRootElement: HTMLElement; // Container for the tree view
+    private editorRootElement: HTMLElement;
+    private functionTestButton: ButtonComponent;
+    private functionResultTextComponent: TextComponent | undefined;
+    private cmEditor: CodeMirror.Editor | null;
 
     /**
      * Creates an instance of the DirectorySelectionModal.
      * @param app - The Obsidian App instance.
-     * @param initialCode - 
-     * @param initialFiles - Array of initially selected file paths.
-     * @param initialMode - The initial selection mode ('include' or 'exclude').
+     * @param plugin - The plugin instance.
+     * @param initialCode - String with the initial code.
+     * @param expectedType - Expected return type.
+     * @param activeFile - The currently active file or folder.
+     * @param frontmatter - Frontmatter data for the active file.
      * @param okCallback - Function to call when the user clicks "OK". Receives the selection result.
      */
     constructor(
         app: App,
+        plugin: any,
         initialCode: string,
         expectedType: ObsidianPropertyTypes,
+        activeFile: TFile | TFolder | null,
+        frontmatter: any,   
         okCallback: (result: codeEditorModalResult | null) => void
     ) {
         super(app);
         // Store initial state for reset
         this.initialCode = initialCode;
         this.expectedType = expectedType;
+        this.useTextArea = false;
+        this.checkedSuccessfully = false;
+        this.activeFile = activeFile;
+        this.frontmatter = frontmatter; // Store frontmatter data
+        this.currentType = expectedType; // Initialize current type to expected type
+        this.currentCode = initialCode; // Initialize current code to initial code
 
+        this.plugin = plugin;
+        this.scriptingTools= new ScriptingTools(this.plugin.settings, this.frontmatter);
         this.okCallback = okCallback;
 
         // Initialize current state from initial state for editing
@@ -55,6 +84,8 @@ export class codeEditorModal extends Modal {
      */
     private resetSelectionToInitial(): void {
         this.currentCode = this.initialCode;
+        this.cmEditor?.setValue(this.currentCode); // Set the initial code in the editor
+        if (this.functionResultTextComponent) this.functionResultTextComponent.setValue(''); // Clear the result text component
     }
 
     /**
@@ -62,34 +93,189 @@ export class codeEditorModal extends Modal {
      */
     private resetSelectionToEmpty(): void {
         this.currentCode = "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result;\n}";
+        this.cmEditor?.setValue(this.currentCode); // Set the initial code in the editor
+        if (this.functionResultTextComponent) this.functionResultTextComponent.setValue(''); // Clear the result text component 
     }
 
+    loadCodeMirrorMode(mode: string) {
+        try {
+          // Verwende require (könnte in zukünftigen Versionen weniger zuverlässig sein)
+          require(`obsidian/lib/codemirror/mode/${mode}/${mode}.js`);
+          console.log(`CodeMirror mode '${mode}' loaded successfully (using require).`);
+        } catch (error) {
+          console.error(`Failed to load CodeMirror mode '${mode}' (using require):`, error);
+        }
+    }
     /**
      * Called when the modal is opened. Builds the UI.
      */
-    onOpen() {
+    async onOpen() {
         const { contentEl } = this;
-        contentEl.empty(); // Clear previous content
+        if (contentEl.parentElement) contentEl.parentElement.style.width = '900px';
+        contentEl.empty(); // Clear previous 
         contentEl.addClass('codeEditor-modal'); 
 
         // --- Modal Title ---
-        contentEl.createEl('h2', { text: 'JavaScript Editor' }); 
-        contentEl.createEl('h4', { text: `Make sure your code results ${this.expectedType}` }); 
+        contentEl.createEl('h2', { text: 'JavaScript Editor' });    
+        contentEl.createEl('body', { text: `Make sure your code results: ${this.expectedType}` }); 
 
         // --- Tree Container ---
         this.editorRootElement = contentEl.createDiv({ cls: 'codeEditor-container' });
         // Basic styling for the scrollable tree area
-        this.editorRootElement.style.maxHeight = '600px';
+        // this.editorRootElement.style.width = '600px';
+        this.editorRootElement.style.height = '600px';
         this.editorRootElement.style.overflowY = 'auto';
-        this.editorRootElement.style.border = '1px solid var(--background-modifier-border)';
+        //this.editorRootElement.style.border = '1px solid var(--background-modifier-border)';
         this.editorRootElement.style.padding = '10px';
         this.editorRootElement.style.marginTop = '10px';
         this.editorRootElement.style.marginBottom = '10px';
 
+        this.cmEditor = null;
+
+        const ruleOptionsDiv = contentEl.createDiv({ cls: "codeEditor-options" });
+
+        if (this.useTextArea) {
+            const ruleOptionsSettings = new Setting(this.editorRootElement)
+                .addTextArea(textArea => {
+                    textArea.setPlaceholder('ender valid JS Code');
+                    textArea.inputEl.setAttribute('style', `height:190px; width:80%;`);
+                    textArea.onChange(async (value) => {
+                        if (this.functionTestButton) this.functionTestButton.buttonEl.addClass('mod-warning');
+                        this.currentCode = value;
+                    })
+                })
+        } else {
+            /*
+            let view = new EditorView({
+                state: EditorState.create({
+                  doc: this.currentCode,  // or some string contents
+                  extensions: [
+                    EditorView.lineWrapping, // Add your extentions here
+                    javascript(),
+                    // sceneGutter, // or leave empty for basic editor
+                  ],
+                }),
+                parent: this.editorRootElement
+              });
+            */
+            // Initialize CodeMirror 5
+            // CodeMirror-Bibliothek abrufen
+            const CodeMirror = (window as any).CodeMirror;
+            // Sicherstellen, dass CodeMirror geladen ist
+            if (CodeMirror) {
+                // JavaScript-Modus laden (falls noch nicht geladen)
+                if (!CodeMirror.modes.javascript) {
+                    await this.loadCodeMirrorMode('javascript');
+                    console.log('javaScript support loaded')
+                }
+            } 
+            let jsCode = this.currentCode;
+            this.cmEditor = CodeMirror(this.editorRootElement, {
+                value: jsCode || "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
+                mode: "javascript",
+                lineNumbers: true,
+                theme: "obsidian",
+                indentUnit: 4,  
+                lineWrapping: false,
+                readOnly: false,
+                outerHeight: '600px',
+            });
+            
+            if (this.cmEditor) {
+                this.cmEditor.on('change', (cmEditor: CodeMirror.Editor) => {
+                    if (this.functionTestButton) this.functionTestButton.buttonEl.addClass('mod-warning');
+                });
+                this.cmEditor.on('blur', (cmEditor: CodeMirror.Editor) => {
+                    this.currentCode= cmEditor.getValue();
+                });
+            };
+           
+            // Add a button to save the code
+            new Setting(ruleOptionsDiv)
+                .addButton((button) => {
+                    this.functionTestButton = button;
+                    button
+                    .setWarning()
+                    .setButtonText("Run Code")
+                    .setTooltip("Run the code and check for errors")
+                    .onClick(async () => {
+                        if (this.cmEditor) {
+                            let jsCode = this.cmEditor.getValue();
+
+                            let userFunction =  parseJSCode(jsCode);
+                            if (typeof userFunction === 'string') {
+                                let errorHint = "See console for details!";
+                                if (userFunction.contains('Unexpected token')) {
+                                    errorHint = "Did you missed a semicolon (;)?";
+                                }
+                                if (this.functionResultTextComponent) this.functionResultTextComponent.setValue(`Syntax error: ${userFunction}! ${errorHint}`);
+                                this.checkedSuccessfully = false;
+                                button.buttonEl.addClass('mod-warning');
+                            } else {
+                                if (userFunction) {
+                                    try {
+                                        const result = userFunction(this.app, this.activeFile, this.scriptingTools)
+                                        if (this.functionResultTextComponent) this.functionResultTextComponent.setValue(`'${result.toString()}' (${typeof result})`);
+                                        this.updateTypeIcons(result, typesContainer, this.expectedType, this.currentType, this.plugin.settings);
+                                        button.buttonEl.removeClass('mod-warning');
+                                        this.checkedSuccessfully = true;
+                                    }
+                                    catch (e) {
+                                        if (this.functionResultTextComponent) {
+                                            this.functionResultTextComponent.setValue(`Syntax error: ${e.message}! See console for details!`);
+                                        }
+                                        console.error("Syntax error. ", e, jsCode, userFunction);
+                                        this.checkedSuccessfully = false;
+                                        button.buttonEl.addClass('mod-warning');    
+                                    }
+                                } else {
+                                    console.error("syntax error");
+                                    this.checkedSuccessfully = false;  
+                                }
+                            }
+                        }
+                    });
+                })
+                .addText((text) => {
+                    this.functionResultTextComponent = text;
+                    text
+                    .setPlaceholder('function result')
+                    .setDisabled(true)
+                    this.functionResultTextComponent.inputEl.style.width = '580px';
+
+                })
+                const typesContainer = ruleOptionsDiv.createDiv({ cls: 'property-icons-container' });
+        }
         // --- Action Buttons ---
         this.createActionButtons(contentEl); // Create OK and Reset buttons
     }
 
+    updateTypeIcons(value:any, container: HTMLDivElement, expectedType: ObsidianPropertyTypes, currentType: ObsidianPropertyTypes, settings: any) {
+        const newType = typeof value;
+        const typeIcons: {[key:string]: ObsidianPropertyTypes[]} = {
+            'string': ['text', 'tags', 'aliases', 'multitext','date', 'datetime'],
+            'number': ['number'],
+            'boolean': ['checkbox'],
+            'object': ['tags', 'aliases', 'multitext']
+        };
+        if (newType === 'string') {
+            if (!this.scriptingTools.isISOString(value, {withDate: true})) {
+                typeIcons[newType].splice(typeIcons[newType].indexOf('date'), 1);
+                console.error("Invalid date format:", value);
+            }
+            if (!this.scriptingTools.isISOString(value, {withDate: true, withTime: true})) {
+                typeIcons[newType].splice(typeIcons[newType].indexOf('datetime'), 1); 
+                console.error("Invalid date format:", value);
+            }
+        }
+        container.empty(); // Clear the container before adding new icons
+        for (let obsidianType of typeIcons[newType]) {
+            if (obsidianType) {
+                const iconEl = container.createSpan({ cls: 'property-icon setting-item-icon' });
+                updatePropertyIcon(iconEl, obsidianType); // Update the icon based on the type
+            }
+        }
+    }
 
     /**
      * Creates the "OK" and "Reset" buttons.
@@ -166,15 +352,21 @@ export class codeEditorModal extends Modal {
  */
 export function openCodeEditorModal(
     app: App,
+    plugin: any,
     initialCode: string,
     expectedType: ObsidianPropertyTypes,
+    activeFile: TFile | TFolder | null,
+    frontmatter: any,
     okCallback: (result: codeEditorModalResult | null) => void
 ): void {
     // Create and open the modal instance
     new codeEditorModal(
         app,
+        plugin,
         initialCode,
         expectedType,
+        activeFile,
+        frontmatter,
         okCallback
     ).open();
 }

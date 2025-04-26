@@ -1,9 +1,9 @@
 import { App, Notice, SuggestModal, TFile } from 'obsidian';
-import { PropertyTypeInfo, PropertyType} from './types';
+import { PropertyTypeInfo, PropertyType, ObsidianPropertyTypes} from './types';
 
 export const DEFAULT_PROPERTY_TYPE_INFO: PropertyTypeInfo = {
     name : "",
-    type : "",
+    type : 'text',
     isArray: false,
     values: [],
     source: 'registered',
@@ -89,7 +89,7 @@ async function getRegisteredPropertiesSafe(app: App): Promise<PropertyTypeInfo[]
             const frontmatterTypes = metadataManager.getAllFrontmatterTypes();
             return frontmatterTypes.map((name: string) => ({
                 name,
-                type: 'string', // Default type if we can't get more info
+                type: 'text', // Default type if we can't get more info
                 source: 'registered'
             }));
         } else if (typeof metadataManager.getProperties === 'function') {
@@ -97,7 +97,7 @@ async function getRegisteredPropertiesSafe(app: App): Promise<PropertyTypeInfo[]
             const properties = metadataManager.getProperties();
             return Object.entries(properties).map(([name, type]: [string, any]) => ({
                 name,
-                type: typeof type === 'string' ? type : 'string',
+                type,
                 source: 'registered'
             }));
         }
@@ -155,22 +155,23 @@ async function getPropertiesFromFiles(app: App): Promise<PropertyTypeInfo[]> {
  * @param types Set of observed types for a property
  * @returns The most specific type we can determine
  */
-function determinePrimaryType(types: Set<string>): string {
+function determinePrimaryType(types: Set<string>): ObsidianPropertyTypes {
     // Handle empty case (shouldn't happen but TypeScript wants us to check)
-    if (types.size === 0) return 'string';
+    if (types.size === 0) return 'text';
     
     // If only one type observed, use that
     if (types.size === 1) return types.values().next().value;
     
     // Priority order for type resolution
-    const typePriority = [
+    const typePriority: ObsidianPropertyTypes[] = [
         'date',
         'datetime',
-        'boolean',
+        'checkbox',
         'number',
-        'array',
+        'tags',
+        'aliases',
         'multitext',
-        'string' // fallback
+        'text' // fallback
     ];
     
     // Return the highest priority type we find
@@ -181,7 +182,7 @@ function determinePrimaryType(types: Set<string>): string {
     }
     
     // Final fallback
-    return 'string';
+    return 'text';
 }
 
 /**

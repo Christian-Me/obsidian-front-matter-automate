@@ -21,7 +21,7 @@
       },
       "content": "dateTimeCreated",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset\n  const result = new Date(file.stat.ctime-timeOffset);\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
-      "jsCode": "",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = 1;\n  if (result === 1) {\n      result = 'eins';\n  }\n  return result; // return you result. \n}",
       "showContent": false,
       "addContent": "end",
       "include": {
@@ -34,8 +34,9 @@
         "selectedFiles": [],
         "mode": "include"
       },
-      "value": "2025-04-19T15:27:34.084",
-      "asLink": false
+      "value": "2025-04-25T22:28:59.848",
+      "asLink": false,
+      "onlyModify": false
     },
     {
       "id": "46da58c3-ac5d-4b56-ac66-a546781389fc",
@@ -50,11 +51,11 @@
       },
       "content": "fullPath",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
-      "jsCode": "",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "Tiere/Vögel/Neues Dokument",
+      "value": "Tiere/Säugetiere/Affen/Gorilla",
       "exclude": {
         "selectedFolders": [
           "/Another Folder",
@@ -63,7 +64,8 @@
         "selectedFiles": [],
         "mode": "exclude"
       },
-      "lowercaseTags": false
+      "lowercaseTags": false,
+      "onlyModify": true
     },
     {
       "id": "ea50c8fb-45b2-4dce-862d-eac571ff0ef5",
@@ -79,11 +81,12 @@
       },
       "content": "path",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
-      "jsCode": "",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[Tiere/Vögel]]",
-      "asLink": true
+      "value": "[[Tiere/Säugetiere/Affen]]",
+      "asLink": true,
+      "onlyModify": true
     },
     {
       "id": "7b45bbd9-fd1e-4815-891c-5d37af8c5d31",
@@ -101,12 +104,13 @@
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "Tiere/Vögel",
+      "value": "Tiere/Säugetiere/Affen",
       "exclude": {
         "selectedFolders": [],
         "selectedFiles": [],
         "mode": "exclude"
-      }
+      },
+      "onlyModify": true
     },
     {
       "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
@@ -127,7 +131,8 @@
       "addContent": "overwrite",
       "value": "[[Tiere]]",
       "asLink": true,
-      "lowercaseTags": false
+      "lowercaseTags": false,
+      "onlyModify": true
     },
     {
       "id": "f542d0a9-b2e4-4a0a-9ca8-70e24ddc83b9",
@@ -148,10 +153,12 @@
       "addContent": "start",
       "value": [
         "Tiere",
-        "Vögel"
+        "Säugetiere",
+        "Affen"
       ],
       "asLink": false,
-      "lowercaseTags": false
+      "lowercaseTags": false,
+      "onlyModify": true
     },
     {
       "id": "fde12cea-877e-42fe-9a33-d42f7ff33b81",
@@ -170,7 +177,8 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-04-23T22:40:09.078"
+      "value": "2025-04-22T08:03:54.000",
+      "onlyModify": true
     },
     {
       "id": "9dbdba02-9a28-4c15-af94-de057dbb3624",
@@ -188,7 +196,8 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": false
+      "value": false,
+      "onlyModify": true
     },
     {
       "id": "37b34872-bd6a-4c5e-9b6d-3689c37e9001",
@@ -208,7 +217,8 @@
       "showContent": false,
       "value": [
         "Tiere",
-        "Vögel"
+        "Säugetiere",
+        "Affen"
       ],
       "spaceReplacement": "_",
       "specialCharReplacement": "-",
@@ -222,7 +232,8 @@
         "selectedFolders": [],
         "selectedFiles": [],
         "mode": "include"
-      }
+      },
+      "onlyModify": true
     },
     {
       "id": "d2bb5e1f-e614-4b01-ab3a-9659f7953afd",
@@ -258,8 +269,9 @@
       "specialCharReplacement": "-",
       "lowercaseTags": true,
       "value": [
-        "tiere/vögel"
-      ]
+        "tiere/säugetiere/affen"
+      ],
+      "onlyModify": true
     },
     {
       "id": "a627a29d-42ea-4899-92f1-790316408124",
@@ -269,7 +281,8 @@
       "property": "aliases",
       "value": [
         "[[#tiere]]",
-        "[[#vögel]]"
+        "[[#säugetiere]]",
+        "[[#affen]]"
       ],
       "customProperty": "",
       "type": "aliases",
@@ -298,7 +311,8 @@
       "prefix": "#",
       "spaceReplacement": "",
       "specialCharReplacement": "",
-      "lowercaseTags": true
+      "lowercaseTags": true,
+      "onlyModify": true
     },
     {
       "id": "258b39fb-4b3f-4190-814a-7eacae5c4841",
@@ -313,8 +327,8 @@
         "type": "",
         "source": "registered"
       },
-      "content": "linkToFile",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "content": "folders",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -335,11 +349,89 @@
       "lowercaseTags": false,
       "inputProperty": "title",
       "value": [
-        "[[Tiere/Vögel/Neues Dokument|Neues Dokument]]"
-      ]
+        "Tiere",
+        "Säugetiere",
+        "Affen"
+      ],
+      "onlyModify": true
+    },
+    {
+      "id": "a984e4ac-7be3-4847-bc66-821d2d6c8332",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "#?:{}\"'",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "getProperty",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "this a date",
+      "value": "2024-02-01T20:15:00",
+      "onlyModify": true
     }
   ],
-  "liveRules": [],
+  "liveRules": [
+    {
+      "id": "a984e4ac-7be3-4847-bc66-821d2d6c8332",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "#?:{}\"'",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "getProperty",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "this a date",
+      "value": "2024-02-01T20:15:00",
+      "onlyModify": true
+    }
+  ],
   "useTextArea": false,
   "exclude": {
     "selectedFolders": [],

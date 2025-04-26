@@ -40,14 +40,30 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
 }
 
 export function executeRule (app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
-  const tools = new ScriptingTools(settings);
+  if (!rule.active) return returnResult;
+  const tools = new ScriptingTools(settings, frontMatter);
   let fxResult:any;
   let oldResult:any;
-  if (!rule.active) return returnResult;
+  let oldFile:TFile | undefined = undefined;
+  if (oldPath) {
+    let oldFileParts = oldPath.split('/');
+    oldFile = {
+      path: oldPath,
+      extension: oldFileParts[oldFileParts.length-1].split('.')[1],
+      name: oldFileParts[oldFileParts.length-1].split('.')[0],
+      stat: currentFile.stat,
+      basename: currentFile.basename,
+      vault: currentFile.vault,
+      parent: currentFile.parent
+    }
+  }
   if (rule.content === 'script') {
-      const ruleFunction = parseJSCode(rule.jsCode);
-      if (typeof ruleFunction !== 'function') return;
-      fxResult = ruleFunction(app, currentFile, tools);
+    const ruleFunction = parseJSCode(rule.jsCode);
+    if (typeof ruleFunction !== 'function') return;
+    fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
+    if (oldFile) {
+      oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
+    }
   } else {
       const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
       if (functionIndex!==-1){
@@ -58,17 +74,7 @@ export function executeRule (app, settings, currentFile: TFile, returnResult: an
             fxResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, currentFile, tools), rule);
           }
           //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
-          if (oldPath) {
-              let oldFileParts = oldPath.split('/');
-              let oldFile:TFile = {
-                  path: oldPath,
-                  extension: oldFileParts[oldFileParts.length-1].split('.')[1],
-                  name: oldFileParts[oldFileParts.length-1].split('.')[0],
-                  stat: currentFile.stat,
-                  basename: currentFile.basename,
-                  vault: currentFile.vault,
-                  parent: currentFile.parent
-              }
+          if (oldFile) {
               if (ruleFunctions[functionIndex].inputProperty) {
                 oldResult = applyFormatOptions(ruleFunctions[functionIndex].fx(app, oldFile, tools, frontMatter[rule.inputProperty]), rule);
               } else {
