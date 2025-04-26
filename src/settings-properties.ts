@@ -1,10 +1,11 @@
 import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion } from 'obsidian';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
 import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS} from './types';
-import { getRuleFunctionById, ruleFunctions, RuleFunction, executeRule } from './rules';
+import { getRuleFunctionById, ruleFunctions, RuleFunction, executeRule, checkIfFileAllowed } from './rules';
 import { AlertModal } from './alertBox';
 import { randomUUID } from 'crypto';
 import { codeEditorModal, codeEditorModalResult, openCodeEditorModal } from './editorModal';
+import { copyFileSync } from 'fs';
 
 export type PropertyInfo = {
     name: string;
@@ -16,6 +17,7 @@ export class RulesTable extends PluginSettingTab {
     plugin: any;
     knownProperties: Record<string, PropertyInfo> = {}; // Cache für gefundene Properties
     container: HTMLDivElement;
+    propertiesListEl: HTMLDivElement;
     settingsParameter: string;
 
     constructor(app: App, plugin: any, container: HTMLDivElement, settingsParameter: string) {
@@ -60,12 +62,14 @@ export class RulesTable extends PluginSettingTab {
         console.log(this.knownProperties);
     }
 
-    // Helper zum Rendern EINER Eigenschaftszeile
+    // Helper to render one rule
+
     renderPropertyRow(containerEl: HTMLElement, rule: FolderTagRuleDefinition, index: number) {
         
         const activeFile = this.app.workspace.getActiveFile();
 
         const rowEl = containerEl.createDiv({ cls: 'property-setting-row setting-item' });
+        rowEl.id = rule.id;
         const controlEl = rowEl.createDiv({ cls: 'setting-item-control' }); 
         controlEl.style.gap = '0px';
         const leftContainer = controlEl.createDiv({ cls: 'property-left-container' });
@@ -80,24 +84,24 @@ export class RulesTable extends PluginSettingTab {
             .setValue(rule.property || '')
             .onChange(async (value) => {
                 this.renderSearchResults(searchContainer, value, index);
-            });
+            })
 
+        nameInput.inputEl.style.border = 'none'; // make it invisible
         nameInput.inputEl.addEventListener('focus', () => {
             this.renderSearchResults(searchContainer, nameInput.getValue(), index);
         });
         nameInput.inputEl.addEventListener('input', () => {
             this.renderSearchResults(searchContainer, nameInput.getValue(), index);
         });
-
-         nameInput.inputEl.addEventListener('blur', (event) => {
-             setTimeout(() => {
-                 const relatedTarget = event.relatedTarget as Node;
-                 const resultsEl = searchContainer.querySelector('.property-search-results');
-                 if (!resultsEl || !resultsEl.contains(relatedTarget)) {
-                     this.clearSearchResults(searchContainer);
-                 }
-             }, 100);
-         });
+        nameInput.inputEl.addEventListener('blur', (event) => {
+            setTimeout(() => {
+                const relatedTarget = event.relatedTarget as Node;
+                const resultsEl = searchContainer.querySelector('.property-search-results');
+                if (!resultsEl || !resultsEl.contains(relatedTarget)) {
+                    this.clearSearchResults(searchContainer);
+                }
+            }, 100);
+        });
 
         const currentPropertyInfo = this.knownProperties[rule.property];
         if (currentPropertyInfo) {
@@ -348,6 +352,43 @@ export class RulesTable extends PluginSettingTab {
                     })
                 );
         }
+
+        const includeEL = new Setting(optionEL)
+        .setName('Include Files and Folders for this rule ')
+        .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
+        .addButton(button => {
+            button
+                .setIcon('folder-check')
+                .setButtonText('Include')
+                .setCta() // Makes the button more prominent
+                .onClick(() => {
+                    openDirectorySelectionModal(
+                        this.app,
+                        rule.include?.selectedFolders || [],
+                        rule.include?.selectedFiles || [],
+                        'include',
+                        rule.include?.display || 'folders',
+                        false, // include, include option hidden
+                        (result: DirectorySelectionResult | null) => {
+                            if (!result) return;
+                            if (!rule.include) {
+                                rule.include = Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
+                                    mode : 'include',
+                                });
+                            };
+                            rule.include.selectedFolders = result.folders;
+                            rule.include.selectedFiles = result.files;
+                            rule.include.mode = 'include';
+                            rule.include.display = result.display;
+                            this.plugin.saveSettings();
+                            console.log(rule.include);
+                            this.updateFilterIndicator(activeFile, this.propertiesListEl);
+                            includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
+                        }
+                    );
+                });
+        });
+        
         const excludeEL = new Setting(optionEL)
         .setName('Exclude Files and Folders from this rule')
         .setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
@@ -373,46 +414,18 @@ export class RulesTable extends PluginSettingTab {
                             };
                             rule.exclude.selectedFolders = result.folders;
                             rule.exclude.selectedFiles = result.files;
+                            rule.exclude.mode = 'exclude';
                             rule.exclude.display = result.display;
-                            this.plugin.saveSettings(); 
+                            this.plugin.saveSettings();
+                            console.log(rule.exclude);
+                            this.updateFilterIndicator(activeFile, this.propertiesListEl);
                             excludeEL.setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
                         }
                     );
                 });
         });          
 
-        const includeEL = new Setting(optionEL)
-        .setName('Include Files and Folders for this rule ')
-        .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even when in excluded Folders.`)
-        .addButton(button => {
-            button
-                .setIcon('folder-check')
-                .setButtonText('Include')
-                .setCta() // Makes the button more prominent
-                .onClick(() => {
-                    openDirectorySelectionModal(
-                        this.app,
-                        rule.include?.selectedFolders || [],
-                        rule.include?.selectedFiles || [],
-                        'include',
-                        rule.include?.display || 'folders',
-                        false, // include, include option hidden
-                        (result: DirectorySelectionResult | null) => {
-                            if (!result) return;
-                            if (!rule.include) {
-                                rule.include = Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
-                                    mode : 'include',
-                                });
-                            };
-                            rule.include.selectedFolders = result.folders;
-                            rule.include.selectedFiles = result.files;
-                            rule.include.display = result.display;
-                            this.plugin.saveSettings();
-                            includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even when in excluded Folders.`)
-                        }
-                    );
-                });
-        });
+        
         new Setting(optionEL)
             .setName('Script')
             .setDesc('edit the script for own modifications')
@@ -663,17 +676,21 @@ export class RulesTable extends PluginSettingTab {
         }
     }
 
+
     async display(): Promise<void> {
         const containerEl = this.container;
         containerEl.empty();
 
         await this.fetchKnownProperties();
 
-        const propertiesListEl = containerEl.createDiv('properties-list');
+        this.propertiesListEl = containerEl.createDiv('properties-list');
 
-        this.plugin.settings.rules.forEach((propConfig, index) => {
-            this.renderPropertyRow(propertiesListEl, propConfig, index);
+        this.plugin.settings.rules.forEach((rule, index) => {
+            this.renderPropertyRow(this.propertiesListEl, rule, index);
         });
+
+        let activeFile = this.app.workspace.getActiveFile();
+        this.updateFilterIndicator(activeFile, this.propertiesListEl);
 
         const addBtnContainer = containerEl.createDiv({ cls: 'setting-item-control' });
         addBtnContainer.style.justifyContent = 'right';
@@ -691,6 +708,20 @@ export class RulesTable extends PluginSettingTab {
                 this.display();
             })
             .buttonEl.className='property-plus-button';
+    }
+
+    private updateFilterIndicator(activeFile, propertiesListEl: HTMLDivElement) {
+        if (activeFile) {
+            this.plugin.settings.rules.forEach((rule, index) => {
+                const propertyRowEl = propertiesListEl.getElementsByClassName('property-setting-row')[index];
+                const propertyLeftDiv = propertyRowEl.querySelector('.property-left-container');
+                if (checkIfFileAllowed(activeFile, this.plugin.settings, rule)) {
+                    propertyLeftDiv?.addClass('property-left-container-allowed');
+                } else {
+                    propertyLeftDiv?.removeClass('property-left-container-allowed');
+                }
+            });
+        }
     }
 }
 

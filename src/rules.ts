@@ -1,6 +1,6 @@
 import { App, renderResults, TFile } from 'obsidian';
 import { parseJSCode, ScriptingTools } from './tools';
-import { ObsidianPropertyTypes, FolderTagRuleDefinition } from './types';
+import { ObsidianPropertyTypes, FolderTagRuleDefinition, FolderTagSettings } from './types';
 
 export interface RuleFunction {
     id:string;
@@ -173,6 +173,80 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
   }
   return returnResult;
 
+}
+
+const  tools = new ScriptingTools();
+  /**
+   * Filters a given file and returns true if it is included in a folder or file list
+   * @param file 
+   * @param filterMode 'exclude'|'include'
+   * @param type 'folders'|'files'
+   * @returns 
+   */
+export function filterFile(file: TFile, fileList: any, filterMode: string, type:string):boolean {
+    let result = false;
+    const filterArray = (type==='folders') ? fileList[filterMode].selectedFolders : fileList[filterMode].selectedFiles;
+    if (filterArray.length === 0) return (filterMode === 'include')? false : true;
+    const filePath = file.path;
+    const fileFolder = tools.getFoldersFromPath(file.path);
+    const fileName = file.basename + '.' + file.extension;
+    
+    if (type === 'files') {
+        result = filterArray.includes(filePath);
+    }
+    if (type === 'folders') {
+        filterArray.forEach(path => {
+            result = fileFolder?.startsWith(path.slice(1)) || false; // remove root '/'
+            if (result === true) return;
+        });
+    };
+    return (filterMode === 'exclude')? !result : result;
+}
+
+export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rule?:FolderTagRuleDefinition):boolean {
+      let result = false;
+      if (!file) return false;
+      if (settings) {
+        try {
+          console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
+          if (settings.include.selectedFiles.length>0) { // there are files in the include files list
+              result = filterFile(file, settings, 'include', 'files');
+          }
+          if (settings.include.selectedFolders.length>0) { // there are folders in the include folders list
+              result = filterFile(file, settings, 'include', 'folders');
+          }
+          if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
+              result = filterFile(file, settings, 'exclude', 'files');
+          }        
+          if (settings.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
+              result = filterFile(file, settings,'exclude', 'folders');
+          }
+        } catch (error) {
+          console.error(`Error filtering file ${file.path} globally: ${error}`);
+          return false; // default to false if there is an error
+        }
+      }
+      if(rule) {
+        try {
+          console.log(`check file ${file.path} against rule`, rule.include, rule.exclude);
+          if (rule.include.selectedFiles.length>0) { // there are files in the include files list
+              result = filterFile(file, rule, 'include', 'files');
+          }
+          if (rule.include.selectedFolders.length>0) { // there are folders in the include folders list
+              result = filterFile(file, rule, 'include', 'folders');
+          }
+          if (rule.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
+              result = filterFile(file, rule, 'exclude', 'files');
+          }        
+          if (rule.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
+              result = filterFile(file, rule, 'exclude', 'folders');
+          }
+        } catch (error) {
+          console.error(`Error filtering file ${file.path} by rule ${rule.property}|${rule.content}: ${error}`);
+          return false; // default to false if there is an error
+        }
+      }
+      return result;
 }
 
 ruleFunctions.push({

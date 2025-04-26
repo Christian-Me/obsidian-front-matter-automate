@@ -1,6 +1,6 @@
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.12";
+export const versionString = "0.0.13";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 

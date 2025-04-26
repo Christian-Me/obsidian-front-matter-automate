@@ -22,6 +22,10 @@
   background-color: var(--metadata-divider-color);
 }
 
+.property-left-container-allowed {
+  background-color: var(--interactive-accent);
+}
+
 .property-middle-container {
   display: flex;
   padding-top: 1px;
@@ -167,6 +171,16 @@
 }
 
 /* styles für directory tree */
+
+.tree-toggle-button {
+  font-size: 12px;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.tree-toggle-button:hover {
+  color: var(--text-accent);
+}
 
 .directory-selection-modal .tree-view-container {
   /* Container for the scrollable tree */

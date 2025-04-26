@@ -41,31 +41,37 @@ export class FolderTagSettingTab extends PluginSettingTab {
         containerEl.empty();
         containerEl.createEl('h2', { text: `Front matter automate V${versionString}` });
 
+        new Setting(containerEl)
+        .setName('Include Files and Folders globally')
+        .setDesc(`Currently ${this.plugin.settings.include.selectedFolders.length} folders and ${this.plugin.settings.include.selectedFiles.length} files will be ${this.plugin.settings.include.mode}d.`)
+        .addButton(button => {
+            button
+                .setIcon('folder-check')
+                .setButtonText('Include')
+                .setCta() // Makes the button more prominent
+                .onClick(() => {
+                    openDirectorySelectionModal(
+                        this.app,
+                        this.plugin.settings.include.selectedFolders || [],
+                        this.plugin.settings.include.selectedFiles || [],
+                        this.plugin.settings.include.mode || 'include',
+                        this.plugin.settings.include.display || 'folders',
+                        false, // include, include option hidden
+                        (result: DirectorySelectionResult | null) => {
+                            if (!result) return;
+                            this.plugin.settings.include.selectedFolders = result.folders;
+                            this.plugin.settings.include.selectedFiles = result.files;
+                            this.plugin.settings.include.mode = result.mode;
+                            this.plugin.settings.include.display = result.display;
+                            this.plugin.saveSettings(); 
+                            this.display();
+                        }
+                    );
+                });
+        });    
 
-        /*
         new Setting(containerEl)
-            .setName('Exclude root folder')
-            .setDesc('If enabled, the root folder name will be excluded from the tag')
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.excludeRootFolder)
-                .onChange(async (value) => {
-                    this.plugin.settings.excludeRootFolder = value;
-                    await this.plugin.saveSettings();
-                }));
-    
-        new Setting(containerEl)
-            .setName('Tags property name')
-            .setDesc('Frontmatter property name to store tags (default: "tags")')
-            .addText(text => text
-                .setPlaceholder('tags')
-                .setValue(this.plugin.settings.tagsPropertyName)
-                .onChange(async (value) => {
-                    this.plugin.settings.tagsPropertyName = value || 'tags';
-                    await this.plugin.saveSettings();
-                }));
-        */
-        new Setting(containerEl)
-        .setName('Exclude Files and Folders')
+        .setName('Exclude Files and Folders globally')
         .setDesc(`Currently ${this.plugin.settings.exclude.selectedFolders.length} folders and ${this.plugin.settings.exclude.selectedFiles.length} files will be ${this.plugin.settings.exclude.mode}d.`)
         .addButton(button => {
             button
@@ -92,66 +98,11 @@ export class FolderTagSettingTab extends PluginSettingTab {
                     );
                 });
         });          
-
-        new Setting(containerEl)
-        .setName('Include Files and Folders')
-        .setDesc(`Currently ${this.plugin.settings.include.selectedFolders.length} folders and ${this.plugin.settings.include.selectedFiles.length} files will be ${this.plugin.settings.include.mode}d even when in excluded Folders.`)
-        .addButton(button => {
-            button
-                .setIcon('folder-check')
-                .setButtonText('Include')
-                .setCta() // Makes the button more prominent
-                .onClick(() => {
-                    openDirectorySelectionModal(
-                        this.app,
-                        this.plugin.settings.include.selectedFolders || [],
-                        this.plugin.settings.include.selectedFiles || [],
-                        this.plugin.settings.include.mode || 'include',
-                        this.plugin.settings.include.display || 'folders',
-                        false, // include, include option hidden
-                        (result: DirectorySelectionResult | null) => {
-                            if (!result) return;
-                            this.plugin.settings.include.selectedFolders = result.folders;
-                            this.plugin.settings.include.selectedFiles = result.files;
-                            this.plugin.settings.include.mode = result.mode;
-                            this.plugin.settings.include.display = result.display;
-                            this.plugin.saveSettings(); 
-                            this.display();
-                        }
-                    );
-                });
-        });      
+  
         new Setting(containerEl)
         .setName('Rules')
         .setDesc('add rules to update selected parameters');
-        /*
 
-        this.rulesDiv = containerEl.createDiv({ cls: "obsidian-f2t-rule-area" })
-        this.rulesControl = containerEl.createDiv({ cls: "obsidian-f2t-rule-controls" })
-        this.plugin.settings.rules.forEach(rule => {
-            this.addRule(this.rulesDiv,rule.id);
-        })
-
-        new Setting(this.rulesControl)
-            .addButton(async (button) => {
-                button.setIcon('square-plus');
-                button.setClass('obsidian-f2t-smallButton');
-                button.setTooltip('add a rule')
-                button.onClick(async () => {
-                    this.addRule(this.rulesDiv);
-                });
-            })
-            /* TODO add clear all rules functionality 
-            .addButton(async (button) => { 
-                button.setIcon('square-x');
-                button.setClass('obsidian-f2t-smallButton');
-                button.setTooltip('remove all rules')
-                button.onClick(async () => {
-                    console.log('removeAllRules');
-                });
-            });
-            */
-        
         this.rulesContainer = containerEl.createDiv('properties-list');
         const rulesTable = new RulesTable(this.app, this.plugin,this.rulesContainer,'rules');
         rulesTable.display();

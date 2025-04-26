@@ -1,7 +1,7 @@
 import { App, Editor, Plugin, MarkdownView, MarkdownPostProcessor, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
-import { executeRule, removeRule, ruleFunctions } from './src/rules';
+import { checkIfFileAllowed, executeRule, removeRule, ruleFunctions } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
 
@@ -104,55 +104,6 @@ export default class FolderTagPlugin extends Plugin {
         return formatted;
     }
 
-    /**
-     * Filters a given file and returns true if it is included in a folder or file list
-     * @param file 
-     * @param filterMode 'exclude'|'include'
-     * @param type 'folders'|'files'
-     * @returns 
-     */
-    filterFile(file: TFile, filterMode: string, type:string):boolean {
-        let result = false;
-        const filterArray = (type==='folders') ? this.settings[filterMode].selectedFolders : this.settings[filterMode].selectedFiles;
-        if (filterArray.length === 0) return (filterMode === 'include')? false : true;
-        const filePath = file.path;
-        const fileFolder = this.tools.getFoldersFromPath(file.path);
-        const fileName = file.basename + '.' + file.extension;
-        
-        if (type === 'files') {
-            result = filterArray.includes(filePath);
-        }
-        if (type === 'folders') {
-            filterArray.forEach(path => {
-                result = fileFolder?.startsWith(path.slice(1)) || false; // remove root '/'
-                if (result === true) return;
-            });
-        };
-        return (filterMode === 'exclude')? !result : result;
-    }
-
-    checkIfFileAllowed(file: TFile) {
-        let result = false;
-        if (this.settings.include.selectedFiles.length>0) { // there are files in the include files list
-            result = this.filterFile(file, 'include', 'files');
-            if (result === true) return result; // file is in include-list
-        }
-        if (this.settings.include.selectedFolders.length>0) { // there are folders in the include folders list
-            result = this.filterFile(file, 'include', 'folders');
-            if (result === true) return result; // file is in a folder inside the include-list
-        }
-        result = true;
-        if (this.settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
-            result = this.filterFile(file, 'exclude', 'files');
-            if (result === false) return result; // file is in exclude-list
-        }        
-        if (this.settings.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
-            result = this.filterFile(file, 'exclude', 'folders');
-            if (result === false) return result; // file is in a folder inside the include-list
-        }
-        return result;
-    }
-
     formatValue(value:any, type:string) {
         switch (type) {
             case 'text':
@@ -176,19 +127,20 @@ export default class FolderTagPlugin extends Plugin {
     }
 
     async updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
-        if (!this.checkIfFileAllowed(file)) {
-            console.log(`file ${file.path} rejected!`)
+        if (!checkIfFileAllowed(file, this.settings)) {
+            console.log(`file ${file.path} globally rejected!`)
             return;
         }
         const currentPathTag = this.formatTagName(this.tools.getFoldersFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFoldersFromPath(oldPath))
         if (oldPathTag) console.log(`update file: "${oldPathTag}" to "${currentPathTag}"`);
         let content = await this.app.vault.read(file);
-        const cache = this.app.metadataCache.getFileCache(file);
-        //const frontmatter = cache?.frontmatter || {};
+        // const cache = this.app.metadataCache.getFileCache(file);
+
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
            // apply all rules to frontmatter
             rules.forEach(rule => {
+                if (!checkIfFileAllowed(file, this.settings, rule)) return;
                 if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
                 frontmatter[rule.property] = executeRule(this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
             })
@@ -205,7 +157,7 @@ export default class FolderTagPlugin extends Plugin {
     }
 
     async removeFrontmatterParameter(file: TFile, rule: FolderTagRuleDefinition, count) {
-        if (!this.checkIfFileAllowed(file)) return;
+        if (!checkIfFileAllowed(file, this.settings, rule)) return;
         const currentPathTag = this.formatTagName(this.tools.getFoldersFromPath(file.path));
         let content = await this.app.vault.read(file);
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {

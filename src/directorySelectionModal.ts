@@ -117,7 +117,6 @@ export class DirectorySelectionModal extends Modal {
 
         // --- Tree Container ---
         this.treeRootElement = contentEl.createDiv({ cls: 'tree-view-container' });
-        // Basic styling for the scrollable tree area
         this.treeRootElement.style.maxHeight = '600px';
         this.treeRootElement.style.overflowY = 'auto';
         this.treeRootElement.style.border = '1px solid var(--background-modifier-border)';
@@ -126,7 +125,9 @@ export class DirectorySelectionModal extends Modal {
         this.treeRootElement.style.marginBottom = '10px';
 
         // --- Build and Render Tree ---
-        this.buildAndRenderTree(); // Initial rendering based on current state
+        if (!this.treeNodes.size) { // Ensure the tree is only rendered once
+            this.buildAndRenderTree(); // Initial rendering based on current state
+        }
 
         // --- Action Buttons ---
         this.createActionButtons(contentEl); // Create OK and Reset buttons
@@ -227,7 +228,7 @@ export class DirectorySelectionModal extends Modal {
 
         // OK Button
         const okButton = buttonsEl.createEl('button', { text: 'OK', cls: 'mod-cta' });
-        cancelButton.ariaLabel = 'close and save changes'; // Accessibility
+        okButton.ariaLabel = 'close and save changes'; // Accessibility
         okButton.onclick = () => {
             this.close();
         };
@@ -242,13 +243,17 @@ export class DirectorySelectionModal extends Modal {
     private buildTreeData(): TreeNode {
         // Create a virtual root node representing the vault
         const vaultRootNode: TreeNode = {
-             path: '/',
-             name: this.app.vault.getName() || 'Vault', // Use vault name or default
-             type: 'folder',
-             children: [],
-             // Placeholder elements, will be assigned during rendering if root is rendered
-             element: null!, checkbox: null!, label: null!, container: null!
+            path: '/', // Root folder path
+            name: this.app.vault.getName() || 'Vault', // Use vault name or default
+            type: 'folder',
+            children: [],
+            // Placeholder elements, will be assigned during rendering
+            element: null!,
+            checkbox: null!,
+            label: null!,
+            container: null!,
         };
+
         const folderNodes = new Map<string, TreeNode>();
         folderNodes.set('/', vaultRootNode); // Add root to the map
 
@@ -257,38 +262,33 @@ export class DirectorySelectionModal extends Modal {
 
         // --- Step 1: Create all folder nodes based on file parent paths ---
         allFiles.forEach(file => {
-            // Get the parent folder object for the file
             const parentFolder = file.parent;
-            // Ensure parentFolder exists before proceeding (Safety check)
             if (!parentFolder) return;
 
             let currentPath = '';
-            // Split path, filter empty strings (handles root '/')
             const pathParts = parentFolder.path.split('/').filter(p => p.length > 0);
 
             let parentNode = vaultRootNode; // Start from vault root
             pathParts.forEach(part => {
-                // Construct the full path for the current part
                 currentPath = currentPath === '/' ? part : `${currentPath}/${part}`;
                 if (!folderNodes.has(currentPath)) {
-                    // Create new folder node if it doesn't exist
                     const newFolderNode: TreeNode = {
-                         path: currentPath,
-                         name: part,
-                         type: 'folder',
-                         children: [],
-                         // Placeholders, assigned during rendering
-                         element: null!, checkbox: null!, label: null!, container: null!
+                        path: currentPath,
+                        name: part,
+                        type: 'folder',
+                        children: [],
+                        element: null!,
+                        checkbox: null!,
+                        label: null!,
+                        container: null!,
                     };
                     folderNodes.set(currentPath, newFolderNode);
-                    // Ensure parentNode has children array initialized
                     if (!parentNode.children) {
                         parentNode.children = [];
                     }
-                    parentNode.children!.push(newFolderNode); // Add to parent's children
-                    parentNode = newFolderNode; // Move down the tree
+                    parentNode.children!.push(newFolderNode);
+                    parentNode = newFolderNode;
                 } else {
-                    // Folder node already exists, just move down
                     parentNode = folderNodes.get(currentPath)!;
                 }
             });
@@ -296,48 +296,39 @@ export class DirectorySelectionModal extends Modal {
 
         // --- Step 2: Add file nodes if 'showFiles' is enabled ---
         if (this.showFiles) {
-             allFiles.forEach(file => {
-                 // Get parent folder and add safety check for null
-                 const parentFolder = file.parent;
-                 if (!parentFolder) {
-                     // console.warn(`File "${file.path}" seems to have no parent folder. Skipping.`); // Optional warning
-                     return; // Skip this file if it has no parent
-                 }
-                 const parentPath = "/"+parentFolder.path; // Now safe to access .path
-                 const parentNode = folderNodes.get(parentPath);
+            allFiles.forEach(file => {
+                const parentFolder = file.parent;
+                if (!parentFolder) return;
 
-                 // Create the file node
-                 const fileNode: TreeNode = {
-                     path: file.path,
-                     name: file.name,
-                     type: 'file',
-                     // Files don't have children
-                     // Placeholders, assigned during rendering
-                     element: null!, checkbox: null!, label: null!, container: null!
-                 };
+                const parentPath = "/" + parentFolder.path;
+                const parentNode = folderNodes.get(parentPath);
 
-                 if (parentNode) {
-                     // Ensure children array exists
-                     if (!parentNode.children) {
+                const fileNode: TreeNode = {
+                    path: file.path,
+                    name: file.name,
+                    type: 'file',
+                    element: null!,
+                    checkbox: null!,
+                    label: null!,
+                    container: null!,
+                };
+
+                if (parentNode) {
+                    if (!parentNode.children) {
                         parentNode.children = [];
-                     }
-                     // Add file to its parent folder's children
-                     parentNode.children!.push(fileNode);
-                 } else {
-                     // This case should ideally not happen if Step 1 worked correctly for all folders
-                     // console.warn(`Could not find parent node for path "${parentPath}" while adding file "${file.path}".`); // Optional warning
-                 }
-             });
+                    }
+                    parentNode.children!.push(fileNode);
+                }
+            });
         }
 
         // --- Step 3: Sort children alphabetically (folders first, then files) ---
         const sortNodes = (a: TreeNode, b: TreeNode) => {
-            if (a.type === 'folder' && b.type === 'file') return -1; // Folders come first
-            if (a.type === 'file' && b.type === 'folder') return 1;  // Files come after
-            return a.name.localeCompare(b.name); // Sort alphabetically by name
+            if (a.type === 'folder' && b.type === 'file') return -1;
+            if (a.type === 'file' && b.type === 'folder') return 1;
+            return a.name.localeCompare(b.name);
         };
 
-        // Sort children of every folder node
         folderNodes.forEach(node => node.children?.sort(sortNodes));
 
         return vaultRootNode; // Return the populated root node
@@ -359,9 +350,13 @@ export class DirectorySelectionModal extends Modal {
          rootUl.style.listStyle = 'none';
          rootUl.style.paddingLeft = '0'; // Remove default list indentation
 
-         // Render children of the virtual vault root node
+         // Render the root folder itself
+         //this.renderTreeNode(treeData, rootUl, 0, this.currentMode === 'include' ? this.currentFolders : this.currentFiles);
+         this.renderTreeNode(treeData, rootUl, 0, this.currentFolders); //TODO: expand this to include files as well
+
+         // Render children of the root folder
          treeData.children?.forEach(childNode => {
-             this.renderTreeNode(childNode, rootUl, 0); // Start rendering at level 0
+             //this.renderTreeNode(childNode, rootUl, 1, this.currentMode === 'include' ? this.currentFolders : this.currentFiles); // Start rendering at level 1
          });
     }
 
@@ -371,7 +366,7 @@ export class DirectorySelectionModal extends Modal {
      * @param parentElement - The HTML `ul` element to append this node's `li` to.
      * @param level - The current indentation level.
      */
-    private renderTreeNode(node: TreeNode, parentElement: HTMLElement, level: number) {
+    private renderTreeNode(node: TreeNode, parentElement: HTMLElement, level: number, selectedPaths: Set<string>) {
         const li = parentElement.createEl('li');
         li.style.marginLeft = `${level * 20}px`; // Apply indentation based on level
         li.addClass(`tree-node-${node.type}`); // Add class for type (folder/file)
@@ -381,6 +376,29 @@ export class DirectorySelectionModal extends Modal {
         container.style.alignItems = 'center';
         container.style.padding = '2px 0'; // Add some vertical padding
 
+        // --- Toggle Button for Folders ---
+        let toggleButton: HTMLElement | null = null;
+        let isCollapsed = true; // Default state is collapsed
+
+        if (node.type === 'folder') {
+            toggleButton = container.createSpan({ cls: 'tree-toggle-button' });
+            toggleButton.textContent = '▶'; // Right-pointing triangle
+            toggleButton.style.cursor = 'pointer';
+            toggleButton.style.marginRight = '5px';
+
+            // Check if this folder or any of its children are selected
+            const shouldExpand = this.shouldExpandFolder(node, selectedPaths);
+            if (shouldExpand) {
+                isCollapsed = false;
+            }
+
+            toggleButton.onclick = () => {
+                isCollapsed = !isCollapsed;
+                if (toggleButton) toggleButton.textContent = isCollapsed ? '▶' : '▼'; // Update triangle direction
+                if (childrenUl) childrenUl.style.display = isCollapsed ? 'none' : 'block'; // Show/hide children
+            };
+        }
+
         // --- Checkbox ---
         const checkbox = container.createEl('input', { type: 'checkbox' });
         checkbox.id = `tree-cb-${node.path.replace(/[^a-zA-Z0-9]/g, '-')}`; // Create a safe ID
@@ -389,8 +407,8 @@ export class DirectorySelectionModal extends Modal {
 
         // --- Label ---
         const label = container.createEl('label');
-        // Add icons for visual distinction (optional)
         label.textContent = `${node.type === 'folder' ? '📁' : '📄'} ${node.name}`;
+        // label.textContent = node.name;
         label.htmlFor = checkbox.id; // Link label to checkbox
         label.style.marginLeft = '5px';
         label.style.cursor = 'pointer';
@@ -421,21 +439,41 @@ export class DirectorySelectionModal extends Modal {
                 if (type === 'folder') this.currentFolders.add(path);
                 else this.currentFiles.add(path);
             } else {
-                 if (type === 'folder') this.currentFolders.delete(path);
-                 else this.currentFiles.delete(path);
+                if (type === 'folder') this.currentFolders.delete(path);
+                else this.currentFiles.delete(path);
             }
             // Update the visual state of the entire tree after a change
             this.updateTreeAppearance();
         };
 
         // --- Render children recursively if it's a folder ---
+        let childrenUl: HTMLElement | null = null;
         if (node.type === 'folder' && node.children && node.children.length > 0) {
-            const childrenUl = li.createEl('ul');
+            childrenUl = li.createEl('ul');
             childrenUl.style.listStyle = 'none';
             childrenUl.style.paddingLeft = '0'; // Reset padding for nested list
             childrenUl.style.marginLeft = '0'; // Prevent double indentation from default UL styles
-            node.children.forEach(child => this.renderTreeNode(child, childrenUl, level + 1)); // Increase level for children
+            childrenUl.style.display = isCollapsed ? 'none' : 'block'; // Show/hide children based on initial state
+
+            node.children.forEach(child => this.renderTreeNode(child, childrenUl!, level + 1, selectedPaths)); // Increase level for children
         }
+    }
+
+    // Helper method to determine if a folder should be expanded
+    private shouldExpandFolder(node: TreeNode, selectedPaths: Set<string>): boolean {
+        if (selectedPaths.has(node.path)) {
+            return true; // The folder itself is selected
+        }
+
+        if (node.children) {
+            for (const child of node.children) {
+                if (this.shouldExpandFolder(child, selectedPaths)) {
+                    return true; // A child is selected
+                }
+            }
+        }
+
+        return false; // Neither the folder nor its children are selected
     }
 
 
@@ -588,6 +626,7 @@ export class DirectorySelectionModal extends Modal {
      * Combines building the tree data, rendering the DOM, and applying initial appearance.
      */
     private buildAndRenderTree() {
+        console.log('Building and rendering tree...');
         this.renderTree(); // Build data and render DOM elements
         this.updateTreeAppearance(); // Apply styles based on current mode/selection
     }
