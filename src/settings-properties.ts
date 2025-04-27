@@ -1,65 +1,28 @@
 import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion } from 'obsidian';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
-import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS} from './types';
+import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS, PropertyInfo} from './types';
 import { getRuleFunctionById, ruleFunctions, RuleFunction, executeRule, checkIfFileAllowed } from './rules';
 import { AlertModal } from './alertBox';
 import { randomUUID } from 'crypto';
 import { codeEditorModal, codeEditorModalResult, openCodeEditorModal } from './editorModal';
 import { copyFileSync } from 'fs';
-
-export type PropertyInfo = {
-    name: string;
-    type: ObsidianPropertyTypes;
-    count?: number;
-};
+import { ScriptingTools } from './tools';
+import { updatePropertyIcon } from './uiElements';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
-    knownProperties: Record<string, PropertyInfo> = {}; // Cache für gefundene Properties
+    knownProperties: Record<string, PropertyInfo> = {}; 
     container: HTMLDivElement;
     propertiesListEl: HTMLDivElement;
     settingsParameter: string;
+    tools: ScriptingTools;
 
     constructor(app: App, plugin: any, container: HTMLDivElement, settingsParameter: string) {
         super(app, plugin);
         this.plugin = plugin;
         this.container = container;
         this.settingsParameter = settingsParameter;
-    }
-
-    /**
-     * * Fetches custom property information from all markdown files in the vault.
-     *
-     * @return {*} 
-     */
-    fetchCustomPropertyInfos() {
-        const propertyInfos: Record<string, PropertyInfo> = {};
-
-        const files = this.app.vault.getMarkdownFiles(); // Retrieve all markdown files
-        files.forEach(file => {
-            const metadata = this.app.metadataCache.getFileCache(file);
-            if (metadata?.frontmatter) {
-                Object.keys(metadata.frontmatter).forEach(key => {
-                    if (!propertyInfos[key]) {
-                        propertyInfos[key] = { name: key, type: 'text' }; // Default type as 'text'
-                    }
-                });
-            }
-        });
-
-        return propertyInfos;
-    }
-
-    async fetchKnownProperties() {
-        if (typeof this.app.metadataCache.getAllPropertyInfos === 'function') {
-            this.knownProperties = this.app.metadataCache.getAllPropertyInfos();
-        } else {
-            this.knownProperties = this.fetchCustomPropertyInfos();
-        }
-        this.knownProperties = Object.fromEntries(
-            Object.entries(this.knownProperties).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-        );
-        console.log(this.knownProperties);
+        this.tools = new ScriptingTools(app, plugin);
     }
 
     // Helper to render one rule
@@ -114,7 +77,7 @@ export class RulesTable extends PluginSettingTab {
         const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
         if (activeFile) {
             this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
-                rule.value = executeRule(this.app, this.plugin.settings, activeFile, '', rule, frontmatter);
+                rule.value = executeRule('preview',this.app, this.plugin.settings, activeFile, '', rule, frontmatter);
             },{'mtime':activeFile.stat.mtime}); // do not change the modify time.
         }
         let previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
@@ -130,31 +93,34 @@ export class RulesTable extends PluginSettingTab {
         propertyDevDropdown.addOption("script", "JavaScript function (advanced)");
         propertyDevDropdown.setValue(rule.content);
         propertyDevDropdown.onChange(async (value) => {
-
             if (value !== '') {
-                if (value !== 'script') {
-                    let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
-                    if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
-                        const shouldProceed = await new AlertModal(
-                                this.app,
-                                'Overwrite existing code?',
-                                'I sees like you have custom code for this rule! Should this be overwritten by default code for this parameter?',
-                                'Yes', 'No'
-                            ).openAndGetValue();
-                        if (shouldProceed) {
+                switch (value) {
+                    case 'script': 
+                        let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
+                        if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
+                            const shouldProceed = await new AlertModal(
+                                    this.app,
+                                    'Overwrite existing code?',
+                                    'I sees like you have custom code for this rule! Should this be overwritten by default code for this parameter?',
+                                    'Yes', 'No'
+                                ).openAndGetValue();
+                            if (shouldProceed) {
+                                rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                                rule.useCustomCode = false;
+                            } else {
+                                rule.buildInCode; // keep the existing code
+                            }
+                            await this.plugin.saveSettings();
+                        } else {
                             rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
                             rule.useCustomCode = false;
-                        } else {
-                            rule.buildInCode; // keep the existing code
+                            await this.plugin.saveSettings();
                         }
-                        await this.plugin.saveSettings();
-                    } else {
-                        rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
-                        rule.useCustomCode = false;
-                        await this.plugin.saveSettings();
-                    }
-                } else {
-                    //cmEditor?.setValue(rule.jsCode!=='' ? rule.jsCode : ruleFunctions[0].source);
+                        break;
+                    case 'autocomplete.modal':
+                        // rule.isLiveRule = true;
+                        break;
+                    default:
                 }
                 rule.content = value;
                 //ruleOptionsDiv.style.display = `${(rule.content === 'script') ? 'flex' : 'none'}`;
@@ -353,42 +319,6 @@ export class RulesTable extends PluginSettingTab {
                     })
                 );
         }
-
-        const includeEL = new Setting(optionEL)
-        .setName('Include Files and Folders for this rule ')
-        .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
-        .addButton(button => {
-            button
-                .setIcon('folder-check')
-                .setButtonText('Include')
-                .setCta() // Makes the button more prominent
-                .onClick(() => {
-                    openDirectorySelectionModal(
-                        this.app,
-                        rule.include?.selectedFolders || [],
-                        rule.include?.selectedFiles || [],
-                        'include',
-                        rule.include?.display || 'folders',
-                        false, // include, include option hidden
-                        (result: DirectorySelectionResult | null) => {
-                            if (!result) return;
-                            if (!rule.include) {
-                                rule.include = Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
-                                    mode : 'include',
-                                });
-                            };
-                            rule.include.selectedFolders = result.folders;
-                            rule.include.selectedFiles = result.files;
-                            rule.include.mode = 'include';
-                            rule.include.display = result.display;
-                            this.plugin.saveSettings();
-                            console.log(rule.include);
-                            this.updateFilterIndicator(activeFile, this.propertiesListEl);
-                            includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
-                        }
-                    );
-                });
-        });
         
         const excludeEL = new Setting(optionEL)
         .setName('Exclude Files and Folders from this rule')
@@ -424,7 +354,43 @@ export class RulesTable extends PluginSettingTab {
                         }
                     );
                 });
-        });          
+        });   
+
+        const includeEL = new Setting(optionEL)
+        .setName('Include Files and Folders for this rule ')
+        .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even if they are excluded globally.`)
+        .addButton(button => {
+            button
+                .setIcon('folder-check')
+                .setButtonText('Include')
+                .setCta() // Makes the button more prominent
+                .onClick(() => {
+                    openDirectorySelectionModal(
+                        this.app,
+                        rule.include?.selectedFolders || [],
+                        rule.include?.selectedFiles || [],
+                        'include',
+                        rule.include?.display || 'folders',
+                        false, // include, include option hidden
+                        (result: DirectorySelectionResult | null) => {
+                            if (!result) return;
+                            if (!rule.include) {
+                                rule.include = Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
+                                    mode : 'include',
+                                });
+                            };
+                            rule.include.selectedFolders = result.folders;
+                            rule.include.selectedFiles = result.files;
+                            rule.include.mode = 'include';
+                            rule.include.display = result.display;
+                            this.plugin.saveSettings();
+                            console.log(rule.include);
+                            this.updateFilterIndicator(activeFile, this.propertiesListEl);
+                            includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
+                        }
+                    );
+                });
+        });       
 
         
         new Setting(optionEL)
@@ -670,7 +636,7 @@ export class RulesTable extends PluginSettingTab {
         if (activeFile) {
             let ruleResult;
             await this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
-                ruleResult = executeRule(this.app, this.plugin.settings, activeFile, '', rule, frontmatter);
+                ruleResult = executeRule('preview',this.app, this.plugin.settings, activeFile, '', rule, frontmatter);
             },{'mtime':activeFile.stat.mtime});  
 
             switch (typeof ruleResult) {
@@ -691,8 +657,8 @@ export class RulesTable extends PluginSettingTab {
         const containerEl = this.container;
         containerEl.empty();
 
-        await this.fetchKnownProperties();
-
+        this.knownProperties = await this.tools.fetchKnownProperties(this.app);
+        
         this.propertiesListEl = containerEl.createDiv('properties-list');
 
         this.plugin.settings.rules.forEach((rule, index) => {
@@ -733,22 +699,4 @@ export class RulesTable extends PluginSettingTab {
             });
         }
     }
-}
-
-
-export function updatePropertyIcon(iconEl: HTMLElement, type: ObsidianPropertyTypes | undefined) {
-    let iconName = 'hash';
-    switch (type) {
-        case 'text': iconName = 'align-left'; break;
-        case 'number': iconName = 'binary'; break;
-        case 'multitext': iconName = 'list'; break;
-        case 'date': iconName = 'calendar'; break;
-        case 'datetime': iconName = 'clock'; break;
-        case 'checkbox': iconName = 'check-square'; break;
-        case 'tags': iconName = 'tags'; break;
-        case 'aliases': iconName = 'forward'; break;
- 
-        default: iconName = 'help-circle';
-    }
-    setIcon(iconEl, iconName);
 }

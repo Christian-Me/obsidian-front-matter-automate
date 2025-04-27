@@ -1,9 +1,13 @@
 import { App, renderResults, TFile } from 'obsidian';
 import { parseJSCode, ScriptingTools } from './tools';
-import { ObsidianPropertyTypes, FolderTagRuleDefinition, FolderTagSettings } from './types';
+import { ObsidianPropertyTypes, FolderTagRuleDefinition, FolderTagSettings, FrontmatterAutomateEvents } from './types';
+import { autocompleteModal, autocompleteModalResult, openAutocompleteModal } from './autocompleteModal';
+import { codeEditorModalResult } from './editorModal';
 
+export type FrontmatterAutomateRuleTypes = 'buildIn' | 'autocomplete.modal' | 'script';
 export interface RuleFunction {
     id:string;
+    ruleType: FrontmatterAutomateRuleTypes;
     description:string;
     tooltip?: string;
     inputProperty?: boolean;
@@ -39,7 +43,8 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
   return
 }
 
-export function executeRule (app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
+export function executeRule (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
+  console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
   if (!rule.active) return returnResult;
   const tools = new ScriptingTools(app, settings, frontMatter);
   let fxResult:any;
@@ -57,18 +62,30 @@ export function executeRule (app, settings, currentFile: TFile, returnResult: an
       parent: currentFile.parent
     }
   }
-
   try {
-    if (rule.content === 'script') {
-      const ruleFunction = parseJSCode(rule.jsCode);
-      if (typeof ruleFunction !== 'function') return;
-      fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
-      if (oldFile) {
-        oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
-      }
-    } else {
+    switch (rule.content) {
+      case 'script': 
+        const ruleFunction = parseJSCode(rule.jsCode);
+        if (typeof ruleFunction !== 'function') return;
+        fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
+        if (oldFile) {
+          oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
+        }
+        break;
+      /*
+      case 'autocomplete.modal':
+        console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`);
+        if (event === 'modify') {
+          console.log('modify autocomplete modal not implemented yet!');
+        }
+        break;
+      */
+      default:
         const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
         if (functionIndex!==-1){
+            tools.setCurrentContent(frontMatter[rule.property])
+            tools.setRule(rule);
+            tools.setFrontmatter(frontMatter);
             const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctions[functionIndex].fx;
             if (typeof ruleFunction !== 'function') {
               console.error(`Could not parse custom function for ${rule.content}!`);
@@ -230,18 +247,19 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
       if (settings) {
         try {
           //console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
+          if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
+              result = filterFile(file, settings, 'exclude', 'files');    
+          }        
+          if (settings.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
+              result = filterFile(file, settings, 'exclude', 'folders');
+          }
           if (settings.include.selectedFiles.length>0) { // there are files in the include files list
               result = filterFile(file, settings, 'include', 'files');
           }
           if (settings.include.selectedFolders.length>0) { // there are folders in the include folders list
               result = filterFile(file, settings, 'include', 'folders');
           }
-          if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
-              result = filterFile(file, settings, 'exclude', 'files');
-          }        
-          if (settings.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
-              result = filterFile(file, settings,'exclude', 'folders');
-          }
+          // if (result === false) return false; // if the file is excluded, return false
         } catch (error) {
           console.error(`Error filtering file ${file.path} globally: ${error}`);
           return false; // default to false if there is an error
@@ -250,17 +268,17 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
       if(rule) {
         try {
           //console.log(`check file ${file.path} against rule`, rule.include, rule.exclude);
-          if (rule.include.selectedFiles.length>0) { // there are files in the include files list
-              result = filterFile(file, rule, 'include', 'files');
-          }
-          if (rule.include.selectedFolders.length>0) { // there are folders in the include folders list
-              result = filterFile(file, rule, 'include', 'folders');
-          }
           if (rule.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
               result = filterFile(file, rule, 'exclude', 'files');
           }        
           if (rule.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
               result = filterFile(file, rule, 'exclude', 'folders');
+          }
+          if (rule.include.selectedFiles.length>0) { // there are files in the include files list
+              result = filterFile(file, rule, 'include', 'files');
+          }
+          if (rule.include.selectedFolders.length>0) { // there are folders in the include folders list
+              result = filterFile(file, rule, 'include', 'folders');
           }
         } catch (error) {
           console.error(`Error filtering file ${file.path} by rule ${rule.property}|${rule.content}: ${error}`);
@@ -272,6 +290,7 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
 
 ruleFunctions.push({
     id:'default',
+    ruleType: 'buildIn',
     description: 'Pass parameter',
     source: "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result;\n}",
     type: ['text'],
@@ -283,6 +302,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
   id:'fullPath',
+  ruleType: 'buildIn',
   description: 'Full path, filename',
   source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
   type: ['text', 'tags', 'aliases','multitext'],
@@ -296,6 +316,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'fullPathExt',
+    ruleType: 'buildIn',
     description: 'Full path, filename and Extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
@@ -327,6 +348,7 @@ ruleFunctions.push({
 */
 ruleFunctions.push({
     id:'path',
+    ruleType: 'buildIn',
     description: 'Full Path',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
@@ -339,6 +361,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'linkToFile',
+    ruleType: 'buildIn',
     description: 'Link to file',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases','multitext'],
@@ -352,6 +375,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'pathFolderNotes',
+    ruleType: 'buildIn',
     description: 'Path (folder notes)',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases','multitext'],
@@ -365,6 +389,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
   id:'fullPathFolderNotes',
+  ruleType: 'buildIn',
   description: 'Full Path (comply with "folder notes")',
   source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
   type: ['text', 'tags', 'aliases'],
@@ -379,6 +404,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'fullPathExtFolderNotes',
+    ruleType: 'buildIn',
     description: 'Full Path with Extension (comply with "folder notes")',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
@@ -393,6 +419,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'isRoot',
+    ruleType: 'buildIn',
     description: 'File in Root folder',
     source: "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n}",
     type: ['checkbox'],
@@ -404,6 +431,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'folder',
+    ruleType: 'buildIn',
     description: 'Parent Folder',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[parts.length-2];\n  }\n  return result;\n}",
     type: ['text', 'tags'],
@@ -421,6 +449,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'folderFolderNotes',
+    ruleType: 'buildIn',
     description: 'Parent Folder (complies with "folder notes")',
     source: "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}",
     type: ['text', 'tags'],
@@ -440,6 +469,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'folders',
+    ruleType: 'buildIn',
     description: 'All folders of the file as a list',
     source: "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
     type: ['multitext','tags','aliases'],
@@ -454,6 +484,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'rootFolder',
+    ruleType: 'buildIn',
     description: 'Root folder',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[0];\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
@@ -471,6 +502,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'name',
+    ruleType: 'buildIn',
     description: 'File name without extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name.split('.');\n  result.pop(); // remove extension\n  result.join('.'); // reconstruct the file name\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
@@ -485,6 +517,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'nameExt',
+    ruleType: 'buildIn',
     description: 'File name with extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name;\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
@@ -497,6 +530,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'getProperty',
+    ruleType: 'buildIn',
     description: 'Get a property',
     inputProperty: true,
     source: "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
@@ -509,6 +543,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'dateTimeCreated',
+    ruleType: 'buildIn',
     description: 'Date (and Time) created',
     source: "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset\n  const result = new Date(file.stat.ctime-timeOffset);\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
     type: ['date', 'datetime'],
@@ -521,6 +556,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'dateTimeModified',
+    ruleType: 'buildIn',
     description: 'Date (and Time) modified',
     source: "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;\n  const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
     type: ['date', 'datetime'],
@@ -533,6 +569,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'fileSizeBytes',
+    ruleType: 'buildIn',
     description: 'File size in bytes',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file size\n  const result = file.stat.size;\n  return result; // return you result.\n}",
     type: ['number'],
@@ -545,6 +582,7 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'fileSizeString',
+    ruleType: 'buildIn',
     description: 'File size formatted as text',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file size\n  let size =file.stat.size;\n  const precision = 2; // number of decimal places\n  if (size > 1024) {\n    size = size / 1024;\n    if (size > 1024) {\n      size = size / 1024;\n      if (size > 1024) {\n        size = size / 1024;\n        return Number.parseFloat(size).toFixed(precision) + ' GB';\n      } \n      return Number.parseFloat(size).toFixed(precision) + ' MB';\n    }\n    return Number.parseFloat(size).toFixed(precision) + ' KB';\n  }   \n  return size + ' Bytes'; // return you result.\n}",
     type: ['text'],
@@ -567,3 +605,32 @@ ruleFunctions.push({
         return size + ' Bytes'; // return you result.
       }
 });
+
+ruleFunctions.push({
+  id: 'autocomplete.modal',
+  ruleType: 'autocomplete.modal',
+  description: 'Autocomplete Modal (advanced)',
+  source: '',
+  type: ['text', 'tags', 'aliases','multitext'],
+  fx: function (app, file, tools:ScriptingTools) { // do not change this line!
+    console.log(`autocomplete modal not implemented yet!, returning current content ${tools.getCurrentContent()}`);
+    const rule = tools.getRule();
+    if (!rule) return tools.getCurrentContent() || 'Error'; // return current content if not implemented yet
+    const frontmatter = tools.getFrontmatter();
+    for (const [key, value] of Object.entries(frontmatter)) {
+      if (key.startsWith(rule.property + '.') && frontmatter[key] !== undefined) {
+        openAutocompleteModal(
+          this.app,
+          this.plugin,
+          rule,
+          tools.getActiveFile(),
+          tools.getFrontmatter(),
+          (result: autocompleteModalResult | null) => {
+              console.log('autocomplete modal result', result);
+          }
+        );
+      }
+    };
+    return tools.getCurrentContent() || 'Error'; // return current content if not implemented yet
+  }
+})

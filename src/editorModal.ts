@@ -3,7 +3,7 @@ import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon,Butt
 //import 'codemirror/mode/javascript/javascript';
 import { ObsidianPropertyTypes } from './types';
 import { parseJSCode, ScriptingTools } from './tools';
-import { updatePropertyIcon } from './settings-properties';
+import { updatePropertyIcon } from './uiElements';
 //import { chdir } from 'node:process';
 //import { EditorView } from '@codemirror/view';
 //import { EditorState } from '@codemirror/state';

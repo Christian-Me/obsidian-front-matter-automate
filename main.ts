@@ -1,7 +1,7 @@
 import { App, Editor, Plugin, MarkdownView, MarkdownPostProcessor, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
-import { checkIfFileAllowed, executeRule, removeRule, ruleFunctions } from './src/rules';
+import { checkIfFileAllowed, executeRule, getRuleFunctionById, removeRule, ruleFunctions } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
 
@@ -50,13 +50,14 @@ export default class FolderTagPlugin extends Plugin {
         // Metadata changed handler
         this.registerEvent(
             this.app.metadataCache.on('changed', (file, data, cache) => {
+                console.log(`metadata changed: `, file.path);
                 if (cache.frontmatter && Array.isArray(this.settings.liveRules)) {
                     this.app.fileManager.processFrontMatter(file, (frontmatter) => {
                     // apply all live rules to frontmatter
                     this.settings.liveRules.forEach(rule => {
                         if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
                         if (cache.frontmatter)
-                            frontmatter[rule.property] = executeRule(this.app, this.settings, file, cache.frontmatter[rule.property], rule, cache.frontmatter);
+                            frontmatter[rule.property] = executeRule('modify',this.app, this.settings, file, cache.frontmatter[rule.property], rule, cache.frontmatter);
                             //console.log(frontmatter[rule.property]);
                         })
                      },{'mtime':file.stat.mtime}); // do not change the modify time.
@@ -66,7 +67,16 @@ export default class FolderTagPlugin extends Plugin {
             
         noticeMessage = noticeMessage + '\n initial processing ...';
         loadingNotice.setMessage(noticeMessage);
-
+        this.settings.rules.forEach(rule => {
+            let ruleFunction = getRuleFunctionById(rule.content);
+            if (!ruleFunction) return;
+            if (ruleFunction.inputProperty) {
+                this.settings.liveRules.push(rule);
+            } else if (ruleFunction.ruleType === 'autocomplete.modal') {
+                this.settings.liveRules.push(rule);
+            }
+            
+        })
         noticeMessage = noticeMessage + '\ndone!';
         loadingNotice.setMessage(noticeMessage);
         setTimeout(()=>{
@@ -142,7 +152,7 @@ export default class FolderTagPlugin extends Plugin {
             rules.forEach(rule => {
                 if (!checkIfFileAllowed(file, this.settings, rule)) return;
                 if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
-                frontmatter[rule.property] = executeRule(this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                frontmatter[rule.property] = executeRule(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
             })
         },{'mtime':file.stat.mtime}); // do not change the modify time.
     }

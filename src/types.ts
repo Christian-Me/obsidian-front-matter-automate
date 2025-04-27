@@ -1,8 +1,9 @@
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.14";
+export const versionString = "0.0.15";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
+export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'delete' | 'modify' | 'preview' | 'all';
 
 export interface FilterFilesAndFolders {
     selectedFolders: string[],
@@ -118,6 +119,12 @@ export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
     onlyModify: true,
     useCustomCode: false,
 }
+
+export type PropertyInfo = {
+    name: string;
+    type: ObsidianPropertyTypes;
+    count?: number;
+};
 
 export type PropertyTypeInfo = {
     name: string;

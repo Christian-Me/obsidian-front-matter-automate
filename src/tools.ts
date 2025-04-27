@@ -1,5 +1,5 @@
-import { App } from 'obsidian';
-import { FolderTagSettings } from './types'
+import { App, TFile } from 'obsidian';
+import { FolderTagRuleDefinition, FolderTagSettings, PropertyInfo, PropertyTypeInfo } from './types'
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -181,6 +181,10 @@ export function cleanCodeString(codeString: string): string {
     frontmatter: any;
     app: App | undefined;
     plugin : any;
+    currentContent: any;
+    rule: FolderTagRuleDefinition | undefined;
+    activeFile: TFile | undefined;
+    knownProperties: Record<string, PropertyInfo>;
 
     constructor(app?:App, plugin?:any, frontmatter?: any) {
         this.app = app;
@@ -188,6 +192,77 @@ export function cleanCodeString(codeString: string): string {
         this.frontmatter = frontmatter;
         this.plugin = plugin;
     }
+    setFrontmatter(frontmatter:any) {
+        this.frontmatter = frontmatter;
+    }
+    getFrontmatter() { 
+        return this.frontmatter;
+    }
+    setActiveFile(file:TFile) {
+        this.activeFile = file;
+    }
+    getActiveFile() {
+        return this.activeFile;
+    }
+    setRule(rule:FolderTagRuleDefinition) {
+        this.rule = rule;
+    }
+    getRule() {
+        return this.rule;
+    }
+    setCurrentContent(content:any) {
+        this.currentContent = content;
+    }
+    getCurrentContent() {
+        return this.currentContent;
+    }
+    /**
+     * * Fetches custom property information from all markdown files in the vault.
+     *
+     * @return {*} 
+     */
+    fetchCustomPropertyInfos(app:App): Record<string, PropertyInfo> {
+        const propertyInfos: Record<string, PropertyInfo> = {};
+
+        const files = app.vault.getMarkdownFiles(); // Retrieve all markdown files
+        files.forEach(file => {
+            const metadata = app.metadataCache.getFileCache(file);
+            if (metadata?.frontmatter) {
+                Object.keys(metadata.frontmatter).forEach(key => {
+                    if (!propertyInfos[key]) {
+                        propertyInfos[key] = { name: key, type: 'text' }; // Default type as 'text'
+                    }
+                });
+            }
+        });
+
+        return propertyInfos;
+    }
+    /**
+     * Fetches known properties from the metadata cache.
+     * If the method getAllPropertyInfos is not available, it falls back to fetchCustomPropertyInfos.
+     * @param app The Obsidian app instance.
+     */
+    async fetchKnownProperties(app:App) {
+      if (typeof app.metadataCache.getAllPropertyInfos === 'function') {
+          this.knownProperties = app.metadataCache.getAllPropertyInfos();
+      } else {
+          this.knownProperties = this.fetchCustomPropertyInfos(app);
+      }
+      this.knownProperties = Object.fromEntries(
+          Object.entries(this.knownProperties).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+      );
+      console.log(this.knownProperties);
+      return this.knownProperties;
+    }
+    
+    getKnownProperties() {
+        if (!this.knownProperties) {
+            this.knownProperties = this.fetchCustomPropertyInfos(this.app!);
+        }
+        return this.knownProperties;
+    }
+
     /**
      * Check if a string complies with ISO Standard
      * 

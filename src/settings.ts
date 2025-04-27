@@ -29,7 +29,10 @@ export class FolderTagSettingTab extends PluginSettingTab {
             if (!ruleFunction) return;
             if (ruleFunction.inputProperty) {
                 this.plugin.settings.liveRules.push(rule);
+            } else if (ruleFunction.ruleType === 'autocomplete.modal') {
+                this.plugin.settings.liveRules.push(rule);
             }
+            
         })
         this.plugin.saveSettings();
     }
@@ -40,35 +43,6 @@ export class FolderTagSettingTab extends PluginSettingTab {
 
         containerEl.empty();
         containerEl.createEl('h2', { text: `Front matter automate V${versionString}` });
-
-        new Setting(containerEl)
-        .setName('Include Files and Folders globally')
-        .setDesc(`Currently ${this.plugin.settings.include.selectedFolders.length} folders and ${this.plugin.settings.include.selectedFiles.length} files will be ${this.plugin.settings.include.mode}d.`)
-        .addButton(button => {
-            button
-                .setIcon('folder-check')
-                .setButtonText('Include')
-                .setCta() // Makes the button more prominent
-                .onClick(() => {
-                    openDirectorySelectionModal(
-                        this.app,
-                        this.plugin.settings.include.selectedFolders || [],
-                        this.plugin.settings.include.selectedFiles || [],
-                        this.plugin.settings.include.mode || 'include',
-                        this.plugin.settings.include.display || 'folders',
-                        false, // include, include option hidden
-                        (result: DirectorySelectionResult | null) => {
-                            if (!result) return;
-                            this.plugin.settings.include.selectedFolders = result.folders;
-                            this.plugin.settings.include.selectedFiles = result.files;
-                            this.plugin.settings.include.mode = result.mode;
-                            this.plugin.settings.include.display = result.display;
-                            this.plugin.saveSettings(); 
-                            this.display();
-                        }
-                    );
-                });
-        });    
 
         new Setting(containerEl)
         .setName('Exclude Files and Folders globally')
@@ -97,7 +71,37 @@ export class FolderTagSettingTab extends PluginSettingTab {
                         }
                     );
                 });
-        });          
+        });  
+
+        new Setting(containerEl)
+        .setName('Include Files and Folders globally')
+        .setDesc(`Currently ${this.plugin.settings.include.selectedFolders.length} folders and ${this.plugin.settings.include.selectedFiles.length} files will be ${this.plugin.settings.include.mode}d even if they are excluded.`)
+        .addButton(button => {
+            button
+                .setIcon('folder-check')
+                .setButtonText('Include')
+                .setCta() // Makes the button more prominent
+                .onClick(() => {
+                    openDirectorySelectionModal(
+                        this.app,
+                        this.plugin.settings.include.selectedFolders || [],
+                        this.plugin.settings.include.selectedFiles || [],
+                        this.plugin.settings.include.mode || 'include',
+                        this.plugin.settings.include.display || 'folders',
+                        false, // include, include option hidden
+                        (result: DirectorySelectionResult | null) => {
+                            if (!result) return;
+                            this.plugin.settings.include.selectedFolders = result.folders;
+                            this.plugin.settings.include.selectedFiles = result.files;
+                            this.plugin.settings.include.mode = result.mode;
+                            this.plugin.settings.include.display = result.display;
+                            this.plugin.saveSettings(); 
+                            this.display();
+                        }
+                    );
+                });
+        });    
+        
   
         new Setting(containerEl)
         .setName('Rules')
