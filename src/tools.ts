@@ -1,5 +1,7 @@
-import { App, TFile } from 'obsidian';
+import { App, normalizePath, TAbstractFile, TFile, TFolder, Vault } from 'obsidian';
 import { FolderTagRuleDefinition, FolderTagSettings, PropertyInfo, PropertyTypeInfo } from './types'
+import { ErrorManager } from "./Error";
+import { AlertModal } from './alertBox';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -174,48 +176,177 @@ export function cleanCodeString(codeString: string): string {
     // Return the accumulated cleaned code string
     return cleanedCode;
   }
+  export function resolveFolder(app: App, folder_str: string): TFolder {
+    folder_str = normalizePath(folder_str);
 
+    const folder = app.vault.getAbstractFileByPath(folder_str);
+    if (!folder) {
+        throw new ErrorManager(`Folder "${folder_str}" doesn't exist`);
+    }
+    if (!(folder instanceof TFolder)) {
+        throw new ErrorManager(`${folder_str} is a file, not a folder`);
+    }
 
+    return folder;
+}
+
+export function resolveFile(app: App, file_str: string): TFile {
+    file_str = normalizePath(file_str);
+
+    const file = app.vault.getAbstractFileByPath(file_str);
+    if (!file) {
+        throw new ErrorManager(`File "${file_str}" doesn't exist`);
+    }
+    if (!(file instanceof TFile)) {
+        throw new ErrorManager(`${file_str} is a folder, not a file`);
+    }
+
+    return file;
+}
+  export function getFilesFromFolder(
+    app: App,
+    folder_str: string
+  ): Array<TFile> {
+    const folder = resolveFolder(app, folder_str);
+
+    const files: Array<TFile> = [];
+    Vault.recurseChildren(folder, (file: TAbstractFile) => {
+        if (file instanceof TFile) {
+            files.push(file);
+        }
+    });
+
+    files.sort((a, b) => {  
+        return a.path.localeCompare(b.path);
+    });
+
+    return files;
+}
   export class ScriptingTools {
-    settings: FolderTagSettings | undefined;
-    frontmatter: any;
     app: App | undefined;
-    plugin : any;
-    currentContent: any;
+    plugin: any; //FolderTagPlugin;
+    settings: FolderTagSettings | undefined;
     rule: FolderTagRuleDefinition | undefined;
+    frontmatter: any;
+    currentContent: any;
     activeFile: TFile | undefined;
     knownProperties: Record<string, PropertyInfo>;
 
-    constructor(app?:App, plugin?:any, frontmatter?: any) {
+    constructor(app?:App, plugin?:any, settings?:FolderTagSettings, rule?: FolderTagRuleDefinition, frontmatter?: any, activeFile?: TFile) {
         this.app = app;
-        this.settings = plugin ? plugin.settings as FolderTagSettings : undefined;
-        this.frontmatter = frontmatter;
         this.plugin = plugin;
+        this.settings = settings
+        this.rule = rule;
+        this.frontmatter = frontmatter;
+        this.activeFile = activeFile;
+    }
+    getFrontmatter() { 
+      return this.frontmatter;
     }
     setFrontmatter(frontmatter:any) {
         this.frontmatter = frontmatter;
     }
-    getFrontmatter() { 
-        return this.frontmatter;
+    setFrontmatterProperty(key:string, value:any) {
+      if (!this.frontmatter) this.frontmatter = {};
+      this.frontmatter[key] = value;
+    }
+    getFrontmatterProperty(key:string) {
+      return this.frontmatter[key]
     }
     setActiveFile(file:TFile) {
-        this.activeFile = file;
+      this.activeFile = file;
     }
     getActiveFile() {
-        return this.activeFile;
+      return this.activeFile;
     }
     setRule(rule:FolderTagRuleDefinition) {
-        this.rule = rule;
+      this.rule = rule;
     }
     getRule() {
-        return this.rule;
+      return this.rule;
     }
     setCurrentContent(content:any) {
-        this.currentContent = content;
+      this.currentContent = content;
     }
     getCurrentContent() {
-        return this.currentContent;
+      return this.currentContent;
     }
+    updateFrontmatter(property, newContent, file?:TFile) {
+      if (!this.app) return;
+      if (!file) file = this.activeFile;
+      if (!file) return;
+      this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        frontmatter[property] = newContent;
+        console.log(`updateFrontmatter '${file.path}' frontmatter '${property}' to '${newContent.join(',')}'`);
+      },{'mtime':file.stat.mtime}); // do not change the modify time.
+    }
+    async showConfirmDialog(message:string, title:string = 'Confirm', button1:string = 'Yes', button2:string = 'No') {
+      const result =  await new AlertModal(this.app!, title, message, button1, button2).openAndGetValue();
+      return result.proceed;
+    }
+    /**
+     * * Get the option config for a specific rule. Optional the specific parameter by providing an option ID.
+     *
+     * @param {string} ruleId
+     * @param {string} [optionId]
+     * @return {*} 
+     * @memberof ScriptingTools
+     */
+    getOptionConfig(ruleId:string|undefined, optionId?:string){
+      if (!ruleId || ruleId === undefined || !this.settings ) return undefined;
+      const rule = this.settings.rules.find((rule: FolderTagRuleDefinition) => rule.id === ruleId);
+      if (rule && rule.hasOwnProperty('optionsConfig')) {
+          //@ts-ignore
+          const optionConfig = rule.optionsConfig[ruleId]
+          if (optionConfig) {
+            if (optionId) {
+              return optionConfig[optionId];
+            } else {
+              return optionConfig;
+            }
+          }
+      }
+      return undefined;
+    }
+
+    getFilesInVault(matching: string): TFile[] {
+        matching = matching.replace(/^\/|\/$/g, "") + '/'; // Ensure it ends with a '/'
+        const files = this.app!.vault.getMarkdownFiles(); // Retrieve all markdown files
+        const matchingFiles = files.filter(file => file instanceof TFile && file.path.includes(matching));
+        return matchingFiles;
+    }
+
+    getFileFromPath(path: string, filesCheck: TFile[] | undefined) {
+      const files = filesCheck ? filesCheck : this.app!.vault.getMarkdownFiles(); // Retrieve all markdown files
+      const matchingFiles = files.filter(file => 
+        file instanceof TFile && 
+        file.path.toLocaleLowerCase().includes(path.toLocaleLowerCase())
+      );
+      return matchingFiles.length > 0 ? matchingFiles[0] : undefined;
+    }
+    async createFileFromPath(fileNameWithPath:string, templateFileWithPath:string) {
+        const fileName = fileNameWithPath.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
+        const templateFile = templateFileWithPath.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
+        const folderPath = this.getFolderFromPath(fileName);
+        const fileNameOnly = fileName.split('/').pop() || fileName; // Get the last part of the path as the file name
+        if (!folderPath) {
+            throw new ErrorManager(`Invalid folder path: "${folderPath}"`);
+        }
+        const folder = this.app!.vault.getAbstractFileByPath(folderPath) as TFolder;
+        if (!folder) {
+            throw new ErrorManager(`Folder "${folderPath}" doesn't exist`);
+        }
+        if (!(folder instanceof TFolder)) {
+            throw new ErrorManager(`${folderPath} is a file, not a folder`);
+        }
+        const templateContent = await this.app!.vault.read(this.app!.vault.getAbstractFileByPath(templateFile) as TFile);
+        const fileExists = this.app!.vault.getAbstractFileByPath(fileNameWithPath) as TFile;
+        if (!fileExists) {
+          return await this.app!.vault.create(folder.path + '/' + fileNameOnly, templateContent); // create the file from the template
+        }
+        return fileExists; // return the file if it already exists
+    }; // create the file if it does not exist
+    
     /**
      * * Fetches custom property information from all markdown files in the vault.
      *
@@ -244,14 +375,23 @@ export function cleanCodeString(codeString: string): string {
      * @param app The Obsidian app instance.
      */
     async fetchKnownProperties(app:App) {
+      let propertyInfos: Record<string, PropertyInfo> = {};
+      // @ts-ignore
       if (typeof app.metadataCache.getAllPropertyInfos === 'function') {
-          this.knownProperties = app.metadataCache.getAllPropertyInfos();
+          // @ts-ignore
+          propertyInfos = app.metadataCache.getAllPropertyInfos();
       } else {
-          this.knownProperties = this.fetchCustomPropertyInfos(app);
+        propertyInfos = this.fetchCustomPropertyInfos(app);
       }
-      this.knownProperties = Object.fromEntries(
-          Object.entries(this.knownProperties).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+      // sort the properties by name
+      propertyInfos = Object.fromEntries(
+          Object.entries(propertyInfos).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
       );
+      // restore to keep properties to case sensitive
+      this.knownProperties = {};
+      Object.keys(propertyInfos).forEach(key => {
+        this.knownProperties[propertyInfos[key].name] = propertyInfos[key];
+      });
       console.log(this.knownProperties);
       return this.knownProperties;
     }
@@ -262,7 +402,26 @@ export function cleanCodeString(codeString: string): string {
         }
         return this.knownProperties;
     }
-
+    
+    extractLinkParts(link: string): { path: string; title: string } {
+      // Remove all square brackets from the string
+      const cleanedLink = link.replace(/[\[\]]/g, "");
+  
+      // Split the string by the "|" character
+      const parts = cleanedLink.split("|");
+  
+      // If only one part exists, use it as both path and title
+      const path = parts[0].trim();
+      const title = parts.length > 1 ? parts[1].trim() : path;
+      console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
+      return { path, title };
+    }
+    removeLeadingSlash(path: string): string {
+      return path.replace(/^\/+/, "");
+    }
+    addLeadingSlash(path: string): string {
+      return path.replace(/^(?!\/)/, "/");
+    }
     /**
      * Check if a string complies with ISO Standard
      * 
@@ -452,13 +611,14 @@ export function cleanCodeString(codeString: string): string {
       });
       return convertedTextParts.join('');
     }
+
     /**
      * get the path to a file from a string containing the full parh/name string
      * @param path string
      * @param separator string defaults to '/'
      * @returns string
      */
-    getFoldersFromPath (path:string|null|undefined, separator = '/') {
+    getFolderFromPath (path:string|null|undefined, separator = '/') {
         if (path === null) return null;
         if (path === undefined) return undefined;
         const currentPathParts = path.split('/');

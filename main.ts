@@ -22,6 +22,7 @@ export default class FolderTagPlugin extends Plugin {
         this.registerEvent(
             this.app.vault.on('create', (file) => {
                 if (file instanceof TFile && file.extension === 'md') {
+                    console.log(`creating file: `, file.path);
                     this.updateFrontmatterParameters('create', file, this.settings.rules);
                 }
             })
@@ -31,6 +32,7 @@ export default class FolderTagPlugin extends Plugin {
         this.registerEvent(
             this.app.vault.on('rename', (file, oldPath) => {
                 if (file instanceof TFile && file.extension === 'md') {
+                    console.log(`renaming file: `, file.path);
                     this.updateFrontmatterParameters('rename', file, this.settings.rules, oldPath);
                 }
             })
@@ -41,7 +43,7 @@ export default class FolderTagPlugin extends Plugin {
             this.app.workspace.on('active-leaf-change', (leaf) => {
                 if (leaf?.view instanceof MarkdownView) {
                     const activeFile = this.app.workspace.getActiveFile();
-                    // console.log(`closing file: `, activeFile?.path);
+                    console.log(`active-leaf-change file: `, activeFile?.path);
                     if (activeFile) this.updateFrontmatterParameters('active-leaf-change', activeFile, this.settings.rules);
                 }
             })
@@ -49,31 +51,45 @@ export default class FolderTagPlugin extends Plugin {
 
         // Metadata changed handler
         this.registerEvent(
-            this.app.metadataCache.on('changed', (file, data, cache) => {
-                console.log(`metadata changed: `, file.path);
-                if (cache.frontmatter && Array.isArray(this.settings.liveRules)) {
-                    this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-                    // apply all live rules to frontmatter
-                    this.settings.liveRules.forEach(rule => {
-                        if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
-                        if (cache.frontmatter)
-                            frontmatter[rule.property] = executeRule('modify',this.app, this.settings, file, cache.frontmatter[rule.property], rule, cache.frontmatter);
-                            //console.log(frontmatter[rule.property]);
-                        })
-                     },{'mtime':file.stat.mtime}); // do not change the modify time.
+            this.app.metadataCache.on('changed', async (file, data, cache) => {
+                if (!checkIfFileAllowed(file, this.settings)) {
+                    console.log(`file ${file.path} globally rejected!`)
+                    return;
+                }
+                if (cache.frontmatter && Array.isArray(this.settings.liveRules) && this.settings.liveRules.length > 0) {
+                    console.log(`Event metadata changed: ${file.path} ${this.settings.liveRules.length} rules live`);
+                    this.app.fileManager.processFrontMatter(file, async (frontmatter) => {
+                        // apply all live rules to frontmatter
+                        for (const rule of this.settings.liveRules)  {
+                            if (checkIfFileAllowed(file, this.settings, rule)){
+                                let result;
+                                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
+                                if (frontmatter) {// cache.frontmatter)
+                                    result = await executeRule('modify',this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter);
+                                    if (result) frontmatter[rule.property] = result;
+                                }
+                            } else {
+                                console.log(`file ${file.path} rejected ny rule ${rule.content}!`)
+                            }
+                        }
+                        console.log(`${this.settings.liveRules.length} rules updated metadata: `, frontmatter);
+                    },{'mtime':file.stat.mtime}); // do not change the modify time.
                 };
             })
         );
             
         noticeMessage = noticeMessage + '\n initial processing ...';
         loadingNotice.setMessage(noticeMessage);
+        this.settings.liveRules = [];
         this.settings.rules.forEach(rule => {
             let ruleFunction = getRuleFunctionById(rule.content);
             if (!ruleFunction) return;
-            if (ruleFunction.inputProperty) {
-                this.settings.liveRules.push(rule);
-            } else if (ruleFunction.ruleType === 'autocomplete.modal') {
-                this.settings.liveRules.push(rule);
+            switch (ruleFunction.ruleType) {
+                case 'autocomplete.modal':
+                case 'buildIn.inputProperty':
+                case 'automation':
+                    this.settings.liveRules.push(rule);
+                    break
             }
             
         })
@@ -141,18 +157,20 @@ export default class FolderTagPlugin extends Plugin {
             console.log(`file ${file.path} globally rejected!`)
             return;
         }
-        const currentPathTag = this.formatTagName(this.tools.getFoldersFromPath(file.path));
-        const oldPathTag = this.formatTagName(this.tools.getFoldersFromPath(oldPath))
+        const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
+        const oldPathTag = this.formatTagName(this.tools.getFolderFromPath(oldPath))
         // if (oldPathTag) console.log(`update file: "${oldPathTag}" to "${currentPathTag}"`);
         // let content = await this.app.vault.read(file);
         // const cache = this.app.metadataCache.getFileCache(file);
 
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
            // apply all rules to frontmatter
-            rules.forEach(rule => {
+            rules.forEach(async (rule) => {
+                let result
                 if (!checkIfFileAllowed(file, this.settings, rule)) return;
                 if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
-                frontmatter[rule.property] = executeRule(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                result = await executeRule(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                if (result) frontmatter[rule.property] = result;
             })
         },{'mtime':file.stat.mtime}); // do not change the modify time.
     }
@@ -168,7 +186,7 @@ export default class FolderTagPlugin extends Plugin {
 
     async removeFrontmatterParameter(file: TFile, rule: FolderTagRuleDefinition, count) {
         if (!checkIfFileAllowed(file, this.settings, rule)) return;
-        const currentPathTag = this.formatTagName(this.tools.getFoldersFromPath(file.path));
+        const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         let content = await this.app.vault.read(file);
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
             if (Array.isArray(frontmatter[rule.property])) count.items += frontmatter[rule.property].length;

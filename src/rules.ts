@@ -1,19 +1,43 @@
-import { App, renderResults, TFile } from 'obsidian';
+import { App, renderResults, SearchComponent, Setting, TFile, TFolder } from 'obsidian';
 import { parseJSCode, ScriptingTools } from './tools';
 import { ObsidianPropertyTypes, FolderTagRuleDefinition, FolderTagSettings, FrontmatterAutomateEvents } from './types';
-import { autocompleteModal, autocompleteModalResult, openAutocompleteModal } from './autocompleteModal';
+import { AutocompleteModal, autocompleteModalResult, openAutocompleteModal } from './autocompleteModal';
 import { codeEditorModalResult } from './editorModal';
+import { FolderSuggest } from "./suggesters/FolderSuggester";
+import { FileSuggest } from "./suggesters/FileSuggester";
+import { DirectorySelectionResult, openDirectorySelectionModal } from './directorySelectionModal';
+import { testFunktion } from './simpleAlertBox';
+import { AlertModal } from './alertBox';
 
-export type FrontmatterAutomateRuleTypes = 'buildIn' | 'autocomplete.modal' | 'script';
+export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' | 'autocomplete.modal' | 'automation' | 'script';
+
+export interface ConfigElements {
+    removeContent: boolean;
+    ruleActive: boolean;
+    modifyOnly: boolean;
+    inputProperty: boolean;
+    addPrefix: boolean;
+    spaceReplacement: boolean;
+    specialCharacterReplacement: boolean;
+    convertToLowerCase: boolean;
+    resultAsLink: boolean;
+    addContent: boolean;
+    excludeFolders: boolean;
+    includeFolders: boolean;
+    script: boolean;
+}
 export interface RuleFunction {
     id:string;
     ruleType: FrontmatterAutomateRuleTypes;
     description:string;
     tooltip?: string;
     inputProperty?: boolean;
+    isLiveRule?: boolean;
     source:string;
     type:ObsidianPropertyTypes[];
     fx:Function;
+    configElements: ConfigElements;
+    configTab?: (optionEl: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent:any) => void; // function to render the config tab for the rule
 }
 
 export const ruleFunctions:RuleFunction[]=[];
@@ -43,10 +67,34 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
   return
 }
 
-export function executeRule (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
-  console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
-  if (!rule.active) return returnResult;
-  const tools = new ScriptingTools(app, settings, frontMatter);
+async function getRuleResult(ruleFx: Function, app: App, rule: FolderTagRuleDefinition, ruleFunction: RuleFunction, currentFile: TFile, tools:ScriptingTools, frontMatter:any):Promise<any> {
+  let result:any = undefined;
+  //console.log('getRuleResult', ruleFx, ruleFunction, currentFile, tools, frontMatter);
+  switch (ruleFunction.ruleType) {
+    case 'script':
+    case 'buildIn':
+      result = applyFormatOptions(ruleFx(app, currentFile, tools), rule);
+      break;
+    case 'buildIn.inputProperty':
+      result = applyFormatOptions(ruleFx(app, currentFile, tools, frontMatter[rule.inputProperty]), rule);
+      break
+    case 'autocomplete.modal':
+      ruleFx(app, currentFile, tools);
+      console.log('autocomplete modal', ruleFx, ruleFunction, currentFile, tools);
+      result = null;
+      break;
+    case 'automation':
+      console.log('automation', ruleFunction, currentFile, tools);
+      result = applyFormatOptions(await ruleFx(app, currentFile, tools), rule);
+      break;
+  }
+  return result;
+}
+
+export async function executeRule (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile | null, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
+  //console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
+  if (!rule.active || !currentFile) return returnResult;
+  const tools = new ScriptingTools(app, this, settings, rule, frontMatter, currentFile);
   let fxResult:any;
   let oldResult:any;
   let oldFile:TFile | undefined = undefined;
@@ -72,14 +120,6 @@ export function executeRule (event: FrontmatterAutomateEvents, app, settings, cu
           oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
         }
         break;
-      /*
-      case 'autocomplete.modal':
-        console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`);
-        if (event === 'modify') {
-          console.log('modify autocomplete modal not implemented yet!');
-        }
-        break;
-      */
       default:
         const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
         if (functionIndex!==-1){
@@ -91,20 +131,12 @@ export function executeRule (event: FrontmatterAutomateEvents, app, settings, cu
               console.error(`Could not parse custom function for ${rule.content}!`);
               return;
             }
-            //console.log(`execute rule for ${rule.property} ${rule.content} for file ${file.path}`);
-            if (ruleFunctions[functionIndex].inputProperty) {
-              fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools, frontMatter[rule.inputProperty]), rule);
-            } else {
-              fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
-            }
-            //console.log(rule.content, ruleFunctions[functionIndex] ? fxResult : '');
+
+            fxResult = await getRuleResult(ruleFunction, app, rule, ruleFunctions[functionIndex], currentFile, tools, frontMatter);
             if (oldFile) {
-                if (ruleFunctions[functionIndex].inputProperty) {
-                  oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools, frontMatter[rule.inputProperty]), rule);
-                } else {
-                  oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
-                }
+                oldResult = await getRuleResult(ruleFunction, app, rule, ruleFunctions[functionIndex], oldFile, tools, frontMatter);
             }
+
         } else {
             console.error(`Rule function ${rule.content} not found!`);
             return returnResult; // return the original value if the function is not found
@@ -226,17 +258,17 @@ export function filterFile(file: TFile, fileList: any, filterMode: string, type:
     const filterArray = (type==='folders') ? fileList[filterMode].selectedFolders : fileList[filterMode].selectedFiles;
     if (filterArray.length === 0) return (filterMode === 'include')? false : true;
     const filePath = file.path;
-    const fileFolder = tools.getFoldersFromPath(file.path);
+    const fileFolder = tools.getFolderFromPath(file.path);
     const fileName = file.basename + '.' + file.extension;
     
     if (type === 'files') {
         result = filterArray.includes(filePath);
     }
     if (type === 'folders') {
-        filterArray.forEach(path => {
+        for (let path of filterArray) {
             result = fileFolder?.startsWith(path.slice(1)) || false; // remove root '/'
-            if (result === true) return;
-        });
+            if (result === true) return (filterMode === 'exclude')? !result : result;;
+        };
     };
     return (filterMode === 'exclude')? !result : result;
 }
@@ -288,12 +320,45 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
       return result;
 }
 
+function defaultConfigElements(modifiers:ConfigElements | any):ConfigElements {
+  const configElements: ConfigElements = {
+    removeContent: true,
+    ruleActive: true,
+    modifyOnly: true,
+    inputProperty: false,
+    addPrefix: true,
+    spaceReplacement: true,
+    specialCharacterReplacement: true,
+    convertToLowerCase: true,
+    resultAsLink: true,
+    addContent: true,
+    excludeFolders: true,
+    includeFolders: true, 
+    script: true,
+  }
+  return Object.assign({}, configElements, modifiers);
+}
+
+/**
+ * Determines whether a specific option is enabled for a given rule function.
+ *
+ * @param ruleFn - The rule function object, which may be undefined. If defined, it should contain a `configElements` property.
+ * @param option - The name of the option to check within the `configElements` of the rule function.
+ * @returns `true` if the option is undefined in the `configElements` or if the option is explicitly set to `true`.
+ *          Returns `false` if the option is explicitly set to `false`.
+ */
+export function useRuleOption(ruleFn : RuleFunction | undefined, option : string): boolean {
+  if (ruleFn?.configElements[option] === undefined) return true;
+  return ruleFn.configElements[option];
+}
+
 ruleFunctions.push({
     id:'default',
     ruleType: 'buildIn',
     description: 'Pass parameter',
     source: "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result;\n}",
     type: ['text'],
+    configElements: defaultConfigElements({}),
     fx: function (app, file, tools:ScriptingTools) { // do not change this line!
         let result = '';
         return result;
@@ -306,6 +371,7 @@ ruleFunctions.push({
   description: 'Full path, filename',
   source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
   type: ['text', 'tags', 'aliases','multitext'],
+  configElements: defaultConfigElements({}),
   fx:function (app: App, file:TFile, tools:ScriptingTools){
       let parts = file.path.split('/');
       parts.pop();
@@ -320,6 +386,7 @@ ruleFunctions.push({
     description: 'Full path, filename and Extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx: function (app: App, file:TFile, tools:ScriptingTools){
             return `${file.path}`;
         }
@@ -352,6 +419,7 @@ ruleFunctions.push({
     description: 'Full Path',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools){
         let parts = file.path.split('/');
         parts.pop();
@@ -365,12 +433,32 @@ ruleFunctions.push({
     description: 'Link to file',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases','multitext'],
+    configElements: defaultConfigElements({resultAsLink: false}),
     fx:function (app: App, file:TFile, tools:ScriptingTools){
-        let parts = file.path.split('/');
+        const parts = file.path.split('/');
+        const addExtension = tools.getOptionConfig(tools.getRule()?.id,'addExtension') 
         parts.pop();
         if (parts[parts.length-1] === file.basename) parts.pop();
-        return `[[${parts.join('/')}/${file.basename}|${file.basename}]]`;
-    }
+        let fileName = addExtension? file.basename + '.' + file.extension : file.basename; 
+        return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;
+    },
+    configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+
+      that.setOptionConfigDefaults(rule.id, {
+        addExtension: true
+      })
+  
+      new Setting(optionEL)
+        .setName('Include file extension')
+        .setDesc('Add file extension to pathname')
+        .addToggle(toggle => toggle
+            .setValue(that.getOptionConfig(rule.id ,'addExtension') || false)
+            .onChange(async (value) => {
+                that.setOptionConfig(rule.id,'addExtension', value);
+                that.updatePreview(rule, previewComponent);
+            })
+        );
+    }  
 });
 
 ruleFunctions.push({
@@ -379,6 +467,7 @@ ruleFunctions.push({
     description: 'Path (folder notes)',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases','multitext'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools){
         let parts = file.path.split('/');
         parts.pop();
@@ -393,6 +482,7 @@ ruleFunctions.push({
   description: 'Full Path (comply with "folder notes")',
   source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
   type: ['text', 'tags', 'aliases'],
+  configElements: defaultConfigElements({}),
   fx:function (app: App, file:TFile, tools:ScriptingTools){
       let parts = file.path.split('/');
       parts.pop(); // remove file name
@@ -408,6 +498,7 @@ ruleFunctions.push({
     description: 'Full Path with Extension (comply with "folder notes")',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools){
         let parts = file.path.split('/');
         parts.pop(); // remove file name
@@ -423,6 +514,7 @@ ruleFunctions.push({
     description: 'File in Root folder',
     source: "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n}",
     type: ['checkbox'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools){
         let parts = file.path.split('/');
         return parts.length === 1;
@@ -435,6 +527,7 @@ ruleFunctions.push({
     description: 'Parent Folder',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[parts.length-2];\n  }\n  return result;\n}",
     type: ['text', 'tags'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file path
         const path = file.path;
@@ -453,6 +546,7 @@ ruleFunctions.push({
     description: 'Parent Folder (complies with "folder notes")',
     source: "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}",
     type: ['text', 'tags'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools) { // do not change this line!
       const parts = file.path.split('/');
       let index = parts.length-2; // index of parent folder
@@ -473,6 +567,7 @@ ruleFunctions.push({
     description: 'All folders of the file as a list',
     source: "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
     type: ['multitext','tags','aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file path
         const path = file.path;
@@ -488,6 +583,7 @@ ruleFunctions.push({
     description: 'Root folder',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[0];\n  }\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file path
         const path = file.path;
@@ -506,6 +602,7 @@ ruleFunctions.push({
     description: 'File name without extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name.split('.');\n  result.pop(); // remove extension\n  result.join('.'); // reconstruct the file name\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file name
         const result = file.name.split('.');
@@ -521,6 +618,7 @@ ruleFunctions.push({
     description: 'File name with extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name;\n  return result;\n}",
     type: ['text', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file name
         const result = file.name;
@@ -530,11 +628,13 @@ ruleFunctions.push({
 
 ruleFunctions.push({
     id:'getProperty',
-    ruleType: 'buildIn',
+    ruleType: 'buildIn.inputProperty',
     description: 'Get a property',
+    isLiveRule: true,
     inputProperty: true,
     source: "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
     type: ['text', 'multitext', 'tags', 'aliases'],
+    configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools, input?) { // do not change this line!
         const result = input;
         return result;
@@ -547,6 +647,7 @@ ruleFunctions.push({
     description: 'Date (and Time) created',
     source: "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset\n  const result = new Date(file.stat.ctime-timeOffset);\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
     type: ['date', 'datetime'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools) { 
         const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset
         const result = new Date(file.stat.ctime-timeOffset);
@@ -560,6 +661,7 @@ ruleFunctions.push({
     description: 'Date (and Time) modified',
     source: "function (app, file, tools) { // do not change this line!\n  const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;\n  const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp\n  return result.toISOString().split('Z')[0]; // remove UTC symbol\n}",
     type: ['date', 'datetime'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools) { 
         const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000;
         const result = new Date(file.stat.mtime-timeOffset); // Apply offset to GMT Timestamp
@@ -573,6 +675,7 @@ ruleFunctions.push({
     description: 'File size in bytes',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file size\n  const result = file.stat.size;\n  return result; // return you result.\n}",
     type: ['number'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!
         // acquire file size
         const result = file.stat.size;
@@ -586,6 +689,7 @@ ruleFunctions.push({
     description: 'File size formatted as text',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file size\n  let size =file.stat.size;\n  const precision = 2; // number of decimal places\n  if (size > 1024) {\n    size = size / 1024;\n    if (size > 1024) {\n      size = size / 1024;\n      if (size > 1024) {\n        size = size / 1024;\n        return Number.parseFloat(size).toFixed(precision) + ' GB';\n      } \n      return Number.parseFloat(size).toFixed(precision) + ' MB';\n    }\n    return Number.parseFloat(size).toFixed(precision) + ' KB';\n  }   \n  return size + ' Bytes'; // return you result.\n}",
     type: ['text'],
+    configElements: defaultConfigElements({}),
     fx:function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!
         // acquire file size
         let size =file.stat.size;
@@ -610,27 +714,228 @@ ruleFunctions.push({
   id: 'autocomplete.modal',
   ruleType: 'autocomplete.modal',
   description: 'Autocomplete Modal (advanced)',
+  isLiveRule: true,
   source: '',
   type: ['text', 'tags', 'aliases','multitext'],
-  fx: function (app, file, tools:ScriptingTools) { // do not change this line!
-    console.log(`autocomplete modal not implemented yet!, returning current content ${tools.getCurrentContent()}`);
+  configElements: defaultConfigElements({removeContent: false,  inputProperty: false, addPrefix: false, spaceReplacement: false, specialCharacterReplacement: false, convertToLowerCase: false, resultAsLink: false, addContent: false, script: false}),
+  fx: async function (app, file, tools:ScriptingTools) { // do not change this line!
+    console.log(`autocomplete modal, work in progress...`);
+    const currentContent = tools.getCurrentContent();
     const rule = tools.getRule();
-    if (!rule) return tools.getCurrentContent() || 'Error'; // return current content if not implemented yet
+    if (!rule) return currentContent;
+    const options = tools.getOptionConfig(rule.id);
+    if (!rule) return tools.getCurrentContent() || 'autocomplete.modal'; // return current content if not implemented yet
     const frontmatter = tools.getFrontmatter();
-    for (const [key, value] of Object.entries(frontmatter)) {
-      if (key.startsWith(rule.property + '.') && frontmatter[key] !== undefined) {
-        openAutocompleteModal(
-          this.app,
-          this.plugin,
-          rule,
-          tools.getActiveFile(),
-          tools.getFrontmatter(),
-          (result: autocompleteModalResult | null) => {
-              console.log('autocomplete modal result', result);
-          }
-        );
-      }
-    };
-    return tools.getCurrentContent() || 'Error'; // return current content if not implemented yet
+    const hasAutocompleteProperties = Object.keys(frontmatter).some(key => 
+      key.startsWith(rule.property + options.propertyDelimiter) &&
+      (frontmatter[key] === undefined ||
+      frontmatter[key] === null ||
+      frontmatter[key] === '')
+    );
+    if (!hasAutocompleteProperties) return tools.getCurrentContent() || 'autocomplete.modal'; // return current content if not implemented yet
+    const result = await openAutocompleteModal(
+        this.app,
+        this.plugin,
+        rule,
+        tools.getActiveFile(),
+        tools.getFrontmatter()
+      );
+    console.log('autocomplete modal result', result, tools.getFrontmatter());
+    if (result?.values) {
+      this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        for (const [key, value] of Object.entries(result.values)) {
+          frontmatter[key] = value; // set the frontmatter value
+        }
+      },{'mtime':file.stat.mtime}); // do not change the modify time.
+    }
+    return tools.getCurrentContent() || 'autocomplete.modal'; // return current content if not implemented yet
+  },
+  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+
+    that.setOptionConfigDefaults(rule.id, {
+      propertyDelimiter: '.',
+    })
+
+    new Setting(optionEL)
+    .setName('Delimiter')
+    .setDesc('Character to determine which property should appear in the modal')
+    .addText(text => text
+        .setValue(that.getOptionConfig(rule.id ,'propertyDelimiter') || '.')
+        .onChange(async (value) => {
+          that.setOptionConfig(rule.id,'propertyDelimiter', value);
+        }));
   }
 })
+
+ruleFunctions.push({
+  id: 'autoLink',
+  ruleType: 'automation',
+  description: 'Auto Link (advanced)',
+  isLiveRule: true,
+  source: '',
+  type: ['text','multitext'],
+  configElements: defaultConfigElements({removeContent: false,  inputProperty: false, addPrefix: false, spaceReplacement: false, specialCharacterReplacement: false, convertToLowerCase: false, resultAsLink: false, script: false}),
+  fx: async function (app, file, tools:ScriptingTools) { // do not change this line!
+    const currentContent = tools.getCurrentContent();
+    let newContent = new Array<string>();
+    const rule = tools.getRule();
+    if (!rule) {
+      console.log(`autoLink: rule not found, returning current content ${currentContent}`);
+      return currentContent;
+    } 
+    const options = tools.getOptionConfig(rule.id);
+    const filesToCheck = tools.getFilesInVault(options.destinationFolder);
+    let links = currentContent || [];
+    if (typeof links === 'object' && !Array.isArray(links)) {
+      links = []; // convert object to array
+    } else if (typeof links === 'string') {
+      links = [links]; // convert to array if not already an array
+    }
+    console.log(`autoLink: links to check`, links, filesToCheck);
+  
+    for (const part of links)  {
+      let link = tools.extractLinkParts(part);
+      let linkFile = tools.getFileFromPath(link.path, filesToCheck);
+      if (!linkFile) { // create new File
+        if (options.askConfirmation) {
+          const result = await new AlertModal(app, 'Create new file', `File ${link.path} does not exist. Do you want to create it?`, 'Create', 'Cancel', "Don't ask again.").openAndGetValue();
+          if (!result.proceed) return; // do not create the file if the user does not confirm
+          options.askConfirmation = !result.data.askConfirmation;
+        }
+        link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
+        console.log(`autoLink: creating new file ${link.path}`);
+        linkFile = await tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined); // create the file if it does not exist
+        console.log(`autoLink: new file created ${linkFile.path}`);
+        tools.updateFrontmatter(rule.property, [`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`], linkFile); // add location of new path to itself
+      } else {
+        console.log(`autoLink: creating Link to existing File ${linkFile.path}`);
+      }
+      if (linkFile) {
+        link.path = linkFile.path;
+        newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
+      }
+      console.log(`autoLink: new content`, newContent);
+    }
+    console.log(`autoLink: write content`, newContent);
+    tools.updateFrontmatter(rule.property, newContent); // update the frontmatter with the new content
+    return newContent;    
+  },
+  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+
+    that.setOptionConfigDefaults(rule.id, {
+      addTemplate: true,
+      askConfirmation: true,
+      destinationFolder: '/',
+      templateFile: '',
+    })
+
+    new Setting(optionEL)
+      .setName('Add template to new files')
+      .setDesc('Automatically add template to new files')
+      .addToggle(toggle => toggle
+          .setValue(that.getOptionConfig(rule.id ,'addTemplate') || false)
+          .onChange(async (value) => {
+              that.setOptionConfig(rule.id,'addTemplate', value);
+          }));
+
+    new Setting(optionEL)
+      .setName('Ask for confirmation')
+      .setDesc('Ask for confirmation before creating new files')
+      .addToggle(toggle => toggle
+          .setValue(that.getOptionConfig(rule.id ,'askConfirmation') || false)
+          .onChange(async (value) => {
+              that.setOptionConfig(rule.id,'askConfirmation', value);
+          }));
+
+    let destinationFolderEl:SearchComponent;  
+    new Setting(optionEL)
+      .setName('Destination Folder')
+      .setDesc('Folder to place new files')
+      .addSearch((cb) => {
+          destinationFolderEl = cb;
+          new FolderSuggest(that.app, cb.inputEl);
+          cb.setPlaceholder("enter folder or browse ...")
+              .setValue(that.getOptionConfig(rule.id ,'destinationFolder') || '')
+              .onChange((newFolder) => {
+                  newFolder = newFolder.trim()
+                  newFolder = newFolder.replace(/\/$/, "");
+                  that.setOptionConfig(rule.id,'destinationFolder', newFolder);
+              });
+          // @ts-ignore
+          cb.containerEl.addClass("frontmatter-automate-search");
+      })
+      .addExtraButton((button) =>
+        button
+          .setIcon('folder-tree')
+          .setTooltip('Select template folder')
+          .onClick(async () => {
+            openDirectorySelectionModal(
+              that.app,
+              [that.getOptionConfig(rule.id ,'destinationFolder')],
+              [],
+              { 
+                  title: 'Select folder to place new files',
+                  selectionMode: 'include',
+                  displayMode: 'folder',
+                  optionSelectionMode: false,
+                  optionShowFiles: false,
+              },
+              (result: DirectorySelectionResult | null) => {
+                  if (!result) return;
+                  if (result.folders.length === 0 || !result.folders[0] || typeof result.folders[0] !== 'string') return;
+                  let selectedFolder = result.folders[0].trim().replace(/\/$/, ""); // remove leading and trailing slashes (/^\/|\/$/g, "")
+                  if (selectedFolder === '') selectedFolder = '/'; // if empty, set to root folder
+                  if (!selectedFolder) return;
+                  destinationFolderEl.setValue(selectedFolder);
+                  that.setOptionConfig(rule.id,'destinationFolder', selectedFolder);
+              }
+          );
+          })
+      );
+    
+    let destinationFileEl:SearchComponent;  
+    new Setting(optionEL)
+      .setName('Template File')
+      .setDesc('Select a template file to add to new files')
+      .addSearch((cb) => {
+          destinationFileEl = cb;
+          new FileSuggest(cb.inputEl, that.plugin, '');
+          cb.setPlaceholder("enter folder or browse ...")
+              .setValue(that.getOptionConfig(rule.id ,'templateFile') || '')
+              .onChange((newFile) => {
+                  newFile = newFile.trim()
+                  newFile = newFile.replace(/\/$/, "");
+                  that.setOptionConfig(rule.id,'templateFile', newFile);
+              });
+          // @ts-ignore
+          cb.containerEl.addClass("frontmatter-automate-search");
+      })
+      .addExtraButton((button) =>
+        button
+          .setIcon('folder-tree')
+          .setTooltip('Select template file')
+          .onClick(async () => {
+            openDirectorySelectionModal(
+              that.app,
+              [],
+              [that.getOptionConfig(rule.id,'templateFile')],
+              { 
+                  title: 'Select template for new files',
+                  selectionMode: 'include',
+                  displayMode: 'file',
+                  optionSelectionMode: false,
+                  optionShowFiles: true,
+              },
+              (result: DirectorySelectionResult | null) => {
+                  if (!result) return;
+                  if (result.files.length === 0 || !result.files[0] || typeof result.files[0] !== 'string') return;
+                  let selectedFile = result.files[0].trim().replace(/\/$/, "");
+                  if (!selectedFile) return;
+                  destinationFileEl.setValue(selectedFile);
+                  that.setOptionConfig(rule.id,'templateFile', selectedFile);
+              }
+            );
+          })
+      );
+    }
+  })

@@ -1,6 +1,7 @@
+import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
 import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.15";
+export const versionString = "0.0.16";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'delete' | 'modify' | 'preview' | 'all';
@@ -8,8 +9,8 @@ export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-chang
 export interface FilterFilesAndFolders {
     selectedFolders: string[],
     selectedFiles: string[],
-    mode: 'include' | 'exclude',
-    display: 'folders' | 'files'
+    mode: DirectorySelectionMode,
+    display: DirectoryDisplayMode
 }
 
 export const DEFAULT_FILTER_FILES_AND_FOLDERS: FilterFilesAndFolders = {
@@ -83,6 +84,7 @@ export interface FolderTagRuleDefinition {
     inputProperty: string;
     onlyModify: boolean;
     useCustomCode: boolean;
+    optionConfig?:{};
 }
 
 export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {

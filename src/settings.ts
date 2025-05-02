@@ -27,12 +27,9 @@ export class FolderTagSettingTab extends PluginSettingTab {
         this.plugin.settings.rules.forEach(rule => {
             let ruleFunction = getRuleFunctionById(rule.content);
             if (!ruleFunction) return;
-            if (ruleFunction.inputProperty) {
-                this.plugin.settings.liveRules.push(rule);
-            } else if (ruleFunction.ruleType === 'autocomplete.modal') {
+            if (ruleFunction.isLiveRule) {
                 this.plugin.settings.liveRules.push(rule);
             }
-            
         })
         this.plugin.saveSettings();
     }
@@ -57,9 +54,12 @@ export class FolderTagSettingTab extends PluginSettingTab {
                         this.app,
                         this.plugin.settings.exclude.selectedFolders || [],
                         this.plugin.settings.exclude.selectedFiles || [],
-                        this.plugin.settings.exclude.mode || 'exclude',
-                        this.plugin.settings.exclude.display || 'folders',
-                        false, // include, exclude option hidden
+                        { 
+                            selectionMode: this.plugin.settings.exclude.mode || 'exclude',
+                            displayMode: this.plugin.settings.exclude.display || 'folders',
+                            optionSelectionMode: false,
+                            optionShowFiles: true,
+                        },
                         (result: DirectorySelectionResult | null) => {
                             if (!result) return;
                             this.plugin.settings.exclude.selectedFolders = result.folders;
@@ -86,9 +86,12 @@ export class FolderTagSettingTab extends PluginSettingTab {
                         this.app,
                         this.plugin.settings.include.selectedFolders || [],
                         this.plugin.settings.include.selectedFiles || [],
-                        this.plugin.settings.include.mode || 'include',
-                        this.plugin.settings.include.display || 'folders',
-                        false, // include, include option hidden
+                        { 
+                            selectionMode: this.plugin.settings.include.mode || 'include',
+                            displayMode: this.plugin.settings.include.display || 'folders',
+                            optionSelectionMode: false,
+                            optionShowFiles: true,
+                        },
                         (result: DirectorySelectionResult | null) => {
                             if (!result) return;
                             this.plugin.settings.include.selectedFolders = result.folders;

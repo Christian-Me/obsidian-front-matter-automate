@@ -112,8 +112,7 @@ export function renderValueInput(containerEl: HTMLElement, propertyInfo: Propert
         returnComponent.inputEl.style.border = 'none';
     }
     return returnComponent;
-}
-    
+} 
 export function updatePropertyIcon(iconEl: HTMLElement, type: ObsidianPropertyTypes | undefined) {
     let iconName = 'hash';
     switch (type) {

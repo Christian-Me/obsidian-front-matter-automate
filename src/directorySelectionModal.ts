@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon } from 'obsidian'; // Added setIcon
 
 // Define the structure for tree nodes
@@ -12,12 +13,21 @@ interface TreeNode {
     container: HTMLElement; // Reference to the container div holding checkbox and label
 }
 
+export type DirectorySelectionMode = 'include' | 'exclude'; // Define selection modes
+export type DirectoryDisplayMode = 'folders' | 'files' | 'folder' | 'file'; // Define display modes
+export interface DirectorySelectionOptions {
+    title?: string; // Title of the modal
+    selectionMode: DirectorySelectionMode; // 'include' or 'exclude'
+    displayMode: DirectoryDisplayMode; // 'folders' or 'files'
+    optionSelectionMode: boolean; // Show include/exclude option
+    optionShowFiles: boolean; // Show files option
+}
 // Define the result structure returned by the modal
 export interface DirectorySelectionResult {
     folders: string[];
     files: string[];
-    mode: 'include' | 'exclude';
-    display: 'folders' | 'files';
+    mode: DirectorySelectionMode;
+    display: DirectoryDisplayMode;
 }
 
 /**
@@ -27,15 +37,16 @@ export class DirectorySelectionModal extends Modal {
     // Initial state passed to the modal (stored for reset functionality)
     private readonly initialFoldersSnapshot: ReadonlySet<string>;
     private readonly initialFilesSnapshot: ReadonlySet<string>;
-    private readonly initialModeSnapshot: 'include' | 'exclude';
-    private readonly initialDisplaySnapshot: 'folders' | 'files';
+    private readonly initialModeSnapshot: DirectorySelectionMode;
+    private readonly initialDisplaySnapshot: DirectoryDisplayMode;
+    private readonly options: DirectorySelectionOptions; // Options for the modal
     private readonly okCallback: (result: DirectorySelectionResult | null) => void;
 
     // Current state being modified within the modal
     private currentFolders: Set<string>;
     private currentFiles: Set<string>;
-    private currentMode: 'include' | 'exclude';
-    private currentDisplay: 'folders' | 'files';
+    private currentMode: DirectorySelectionMode;
+    private currentDisplay: DirectoryDisplayMode;
     private includeExcludeSelectable: boolean;
     private showFiles: boolean = false; // State for showing files in the tree
 
@@ -56,19 +67,17 @@ export class DirectorySelectionModal extends Modal {
         app: App,
         initialFolders: string[],
         initialFiles: string[],
-        initialMode: 'include' | 'exclude',
-        initialDisplay: 'folders' | 'files',
-        includeExcludeSelectable: boolean,
+        initialOptions: DirectorySelectionOptions,
         okCallback: (result: DirectorySelectionResult | null) => void
     ) {
         super(app);
         // Store initial state for reset
         this.initialFoldersSnapshot = new Set(initialFolders);
         this.initialFilesSnapshot = new Set(initialFiles);
-        this.initialModeSnapshot = initialMode;
-        this.initialDisplaySnapshot = initialDisplay;
-        this.showFiles = initialDisplay==='files' || initialFiles.length>0;
-        this.includeExcludeSelectable = includeExcludeSelectable;
+        this.initialModeSnapshot = initialOptions.selectionMode;
+        this.initialDisplaySnapshot = initialOptions.displayMode;
+        this.showFiles = initialOptions.displayMode==='files' || initialOptions.displayMode==='file'|| initialFiles.length>0;
+        this.options = initialOptions;
         this.okCallback = okCallback;
 
         // Initialize current state from initial state for editing
@@ -105,9 +114,9 @@ export class DirectorySelectionModal extends Modal {
 
         // --- Modal Title ---
         if (this.includeExcludeSelectable) {
-            contentEl.createEl('h2', { text: 'Include or Exclude Folders and Files' }); 
+            contentEl.createEl('h2', { text: this.options.title || 'Include or Exclude Folders and Files' }); 
         } else {
-            contentEl.createEl('h2', { text: `${this.currentMode === 'exclude' ? 'Exclude' : 'Include'} Folders and Files` }); 
+            contentEl.createEl('h2', { text: this.options.title || `${this.currentMode === 'exclude' ? 'Exclude' : 'Include'} Folders and Files` }); 
         }
 
         // --- Settings Controls ---
@@ -171,17 +180,19 @@ export class DirectorySelectionModal extends Modal {
      * @param containerEl - The HTML element to append the setting to.
      */
     private createShowFilesSetting(containerEl: HTMLElement): void {
-        new Setting(containerEl)
-            .setName('Show Files')
-            .setDesc('Show Files within the directory tree.')
-            .addToggle(toggle => {
-                toggle
-                    .setValue(this.showFiles)
-                    .onChange(value => {
-                        this.showFiles = value;
-                        this.buildAndRenderTree();
-                    });
-            });
+        if (this.options.optionShowFiles) {
+            new Setting(containerEl)
+                .setName('Show Files')
+                .setDesc('Show Files within the directory tree.')
+                .addToggle(toggle => {
+                    toggle
+                        .setValue(this.showFiles)
+                        .onChange(value => {
+                            this.showFiles = value;
+                            this.buildAndRenderTree();
+                        });
+                });
+        }
     }
 
     /**
@@ -352,7 +363,7 @@ export class DirectorySelectionModal extends Modal {
 
          // Render the root folder itself
          //this.renderTreeNode(treeData, rootUl, 0, this.currentMode === 'include' ? this.currentFolders : this.currentFiles);
-         this.renderTreeNode(treeData, rootUl, 0, this.currentFolders); //TODO: expand this to include files as well
+         this.renderTreeNode(treeData, rootUl, 0, this.currentFolders, this.currentFiles); //TODO: expand this to include files as well
 
          // Render children of the root folder
          treeData.children?.forEach(childNode => {
@@ -366,7 +377,7 @@ export class DirectorySelectionModal extends Modal {
      * @param parentElement - The HTML `ul` element to append this node's `li` to.
      * @param level - The current indentation level.
      */
-    private renderTreeNode(node: TreeNode, parentElement: HTMLElement, level: number, selectedPaths: Set<string>) {
+    private renderTreeNode(node: TreeNode, parentElement: HTMLElement, level: number, selectedPaths: Set<string>, selectedfiles: Set<string>) {
         const li = parentElement.createEl('li');
         li.style.marginLeft = `${level * 20}px`; // Apply indentation based on level
         li.addClass(`tree-node-${node.type}`); // Add class for type (folder/file)
@@ -387,7 +398,7 @@ export class DirectorySelectionModal extends Modal {
             toggleButton.style.marginRight = '5px';
 
             // Check if this folder or any of its children are selected
-            const shouldExpand = this.shouldExpandFolder(node, selectedPaths);
+            const shouldExpand = this.shouldExpandFolder(node, selectedPaths, selectedfiles);
             if (shouldExpand) {
                 isCollapsed = false;
             }
@@ -436,8 +447,18 @@ export class DirectorySelectionModal extends Modal {
 
             // Update the current selection sets
             if (target.checked) {
-                if (type === 'folder') this.currentFolders.add(path);
-                else this.currentFiles.add(path);
+                if (type === 'folder'){
+                    if (this.options.displayMode === 'folder') {
+                        this.currentFolders.clear(); // Clear previous selection if only one folder can be selected
+
+                    }
+                    this.currentFolders.add(path);
+                } else {
+                    if (this.options.displayMode === 'file') {
+                        this.currentFiles.clear(); // Clear previous selection if only one file can be selected
+                    }
+                    this.currentFiles.add(path);
+                }
             } else {
                 if (type === 'folder') this.currentFolders.delete(path);
                 else this.currentFiles.delete(path);
@@ -455,19 +476,19 @@ export class DirectorySelectionModal extends Modal {
             childrenUl.style.marginLeft = '0'; // Prevent double indentation from default UL styles
             childrenUl.style.display = isCollapsed ? 'none' : 'block'; // Show/hide children based on initial state
 
-            node.children.forEach(child => this.renderTreeNode(child, childrenUl!, level + 1, selectedPaths)); // Increase level for children
+            node.children.forEach(child => this.renderTreeNode(child, childrenUl!, level + 1, selectedPaths, selectedfiles)); // Increase level for children
         }
     }
 
     // Helper method to determine if a folder should be expanded
-    private shouldExpandFolder(node: TreeNode, selectedPaths: Set<string>): boolean {
-        if (selectedPaths.has(node.path)) {
+    private shouldExpandFolder(node: TreeNode, selectedPaths: Set<string>, selectedFiles: Set<string>): boolean {
+        if (selectedPaths.has(node.path) || selectedFiles.has(node.path)) {
             return true; // The folder itself is selected
         }
 
         if (node.children) {
             for (const child of node.children) {
-                if (this.shouldExpandFolder(child, selectedPaths)) {
+                if (this.shouldExpandFolder(child, selectedPaths, selectedFiles)) {
                     return true; // A child is selected
                 }
             }
@@ -528,6 +549,7 @@ export class DirectorySelectionModal extends Modal {
             // --- Apply Visual Styles ---
             // Checkbox itself should always be clickable to change selection state
             node.checkbox.disabled = false;
+            node.checkbox.checked = nodeSelected;
 
             // Apply styling to the container (label, icon) based on disabled state
             if (isDisabled) {
@@ -665,9 +687,7 @@ export function openDirectorySelectionModal(
     app: App,
     initialFolders: string[],
     initialFiles: string[],
-    initialMode: 'include' | 'exclude',
-    initialDisplay: 'folders' | 'files',
-    includeExcludeSelectable: boolean,
+    options: DirectorySelectionOptions,
     okCallback: (result: DirectorySelectionResult | null) => void
 ): void {
     // Create and open the modal instance
@@ -675,9 +695,7 @@ export function openDirectorySelectionModal(
         app,
         initialFolders,
         initialFiles,
-        initialMode,
-        initialDisplay,
-        includeExcludeSelectable,
+        options,
         okCallback
     ).open();
 }

@@ -36,7 +36,7 @@
         "selectedFiles": [],
         "mode": "exclude"
       },
-      "value": "2025-04-27T12:48:29.531",
+      "value": "2025-04-25T22:28:59.853",
       "asLink": false,
       "onlyModify": false
     },
@@ -57,9 +57,9 @@
       "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[global/template]]",
+      "value": "[[Tiere/Säugetiere/Affen]]",
       "asLink": true,
-      "onlyModify": true,
+      "onlyModify": false,
       "include": {
         "selectedFolders": [
           "/Tiere"
@@ -71,7 +71,8 @@
         "selectedFolders": [],
         "selectedFiles": [],
         "mode": "exclude"
-      }
+      },
+      "lowercaseTags": false
     },
     {
       "id": "7b45bbd9-fd1e-4815-891c-5d37af8c5d31",
@@ -83,26 +84,30 @@
         "count": 1,
         "source": "registered"
       },
-      "content": "pathFolderNotes",
+      "content": "linkToFile",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "global/template",
+      "value": "[[tiere/säugetiere/affen/schimpanse.md|schimpanse]]",
       "exclude": {
-        "selectedFolders": [
-          "/"
-        ],
+        "selectedFolders": [],
         "selectedFiles": [],
         "mode": "exclude"
       },
-      "onlyModify": true,
+      "onlyModify": false,
       "include": {
         "selectedFolders": [],
         "selectedFiles": [],
         "mode": "include"
-      }
+      },
+      "optionsConfig": {
+        "7b45bbd9-fd1e-4815-891c-5d37af8c5d31": {
+          "addExtension": true
+        }
+      },
+      "lowercaseTags": true
     },
     {
       "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
@@ -121,10 +126,10 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[global]]",
+      "value": "[[Tiere]]",
       "asLink": true,
       "lowercaseTags": false,
-      "onlyModify": true,
+      "onlyModify": false,
       "include": {
         "selectedFolders": [],
         "selectedFiles": [],
@@ -154,12 +159,13 @@
       "showContent": true,
       "addContent": "start",
       "value": [
-        "global",
-        "template"
+        "Tiere",
+        "Säugetiere",
+        "Affen"
       ],
       "asLink": false,
       "lowercaseTags": false,
-      "onlyModify": true,
+      "onlyModify": false,
       "include": {
         "selectedFolders": [],
         "selectedFiles": [],
@@ -188,7 +194,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-04-27T12:50:10.878",
+      "value": "2025-05-02T19:13:52.288",
       "onlyModify": true,
       "include": {
         "selectedFolders": [],
@@ -247,8 +253,9 @@
       "jsCode": "",
       "showContent": false,
       "value": [
-        "global",
-        "template"
+        "Tiere",
+        "Säugetiere",
+        "Affen"
       ],
       "spaceReplacement": "_",
       "specialCharReplacement": "-",
@@ -299,7 +306,7 @@
       "specialCharReplacement": "-",
       "lowercaseTags": true,
       "value": [
-        "global/template"
+        "tiere/säugetiere/affen"
       ],
       "onlyModify": true
     },
@@ -310,8 +317,9 @@
       "addContent": "end",
       "property": "aliases",
       "value": [
-        "[[#global]]",
-        "[[#template]]"
+        "[[#tiere]]",
+        "[[#säugetiere]]",
+        "[[#affen]]"
       ],
       "customProperty": "",
       "type": "aliases",
@@ -375,8 +383,9 @@
       "lowercaseTags": false,
       "inputProperty": "title",
       "value": [
-        "[[global]]",
-        "[[template]]"
+        "[[Tiere]]",
+        "[[Säugetiere]]",
+        "[[Affen]]"
       ],
       "onlyModify": true
     },
@@ -415,15 +424,15 @@
       "lowercaseTags": false,
       "inputProperty": "this a date",
       "onlyModify": false,
-      "value": "75 Bytes"
+      "value": "1.03 KB"
     },
     {
       "id": "54218a08-e3ea-4b75-970f-70d1d2e252c0",
       "active": true,
       "asLink": false,
       "addContent": "overwrite",
-      "property": "fullpath",
-      "value": "global/template",
+      "property": "fullPath",
+      "value": "Tiere/Säugetiere/Affen",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -465,7 +474,58 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "location",
-      "value": "Error",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "autoLink",
+      "buildInCode": "",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [
+          "/category",
+          "/global"
+        ],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": false,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "b7ab9f6f-fc3a-4823-8db5-7d54ca4c47b1": {
+          "addTemplate": true,
+          "askConfirmation": true,
+          "destinationFolder": "/category/locations/location",
+          "templateFile": "global/template/t_location.md"
+        }
+      },
+      "value": [
+        "[[category/locations/location/Kongo.md|Kongo]]",
+        "[[category/locations/location/Australien.md|Australien]]",
+        "[[category/locations/location/Deutschland.md|Deutschland]]"
+      ]
+    },
+    {
+      "id": "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "autocompleteTest",
+      "value": null,
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -484,11 +544,53 @@
         "display": "folders"
       },
       "include": {
-        "selectedFolders": [
-          "/category/locations/location"
-        ],
+        "selectedFolders": [],
         "selectedFiles": [],
-        "mode": "include"
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a": {
+          "propertyDelimiter": "."
+        }
+      }
+    },
+    {
+      "id": "827efa24-54b9-46ae-b4ae-7e058c0ddea0",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "aliases",
+      "value": "Tiere/Säugetiere/Affen",
+      "customProperty": "",
+      "type": "aliases",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "path",
+      "buildInCode": "",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
       },
       "prefix": "",
       "spaceReplacement": "",
@@ -506,7 +608,58 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "location",
-      "value": "Error",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "autoLink",
+      "buildInCode": "",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [
+          "/category",
+          "/global"
+        ],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": false,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "b7ab9f6f-fc3a-4823-8db5-7d54ca4c47b1": {
+          "addTemplate": true,
+          "askConfirmation": true,
+          "destinationFolder": "/category/locations/location",
+          "templateFile": "global/template/t_location.md"
+        }
+      },
+      "value": [
+        "[[category/locations/location/Kongo.md|Kongo]]",
+        "[[category/locations/location/Australien.md|Australien]]",
+        "[[category/locations/location/Deutschland.md|Deutschland]]"
+      ]
+    },
+    {
+      "id": "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "autocompleteTest",
+      "value": null,
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -525,11 +678,10 @@
         "display": "folders"
       },
       "include": {
-        "selectedFolders": [
-          "/category/locations/location"
-        ],
+        "selectedFolders": [],
         "selectedFiles": [],
-        "mode": "include"
+        "mode": "include",
+        "display": "folders"
       },
       "prefix": "",
       "spaceReplacement": "",
@@ -537,13 +689,18 @@
       "lowercaseTags": false,
       "inputProperty": "",
       "onlyModify": true,
-      "useCustomCode": false
+      "useCustomCode": false,
+      "optionsConfig": {
+        "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a": {
+          "propertyDelimiter": "."
+        }
+      }
     }
   ],
   "useTextArea": false,
   "exclude": {
     "selectedFolders": [
-      "/global"
+      "/global/template"
     ],
     "selectedFiles": [],
     "mode": "exclude"

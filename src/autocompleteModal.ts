@@ -13,7 +13,12 @@ export interface autocompleteModalResult {
 /**
  * Obsidian Modal for selecting directories and files from the vault structure.
  */
-export class autocompleteModal extends Modal {
+export class AutocompleteModal extends Modal {
+
+    
+    private resolvePromise!: (result: autocompleteModalResult | null) => void;
+    private promise: Promise<autocompleteModalResult | null>;
+
     // Initial state passed to the modal (stored for reset functionality)
     private readonly okCallback: (result: autocompleteModalResult | null) => void;
     private plugin: any;
@@ -47,7 +52,7 @@ export class autocompleteModal extends Modal {
         rule: FolderTagRuleDefinition,
         activeFile: TFile | TFolder | undefined,
         frontmatter: any,   
-        okCallback: (result: autocompleteModalResult | null) => void
+        okCallback?: (result: autocompleteModalResult | null) => void
     ) {
         super(app);
         this.app = app;
@@ -59,7 +64,12 @@ export class autocompleteModal extends Modal {
         this.plugin = plugin;
         this.rule = rule;
         this.expectedType = rule.type; // Expected type for the modal
-        this.okCallback = okCallback;
+
+        // Initialize the promise
+        this.promise = new Promise((resolve) => {
+            this.resolvePromise = resolve;
+        });
+        if (okCallback) this.okCallback = okCallback;
 
         // Initialize current state from initial state for editing
         this.resetToInitial(); // Use a method for initialization and reset
@@ -81,15 +91,15 @@ export class autocompleteModal extends Modal {
      * Called when the modal is opened. Builds the UI.
      */
     async onOpen() {
-        this.knownProperties = await this.scriptingTools.fetchCustomPropertyInfos(this.app); // Initialize known properties
+        this.knownProperties = await this.scriptingTools.fetchKnownProperties(this.app); // Initialize known properties
         const { contentEl } = this;
         if (contentEl.parentElement) contentEl.parentElement.style.width = '900px';
         contentEl.empty(); // Clear previous 
         contentEl.addClass('codeEditor-modal'); 
 
         // --- Modal Title ---
-        contentEl.createEl('h2', { text: 'Autocomplete Modal' });    
-        contentEl.createEl('body', { text: `Expected result: ${this.expectedType}` }); 
+        contentEl.createEl('h2', { text: 'Please complete the following properties' });    
+        contentEl.createEl('body', { text: `File: ${this.activeFile?.path}` }); 
 
         // --- Tree Container ---
         this.contentRootElement = contentEl.createDiv({ cls: 'codeEditor-container' });
@@ -104,6 +114,7 @@ export class autocompleteModal extends Modal {
 
 
         const propertyContainerEl = contentEl.createDiv({ cls: "codeEditor-options" });
+        propertyContainerEl.style.flexDirection = 'column'; // Stack items vertically
 
         for (const [key, value] of Object.entries(this.frontmatter)) {
             if (key.startsWith(this.rule.property + '.')) {
@@ -120,7 +131,7 @@ export class autocompleteModal extends Modal {
                 const leftContainer = controlEl.createDiv({ cls: 'property-left-container' });
                 leftContainer.style.display = 'flex';
                 leftContainer.style.alignItems = 'center';
-                leftContainer.style.minWidth = '150px'; 
+                leftContainer.style.minWidth = '250px'; 
 
                 const iconEl = leftContainer.createSpan({ cls: 'property-icon setting-item-icon' });
                 iconEl.style.marginRight = '8px';
@@ -134,6 +145,7 @@ export class autocompleteModal extends Modal {
                 nameInput.inputEl.style.border = 'none'; // make border invisible
                 const middleContainer = controlEl.createDiv({ cls: 'property-middle-container' });
                 const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
+                valueContainer.style.width = '100%'; // Full width for value container
                 let previewComponent = renderValueInput(valueContainer, this.knownProperties[key], this.frontmatter[key], this.changeCallback);
 
                 previewComponent.inputEl.style.width = '100%'; // Make the input field take full width
@@ -189,7 +201,7 @@ export class autocompleteModal extends Modal {
         cancelButton.ariaLabel = 'close and discard changes'; // Accessibility
         cancelButton.onclick = () => {
             console.log("Cancel Clicked - Returning"); // Debug log
-            this.okCallback( null ); // Pass the final selection back
+            this.resolvePromise(null); // Resolve the promise with null
             this.close();
         };
 
@@ -197,7 +209,7 @@ export class autocompleteModal extends Modal {
         const okButton = buttonsEl.createEl('button', { text: 'OK', cls: 'mod-cta' });
         cancelButton.ariaLabel = 'close and save changes'; // Accessibility
         okButton.onclick = () => {
-            this.okCallback( {values:this.result} ); // Pass the final selection back
+            this.resolvePromise({ values: this.result }); // Resolve the promise with the result
             this.close();
         };
 
@@ -211,31 +223,32 @@ export class autocompleteModal extends Modal {
         const { contentEl } = this;
         contentEl.empty(); // Clear the modal's content
     }
+
+    openAndGetValues(): Promise<autocompleteModalResult | null> {
+        this.open();
+        return this.promise; // Return the promise
+    }
 }
 
+
 /**
- * Helper function to easily open the Directory Selection Modal.
+ * Opens an autocomplete modal for selecting or entering values based on the provided parameters.
  *
- * @param app - The Obsidian App instance.
- * @param initialCode - String with the initial code.
- * @param expectedType - Expected return type.
- * @param okCallback - Function to call when the user clicks "OK". Receives the selection result.
+ * @param app - The Obsidian application instance.
+ * @param plugin - The plugin instance that is invoking the modal.
+ * @param rule - The folder-to-tag rule definition to be used in the modal.
+ * @param activeFile - The currently active file or folder, if any.
+ * @param frontmatter - The frontmatter data associated with the active file.
+ * @returns A promise that resolves to the result of the autocomplete modal, or `null` if no selection was made.
  */
-export function openAutocompleteModal(
+export async function openAutocompleteModal(
     app: App,
     plugin: any,
     rule: FolderTagRuleDefinition,
     activeFile: TFile | TFolder | undefined,
-    frontmatter: any,
-    okCallback: (result: autocompleteModalResult | null) => void
-): void {
+    frontmatter: any
+): Promise<autocompleteModalResult | null> {
     // Create and open the modal instance
-    new autocompleteModal(
-        app,
-        plugin,
-        rule,
-        activeFile,
-        frontmatter,
-        okCallback
-    ).open();
+    const modal = new AutocompleteModal(app, plugin, rule, activeFile, frontmatter);
+    return await modal.openAndGetValues(); // Wait for the promise to resolve
 }
