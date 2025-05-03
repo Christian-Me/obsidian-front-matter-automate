@@ -132,6 +132,7 @@ export function executeRule (event: FrontmatterAutomateEvents, app, settings, cu
           oldResult = applyFormatOptions(customRuleFunction(app, oldFile, tools), rule);
         }
         break;
+      case 'buildIn.inputProperty':
       case 'buildIn':  
         const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctionConfig.fx;
         if (typeof ruleFunction !== 'function') {
@@ -377,6 +378,40 @@ ruleFunctions.push({
 });
 
 ruleFunctions.push({
+  id:'constant',
+  ruleType: 'buildIn',
+  description: 'Constant value',
+  source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+  type: ['text', 'tags', 'aliases','multitext'],
+  configElements: defaultConfigElements({
+    addPrefix: false,
+    spaceReplacement: false,
+    specialCharacterReplacement: false,
+    convertToLowerCase: false,
+    resultAsLink: false,}),
+  fx:function (app: App, file:TFile, tools:ScriptingTools){
+      const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');
+      return result;
+  },
+  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+
+    that.setOptionConfigDefaults(rule.id, {
+      constantValue: '',
+    })
+
+    new Setting(optionEL)
+    .setName('Constant value')
+    .setDesc('Enter a constant value to be used in the rule')
+    .addText(text => text
+        .setValue(that.getOptionConfig(rule.id ,'constantValue') || '')
+        .onChange(async (value) => {
+          that.setOptionConfig(rule.id,'constantValue', value);
+          that.updatePreview(rule, previewComponent);
+        }));
+  }
+});
+
+ruleFunctions.push({
   id:'fullPath',
   ruleType: 'buildIn',
   description: 'Full path, filename',
@@ -402,28 +437,7 @@ ruleFunctions.push({
             return `${file.path}`;
         }
 });
-/*
-ruleFunctions.push({
-    id:'aliasFromPath',
-    description: 'An Alias from every folder of the file Path',
-    source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  let pathArray = file.path.split('/');\n  pathArray.pop(); // remove File name with extension\n  pathArray = pathArray.map((dir) => tools.formatUpperCamelCase(dir)); // convert to UpperCamelCase\n  const fileNameParts = file.name.split('.');\n  if (fileNameParts.length > 1) {\n    fileNameParts.pop(); // remove Extension\n  }\n  const fileName = fileNameParts.join('.'); // rebuild file Name\n  pathArray.push(tools.formatUpperCamelCase(fileName)); // add file name without extension and in UpperCamelCase\n  const result = pathArray.join('.') || '';\n  return result;\n}",
-    type: ['aliases'],
-    fx: function (app, file, tools:ScriptingTools) { // do not change this line!
-            // acquire file path
-            let pathArray = file.path.split('/');
-            pathArray.pop(); // remove File name with extension
-            pathArray = pathArray.map((dir) => tools.formatUpperCamelCase(dir)); // convert to upper camelCase
-            const fileNameParts = file.name.split('.');
-            if (fileNameParts.length > 1) {
-            fileNameParts.pop(); // remove Extension
-            }
-            const fileName = fileNameParts.join('.'); // rebuild file Name
-            pathArray.push(tools.formatUpperCamelCase(fileName)); // add file name without extension and in upperCamelCase
-            const result = pathArray.join('.') || '';
-            return result;
-        }
-});
-*/
+
 ruleFunctions.push({
     id:'path',
     ruleType: 'buildIn',
@@ -595,7 +609,7 @@ ruleFunctions.push({
     ruleType: 'buildIn',
     description: 'Root folder',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[0];\n  }\n  return result;\n}",
-    type: ['text', 'tags', 'aliases'],
+    type: ['text', 'multitext', 'tags', 'aliases'],
     configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file path
@@ -614,7 +628,7 @@ ruleFunctions.push({
     ruleType: 'buildIn',
     description: 'File name without extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name.split('.');\n  result.pop(); // remove extension\n  result.join('.'); // reconstruct the file name\n  return result;\n}",
-    type: ['text', 'tags', 'aliases'],
+    type: ['text', 'multitext', 'tags', 'aliases'],
     configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file name
@@ -630,7 +644,7 @@ ruleFunctions.push({
     ruleType: 'buildIn',
     description: 'File name with extension',
     source: "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = file.name;\n  return result;\n}",
-    type: ['text', 'tags', 'aliases'],
+    type: ['text', 'multitext', 'tags', 'aliases'],
     configElements: defaultConfigElements({}),
     fx:function (app, file, tools:ScriptingTools) { // do not change this line!
         // acquire file name
@@ -647,7 +661,7 @@ ruleFunctions.push({
     inputProperty: true,
     source: "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
     type: ['text', 'multitext', 'tags', 'aliases'],
-    configElements: defaultConfigElements({}),
+    configElements: defaultConfigElements({inputProperty:true}),
     fx:function (app, file, tools:ScriptingTools, input?) { // do not change this line!
         const result = input;
         return result;

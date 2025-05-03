@@ -36,7 +36,7 @@
         "selectedFiles": [],
         "mode": "exclude"
       },
-      "value": "2025-05-03T02:40:36.856",
+      "value": "2025-04-25T22:28:59.840",
       "asLink": false,
       "onlyModify": false
     },
@@ -57,7 +57,7 @@
       "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[category/locations/location]]",
+      "value": "[[Tiere/Säugetiere/Affen]]",
       "asLink": true,
       "onlyModify": false,
       "include": {
@@ -90,7 +90,7 @@
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "location",
+      "value": "affen",
       "exclude": {
         "selectedFolders": [],
         "selectedFiles": [],
@@ -127,7 +127,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[category]]",
+      "value": "[[Tiere]]",
       "asLink": true,
       "lowercaseTags": false,
       "onlyModify": false,
@@ -160,9 +160,9 @@
       "showContent": true,
       "addContent": "overwrite",
       "value": [
-        "category",
-        "locations",
-        "location"
+        "Tiere",
+        "Säugetiere",
+        "Affen"
       ],
       "asLink": false,
       "lowercaseTags": false,
@@ -197,7 +197,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-05-03T03:39:31.977",
+      "value": "2025-05-03T08:25:00.729",
       "onlyModify": true,
       "include": {
         "selectedFolders": [],
@@ -260,9 +260,9 @@
       "jsCode": "",
       "showContent": false,
       "value": [
-        "category",
-        "locations",
-        "location"
+        "Tiere",
+        "Säugetiere",
+        "Affen"
       ],
       "spaceReplacement": "_",
       "specialCharReplacement": "-",
@@ -288,9 +288,9 @@
       "addContent": "end",
       "property": "aliases",
       "value": [
-        "[[#category]]",
-        "[[#locations]]",
-        "[[#location]]"
+        "[[#tiere]]",
+        "[[#säugetiere]]",
+        "[[#affen]]"
       ],
       "customProperty": "",
       "type": "aliases",
@@ -334,8 +334,8 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "linkToFile",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "content": "getProperty",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
       "jsCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index];\n  } else {\n    return '/'; // root = vault\n  }\n}",
       "showContent": false,
       "exclude": {
@@ -354,12 +354,16 @@
       "spaceReplacement": "",
       "specialCharReplacement": "",
       "lowercaseTags": false,
-      "inputProperty": "this a date",
+      "inputProperty": "rootFolder",
       "onlyModify": false,
-      "value": "[[category/locations/location/Europa.md|Europa]]",
       "useCustomCode": false,
       "optionsConfig": {
         "a984e4ac-7be3-4847-bc66-821d2d6c8332": {
+          "addTemplate": true,
+          "askConfirmation": true,
+          "destinationFolder": "/",
+          "templateFile": "",
+          "propertyDelimiter": ".",
           "addExtension": true
         }
       }
@@ -370,7 +374,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullPath",
-      "value": "category/locations/location/Europa.md",
+      "value": "Tiere/Säugetiere/Affen/Affen 1.md",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -456,10 +460,7 @@
           "templateFile": "global/template/t_location.md"
         }
       },
-      "value": [
-        "[[category/locations/location/Europa.md|Europa]]",
-        "[[category/locations/location/Birma.md|Birma]]"
-      ]
+      "value": []
     },
     {
       "id": "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a",
@@ -506,47 +507,6 @@
       }
     },
     {
-      "id": "827efa24-54b9-46ae-b4ae-7e058c0ddea0",
-      "active": true,
-      "asLink": true,
-      "addContent": "start",
-      "property": "aliases",
-      "value": [
-        "[[category/locations/location/Europa.md]]"
-      ],
-      "customProperty": "",
-      "type": "aliases",
-      "typeProperty": {
-        "name": "",
-        "type": "text",
-        "source": "registered"
-      },
-      "content": "fullPathExt",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
-      "jsCode": "",
-      "showContent": false,
-      "exclude": {
-        "selectedFolders": [
-          "/category/locations"
-        ],
-        "selectedFiles": [],
-        "mode": "exclude"
-      },
-      "include": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "include",
-        "display": "folders"
-      },
-      "prefix": "",
-      "spaceReplacement": "",
-      "specialCharReplacement": "",
-      "lowercaseTags": false,
-      "inputProperty": "",
-      "onlyModify": true,
-      "useCustomCode": false
-    },
-    {
       "id": "c3e962a8-7fca-48dc-b82c-fbc909380f1e",
       "active": true,
       "asLink": false,
@@ -590,9 +550,138 @@
           "propertyDelimiter": "-"
         }
       }
+    },
+    {
+      "id": "b1e3be20-3042-49ab-a2dc-47ab777dff27",
+      "active": true,
+      "asLink": false,
+      "addContent": "end",
+      "property": "cssclasses",
+      "value": [
+        "Tiere"
+      ],
+      "customProperty": "",
+      "type": "multitext",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "rootFolder",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    result = parts[0];\n  }\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false
+    },
+    {
+      "id": "ae457d67-de32-4daa-a8a6-47729c7eb6aa",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "constant",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "constant",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "ae457d67-de32-4daa-a8a6-47729c7eb6aa": {
+          "constantValue": "Batman"
+        }
+      },
+      "value": "Batman"
     }
   ],
   "liveRules": [
+    {
+      "id": "a984e4ac-7be3-4847-bc66-821d2d6c8332",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "#?:{}\"'",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "getProperty",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index];\n  } else {\n    return '/'; // root = vault\n  }\n}",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "include": {
+        "selectedFolders": [
+          "/Tiere"
+        ],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "rootFolder",
+      "onlyModify": false,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "a984e4ac-7be3-4847-bc66-821d2d6c8332": {
+          "addTemplate": true,
+          "askConfirmation": true,
+          "destinationFolder": "/",
+          "templateFile": "",
+          "propertyDelimiter": ".",
+          "addExtension": true
+        }
+      }
+    },
     {
       "id": "b7ab9f6f-fc3a-4823-8db5-7d54ca4c47b1",
       "active": true,
@@ -638,10 +727,7 @@
           "templateFile": "global/template/t_location.md"
         }
       },
-      "value": [
-        "[[category/locations/location/Europa.md|Europa]]",
-        "[[category/locations/location/Birma.md|Birma]]"
-      ]
+      "value": []
     },
     {
       "id": "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a",

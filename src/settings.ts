@@ -23,6 +23,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
         this.scriptingTools = new ScriptingTools(app, plugin);
     }
     hide(): void {
+        // update the rules to remove the ones that are not live anymore
         this.plugin.settings.liveRules=[];
         this.plugin.settings.rules.forEach(rule => {
             let ruleFunction = getRuleFunctionById(rule.content);
@@ -32,6 +33,11 @@ export class FolderTagSettingTab extends PluginSettingTab {
             }
         })
         this.plugin.saveSettings();
+        // update active file if it is open
+        const activeFile = this.app.workspace.getActiveFile();
+        if (activeFile && activeFile.extension === 'md') {
+            this.plugin.updateFrontmatterParameters('active-leaf-change', activeFile, this.plugin.settings.rules);
+        }
     }
     display(): void {
         this.knownProperties = fmTools.getPropertiesFromMetadataManager(this.app);

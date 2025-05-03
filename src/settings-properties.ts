@@ -123,11 +123,13 @@ export class RulesTable extends PluginSettingTab {
                             await this.plugin.saveSettings();
                         }
                         break;
+                    case 'buildIn.inputProperty':
                     case 'buildIn':
                         rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
                         rule.useCustomCode = false;
                         await this.plugin.saveSettings();
                         break;
+                    case 'automation':
                     case 'autocomplete.modal':
                         // rule.isLiveRule = true;
                         break;
@@ -138,6 +140,7 @@ export class RulesTable extends PluginSettingTab {
                 //showJsFunctionButton(rule.content);
                 await this.plugin.saveSettings();
                 this.updatePreview(rule, previewComponent);
+                this.renderPropertyOptions(optionEL, rule, previewComponent);
             }
         });
 
@@ -150,6 +153,7 @@ export class RulesTable extends PluginSettingTab {
             for (let container of settingsContainers) {
                 if (container.getAttribute('id') !== rule.id) container.setAttribute('style','display: none;');
             }
+            this.renderPropertyOptions(optionEL, rule, previewComponent);
             optionEL.style.display = optionEL.style.display === 'block' ? 'none' : 'block';
         });
 
@@ -185,6 +189,11 @@ export class RulesTable extends PluginSettingTab {
         const optionEL = containerEl.createDiv({ cls: 'property-options-container' }); // options container
         optionEL.id = rule.id;
         optionEL.style.display = 'none';
+    }
+
+    renderPropertyOptions(optionEL: HTMLDivElement, rule: FolderTagRuleDefinition, previewComponent: TextComponent) {
+        optionEL.empty(); // clear previous options
+        const ruleFn = getRuleFunctionById(rule.content);
         if (useRuleOption(ruleFn,'removeContent')) {
             const removeContentButton = new Setting(optionEL)
                 .setName('Remove content')
@@ -455,10 +464,11 @@ export class RulesTable extends PluginSettingTab {
                     }
                 });
         }
-            const ruleFunction = getRuleFunctionById(rule.content);
-            if (ruleFunction && typeof ruleFunction.configTab ==='function') {
-                ruleFunction.configTab(optionEL, rule, this, previewComponent);
-            }
+        // add custom config
+        const ruleFunction = getRuleFunctionById(rule.content);
+        if (ruleFunction && typeof ruleFunction.configTab ==='function') {
+            ruleFunction.configTab(optionEL, rule, this, previewComponent);
+        }
     }
 
     getOptionConfig(ruleId:string,propertyId:string){
