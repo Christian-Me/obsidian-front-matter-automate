@@ -2,6 +2,7 @@ import { App, normalizePath, TAbstractFile, TFile, TFolder, Vault } from 'obsidi
 import { FolderTagRuleDefinition, FolderTagSettings, PropertyInfo, PropertyTypeInfo } from './types'
 import { ErrorManager } from "./Error";
 import { AlertModal } from './alertBox';
+import { ruleFunctions } from './rules';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -265,6 +266,15 @@ export function resolveFile(app: App, file_str: string): TFile {
     getRule() {
       return this.rule;
     }
+    getRuleFunction(rule?:FolderTagRuleDefinition) {
+      if (!rule) rule = this.rule;
+      if (rule) {
+        const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
+          if (functionIndex!==-1){
+            return ruleFunctions[functionIndex];
+          }
+        }
+    }
     setCurrentContent(content:any) {
       this.currentContent = content;
     }
@@ -276,8 +286,12 @@ export function resolveFile(app: App, file_str: string): TFile {
       if (!file) file = this.activeFile;
       if (!file) return;
       this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-        frontmatter[property] = newContent;
-        console.log(`updateFrontmatter '${file.path}' frontmatter '${property}' to '${newContent.join(',')}'`);
+        console.log(`updateFrontmatter '${file.path}' frontmatter '${property}' to '${newContent.toString()}'`);
+        if (typeof newContent === 'object' && !Array.isArray(newContent)) {
+          console.warn(`updateFrontmatter '${file.path}'|'${property}' object not supported!`);
+        } else {
+          frontmatter[property] = newContent;
+        }
       },{'mtime':file.stat.mtime}); // do not change the modify time.
     }
     async showConfirmDialog(message:string, title:string = 'Confirm', button1:string = 'Yes', button2:string = 'No') {
@@ -346,7 +360,7 @@ export function resolveFile(app: App, file_str: string): TFile {
         }
         return fileExists; // return the file if it already exists
     }; // create the file if it does not exist
-    
+
     /**
      * * Fetches custom property information from all markdown files in the vault.
      *
@@ -413,7 +427,7 @@ export function resolveFile(app: App, file_str: string): TFile {
       // If only one part exists, use it as both path and title
       const path = parts[0].trim();
       const title = parts.length > 1 ? parts[1].trim() : path;
-      console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
+      //console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
       return { path, title };
     }
     removeLeadingSlash(path: string): string {
@@ -638,3 +652,17 @@ export function resolveFile(app: App, file_str: string): TFile {
       return [...uniqueStringsSet];
     }
   }
+/**
+ * get the path to a file from a string containing the full parh/name string
+ * @param path string
+ * @param separator string defaults to '/'
+ * @returns string
+ */
+export function getFolderFromPath (path:string|null|undefined, separator = '/') {
+    if (path === null) return null;
+    if (path === undefined) return undefined;
+    const currentPathParts = path.split('/');
+    currentPathParts.pop(); // remove File name;
+    return currentPathParts.join(separator);
+}
+    

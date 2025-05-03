@@ -1,7 +1,6 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
-import * as fmTools from './frontmatter-tools';
 
-export const versionString = "0.0.16";
+export const versionString = "0.0.17";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'delete' | 'modify' | 'preview' | 'all';

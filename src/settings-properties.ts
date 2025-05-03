@@ -98,9 +98,10 @@ export class RulesTable extends PluginSettingTab {
         propertyDevDropdown.setValue(rule.content);
         propertyDevDropdown.onChange(async (value) => {
             if (value !== '') {
-                switch (value) {
-                    case 'script': 
-                        let oldOriginalCode = getRuleFunctionById(rule.content)?.source || ruleFunctions[0].source;
+                const ruleFunction = getRuleFunctionById(value);
+                switch (ruleFunction?.ruleType) {
+                    case 'script':
+                        let oldOriginalCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
                         if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
                             const shouldProceed = await new AlertModal(
                                     this.app,
@@ -121,6 +122,11 @@ export class RulesTable extends PluginSettingTab {
                             rule.useCustomCode = false;
                             await this.plugin.saveSettings();
                         }
+                        break;
+                    case 'buildIn':
+                        rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                        rule.useCustomCode = false;
+                        await this.plugin.saveSettings();
                         break;
                     case 'autocomplete.modal':
                         // rule.isLiveRule = true;
@@ -690,10 +696,10 @@ export class RulesTable extends PluginSettingTab {
         return returnComponent;
     }
 
-    updatePreview( rule, previewComponent) {
+    async updatePreview( rule, previewComponent) {
         if (this.activeFile) {
             let ruleResult;
-            this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
+            await this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
                 ruleResult = await executeRule('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
             },{'mtime':this.activeFile.stat.mtime});  
 

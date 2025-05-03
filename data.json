@@ -36,7 +36,7 @@
         "selectedFiles": [],
         "mode": "exclude"
       },
-      "value": "2025-04-25T22:28:59.853",
+      "value": "2025-05-03T02:40:36.856",
       "asLink": false,
       "onlyModify": false
     },
@@ -57,7 +57,7 @@
       "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[Tiere/Säugetiere/Affen]]",
+      "value": "[[category/locations/location]]",
       "asLink": true,
       "onlyModify": false,
       "include": {
@@ -84,13 +84,13 @@
         "count": 1,
         "source": "registered"
       },
-      "content": "linkToFile",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "content": "folderFolderNotes",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}",
       "jsCode": "",
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "[[tiere/säugetiere/affen/schimpanse.md|schimpanse]]",
+      "value": "location",
       "exclude": {
         "selectedFolders": [],
         "selectedFiles": [],
@@ -107,7 +107,8 @@
           "addExtension": true
         }
       },
-      "lowercaseTags": true
+      "lowercaseTags": true,
+      "useCustomCode": false
     },
     {
       "id": "fb4e9b8d-a49b-4674-8741-32b879531d81",
@@ -126,7 +127,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[Tiere]]",
+      "value": "[[category]]",
       "asLink": true,
       "lowercaseTags": false,
       "onlyModify": false,
@@ -157,11 +158,11 @@
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
       "jsCode": "",
       "showContent": true,
-      "addContent": "start",
+      "addContent": "overwrite",
       "value": [
-        "Tiere",
-        "Säugetiere",
-        "Affen"
+        "category",
+        "locations",
+        "location"
       ],
       "asLink": false,
       "lowercaseTags": false,
@@ -172,7 +173,9 @@
         "mode": "include"
       },
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category"
+        ],
         "selectedFiles": [],
         "mode": "exclude"
       }
@@ -180,7 +183,7 @@
     {
       "id": "fde12cea-877e-42fe-9a33-d42f7ff33b81",
       "active": true,
-      "property": "this is a datetime",
+      "property": "date modified",
       "customProperty": "",
       "type": "datetime",
       "typeProperty": {
@@ -194,7 +197,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-05-02T19:13:52.288",
+      "value": "2025-05-03T03:39:31.977",
       "onlyModify": true,
       "include": {
         "selectedFolders": [],
@@ -220,21 +223,25 @@
       },
       "content": "isRoot",
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n}",
-      "jsCode": "",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "end",
       "value": false,
-      "onlyModify": true,
+      "onlyModify": false,
       "include": {
         "selectedFolders": [],
         "selectedFiles": [],
         "mode": "include"
       },
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category",
+          "/global"
+        ],
         "selectedFiles": [],
         "mode": "exclude"
-      }
+      },
+      "useCustomCode": true
     },
     {
       "id": "37b34872-bd6a-4c5e-9b6d-3689c37e9001",
@@ -253,61 +260,25 @@
       "jsCode": "",
       "showContent": false,
       "value": [
-        "Tiere",
-        "Säugetiere",
-        "Affen"
+        "category",
+        "locations",
+        "location"
       ],
       "spaceReplacement": "_",
       "specialCharReplacement": "-",
       "lowercaseTags": false,
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category/locations"
+        ],
         "selectedFiles": [],
-        "mode": "include"
+        "mode": "exclude"
       },
       "include": {
         "selectedFolders": [],
         "selectedFiles": [],
         "mode": "include"
       },
-      "onlyModify": true
-    },
-    {
-      "id": "d2bb5e1f-e614-4b01-ab3a-9659f7953afd",
-      "active": true,
-      "asLink": false,
-      "addContent": "start",
-      "property": "tags",
-      "customProperty": "",
-      "type": "tags",
-      "typeProperty": {
-        "name": "",
-        "type": "",
-        "source": "registered"
-      },
-      "content": "path",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
-      "jsCode": "",
-      "showContent": false,
-      "exclude": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
-      },
-      "include": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "include",
-        "display": "folders"
-      },
-      "prefix": "",
-      "spaceReplacement": "_",
-      "specialCharReplacement": "-",
-      "lowercaseTags": true,
-      "value": [
-        "tiere/säugetiere/affen"
-      ],
       "onlyModify": true
     },
     {
@@ -317,9 +288,9 @@
       "addContent": "end",
       "property": "aliases",
       "value": [
-        "[[#tiere]]",
-        "[[#säugetiere]]",
-        "[[#affen]]"
+        "[[#category]]",
+        "[[#locations]]",
+        "[[#location]]"
       ],
       "customProperty": "",
       "type": "aliases",
@@ -333,7 +304,9 @@
       "jsCode": "",
       "showContent": false,
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category/locations"
+        ],
         "selectedFiles": [],
         "mode": "exclude"
       },
@@ -349,47 +322,6 @@
       "onlyModify": true
     },
     {
-      "id": "258b39fb-4b3f-4190-814a-7eacae5c4841",
-      "active": true,
-      "asLink": true,
-      "addContent": "start",
-      "property": "link",
-      "customProperty": "",
-      "type": "multitext",
-      "typeProperty": {
-        "name": "",
-        "type": "",
-        "source": "registered"
-      },
-      "content": "folders",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
-      "jsCode": "",
-      "showContent": false,
-      "exclude": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
-      },
-      "include": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "include",
-        "display": "folders"
-      },
-      "prefix": "",
-      "spaceReplacement": "",
-      "specialCharReplacement": "",
-      "lowercaseTags": false,
-      "inputProperty": "title",
-      "value": [
-        "[[Tiere]]",
-        "[[Säugetiere]]",
-        "[[Affen]]"
-      ],
-      "onlyModify": true
-    },
-    {
       "id": "a984e4ac-7be3-4847-bc66-821d2d6c8332",
       "active": true,
       "asLink": false,
@@ -402,8 +334,8 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "fileSizeString",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}",
+      "content": "linkToFile",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index];\n  } else {\n    return '/'; // root = vault\n  }\n}",
       "showContent": false,
       "exclude": {
@@ -424,7 +356,13 @@
       "lowercaseTags": false,
       "inputProperty": "this a date",
       "onlyModify": false,
-      "value": "1.03 KB"
+      "value": "[[category/locations/location/Europa.md|Europa]]",
+      "useCustomCode": false,
+      "optionsConfig": {
+        "a984e4ac-7be3-4847-bc66-821d2d6c8332": {
+          "addExtension": true
+        }
+      }
     },
     {
       "id": "54218a08-e3ea-4b75-970f-70d1d2e252c0",
@@ -432,7 +370,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullPath",
-      "value": "Tiere/Säugetiere/Affen",
+      "value": "category/locations/location/Europa.md",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -440,8 +378,8 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "path",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "content": "fullPathExt",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
       "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = 'wwww';\n  return result; // return you result.\n}",
       "showContent": false,
       "exclude": {
@@ -466,7 +404,12 @@
       "lowercaseTags": false,
       "inputProperty": "",
       "onlyModify": true,
-      "useCustomCode": true
+      "useCustomCode": false,
+      "optionsConfig": {
+        "54218a08-e3ea-4b75-970f-70d1d2e252c0": {
+          "addExtension": false
+        }
+      }
     },
     {
       "id": "b7ab9f6f-fc3a-4823-8db5-7d54ca4c47b1",
@@ -482,7 +425,7 @@
         "source": "registered"
       },
       "content": "autoLink",
-      "buildInCode": "",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -514,9 +457,8 @@
         }
       },
       "value": [
-        "[[category/locations/location/Kongo.md|Kongo]]",
-        "[[category/locations/location/Australien.md|Australien]]",
-        "[[category/locations/location/Deutschland.md|Deutschland]]"
+        "[[category/locations/location/Europa.md|Europa]]",
+        "[[category/locations/location/Birma.md|Birma]]"
       ]
     },
     {
@@ -538,10 +480,11 @@
       "jsCode": "",
       "showContent": false,
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category/locations"
+        ],
         "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
+        "mode": "exclude"
       },
       "include": {
         "selectedFolders": [],
@@ -554,7 +497,7 @@
       "specialCharReplacement": "",
       "lowercaseTags": false,
       "inputProperty": "",
-      "onlyModify": true,
+      "onlyModify": false,
       "useCustomCode": false,
       "optionsConfig": {
         "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a": {
@@ -565,10 +508,12 @@
     {
       "id": "827efa24-54b9-46ae-b4ae-7e058c0ddea0",
       "active": true,
-      "asLink": false,
-      "addContent": "overwrite",
+      "asLink": true,
+      "addContent": "start",
       "property": "aliases",
-      "value": "Tiere/Säugetiere/Affen",
+      "value": [
+        "[[category/locations/location/Europa.md]]"
+      ],
       "customProperty": "",
       "type": "aliases",
       "typeProperty": {
@@ -576,15 +521,16 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "path",
-      "buildInCode": "",
+      "content": "fullPathExt",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category/locations"
+        ],
         "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
+        "mode": "exclude"
       },
       "include": {
         "selectedFolders": [],
@@ -599,6 +545,51 @@
       "inputProperty": "",
       "onlyModify": true,
       "useCustomCode": false
+    },
+    {
+      "id": "c3e962a8-7fca-48dc-b82c-fbc909380f1e",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "location",
+      "value": null,
+      "customProperty": "",
+      "type": "multitext",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "autocomplete.modal",
+      "buildInCode": "",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [
+          "/"
+        ],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "include": {
+        "selectedFolders": [
+          "/category/locations/location"
+        ],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "c3e962a8-7fca-48dc-b82c-fbc909380f1e": {
+          "propertyDelimiter": "-"
+        }
+      }
     }
   ],
   "liveRules": [
@@ -616,7 +607,7 @@
         "source": "registered"
       },
       "content": "autoLink",
-      "buildInCode": "",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -648,9 +639,8 @@
         }
       },
       "value": [
-        "[[category/locations/location/Kongo.md|Kongo]]",
-        "[[category/locations/location/Australien.md|Australien]]",
-        "[[category/locations/location/Deutschland.md|Deutschland]]"
+        "[[category/locations/location/Europa.md|Europa]]",
+        "[[category/locations/location/Birma.md|Birma]]"
       ]
     },
     {
@@ -672,10 +662,11 @@
       "jsCode": "",
       "showContent": false,
       "exclude": {
-        "selectedFolders": [],
+        "selectedFolders": [
+          "/category/locations"
+        ],
         "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
+        "mode": "exclude"
       },
       "include": {
         "selectedFolders": [],
@@ -688,11 +679,56 @@
       "specialCharReplacement": "",
       "lowercaseTags": false,
       "inputProperty": "",
-      "onlyModify": true,
+      "onlyModify": false,
       "useCustomCode": false,
       "optionsConfig": {
         "f1c7f2b1-c853-4ebe-9268-7852c2db5c8a": {
           "propertyDelimiter": "."
+        }
+      }
+    },
+    {
+      "id": "c3e962a8-7fca-48dc-b82c-fbc909380f1e",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "location",
+      "value": null,
+      "customProperty": "",
+      "type": "multitext",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "autocomplete.modal",
+      "buildInCode": "",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [
+          "/"
+        ],
+        "selectedFiles": [],
+        "mode": "exclude"
+      },
+      "include": {
+        "selectedFolders": [
+          "/category/locations/location"
+        ],
+        "selectedFiles": [],
+        "mode": "include"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "c3e962a8-7fca-48dc-b82c-fbc909380f1e": {
+          "propertyDelimiter": "-"
         }
       }
     }

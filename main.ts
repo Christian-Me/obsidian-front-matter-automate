@@ -152,26 +152,37 @@ export default class FolderTagPlugin extends Plugin {
         }
     }
 
-    async updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
+    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
         if (!checkIfFileAllowed(file, this.settings)) {
             console.log(`file ${file.path} globally rejected!`)
             return;
         }
         const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFolderFromPath(oldPath))
-        // if (oldPathTag) console.log(`update file: "${oldPathTag}" to "${currentPathTag}"`);
-        // let content = await this.app.vault.read(file);
-        // const cache = this.app.metadataCache.getFileCache(file);
 
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
            // apply all rules to frontmatter
-            rules.forEach(async (rule) => {
-                let result
-                if (!checkIfFileAllowed(file, this.settings, rule)) return;
-                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
-                result = await executeRule(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
-                if (result) frontmatter[rule.property] = result;
-            })
+           console.log(`Event start ${eventName}: ${file.path} ${rules.length} rules`,frontmatter);
+            for (let rule of rules) {
+                let result = frontmatter[rule.property];
+                if (!checkIfFileAllowed(file, this.settings, rule)) {
+                    console.log(`file ${file.path} rejected by rule (${rule.property}|${rule.content}) settings`);
+                    continue; // only modify if file is allowed
+                }
+                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) {
+                    console.log(`file ${file.path} has not ${rule.property}(${rule.content}) onlyModify`);
+                    continue; // only modify if property exists
+                }
+                switch (this.tools.getRuleFunction(rule)?.ruleType) {
+                    case 'buildIn':
+                    case 'script':
+                        result = executeRule(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                        break;
+                    default:
+                }
+                frontmatter[rule.property] = result;
+            }
+            console.log('Frontmatter updated',frontmatter);
         },{'mtime':file.stat.mtime}); // do not change the modify time.
     }
     

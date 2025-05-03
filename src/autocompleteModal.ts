@@ -22,7 +22,8 @@ export class AutocompleteModal extends Modal {
     // Initial state passed to the modal (stored for reset functionality)
     private readonly okCallback: (result: autocompleteModalResult | null) => void;
     private plugin: any;
-    private scriptingTools: ScriptingTools;
+    private options: any;
+    private tools: ScriptingTools;
     private expectedType: ObsidianPropertyTypes;
     private rule: FolderTagRuleDefinition;
     private knownProperties: Record<string, PropertyInfo> = {};
@@ -50,6 +51,7 @@ export class AutocompleteModal extends Modal {
         app: App,
         plugin: any,
         rule: FolderTagRuleDefinition,
+        options: any,
         activeFile: TFile | TFolder | undefined,
         frontmatter: any,   
         okCallback?: (result: autocompleteModalResult | null) => void
@@ -57,12 +59,13 @@ export class AutocompleteModal extends Modal {
         super(app);
         this.app = app;
         // Store initial state for reset
-        this.scriptingTools= new ScriptingTools(app, this.plugin, this.frontmatter);
+        this.tools= new ScriptingTools(app, this.plugin, this.frontmatter);
         this.activeFile = activeFile;
         this.frontmatter = frontmatter; // Store frontmatter data
 
         this.plugin = plugin;
         this.rule = rule;
+        this.options = options; // Store options for the modal
         this.expectedType = rule.type; // Expected type for the modal
 
         // Initialize the promise
@@ -91,7 +94,7 @@ export class AutocompleteModal extends Modal {
      * Called when the modal is opened. Builds the UI.
      */
     async onOpen() {
-        this.knownProperties = await this.scriptingTools.fetchKnownProperties(this.app); // Initialize known properties
+        this.knownProperties = await this.tools.fetchKnownProperties(this.app); // Initialize known properties
         const { contentEl } = this;
         if (contentEl.parentElement) contentEl.parentElement.style.width = '900px';
         contentEl.empty(); // Clear previous 
@@ -117,7 +120,7 @@ export class AutocompleteModal extends Modal {
         propertyContainerEl.style.flexDirection = 'column'; // Stack items vertically
 
         for (const [key, value] of Object.entries(this.frontmatter)) {
-            if (key.startsWith(this.rule.property + '.')) {
+            if (key.startsWith(this.rule.property + this.options.propertyDelimiter)) {
                 const rowEl = propertyContainerEl.createDiv({ cls: 'property-setting-row setting-item' });
                 rowEl.style.width = '100%'; // Full width
 
@@ -245,10 +248,11 @@ export async function openAutocompleteModal(
     app: App,
     plugin: any,
     rule: FolderTagRuleDefinition,
+    options: any,
     activeFile: TFile | TFolder | undefined,
     frontmatter: any
 ): Promise<autocompleteModalResult | null> {
     // Create and open the modal instance
-    const modal = new AutocompleteModal(app, plugin, rule, activeFile, frontmatter);
+    const modal = new AutocompleteModal(app, plugin, rule, options, activeFile, frontmatter);
     return await modal.openAndGetValues(); // Wait for the promise to resolve
 }

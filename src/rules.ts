@@ -1,5 +1,5 @@
 import { App, renderResults, SearchComponent, Setting, TFile, TFolder } from 'obsidian';
-import { parseJSCode, ScriptingTools } from './tools';
+import { getFolderFromPath, parseJSCode, ScriptingTools } from './tools';
 import { ObsidianPropertyTypes, FolderTagRuleDefinition, FolderTagSettings, FrontmatterAutomateEvents } from './types';
 import { AutocompleteModal, autocompleteModalResult, openAutocompleteModal } from './autocompleteModal';
 import { codeEditorModalResult } from './editorModal';
@@ -67,7 +67,7 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
   return
 }
 
-async function getRuleResult(ruleFx: Function, app: App, rule: FolderTagRuleDefinition, ruleFunction: RuleFunction, currentFile: TFile, tools:ScriptingTools, frontMatter:any):Promise<any> {
+function getRuleResult(ruleFx: Function, app: App, rule: FolderTagRuleDefinition, ruleFunction: RuleFunction, currentFile: TFile, tools:ScriptingTools, frontMatter:any):Promise<any> {
   let result:any = undefined;
   //console.log('getRuleResult', ruleFx, ruleFunction, currentFile, tools, frontMatter);
   switch (ruleFunction.ruleType) {
@@ -80,22 +80,22 @@ async function getRuleResult(ruleFx: Function, app: App, rule: FolderTagRuleDefi
       break
     case 'autocomplete.modal':
       ruleFx(app, currentFile, tools);
-      console.log('autocomplete modal', ruleFx, ruleFunction, currentFile, tools);
+      //console.log('autocomplete modal', ruleFx, ruleFunction, currentFile, tools);
       result = null;
       break;
     case 'automation':
-      console.log('automation', ruleFunction, currentFile, tools);
-      result = applyFormatOptions(await ruleFx(app, currentFile, tools), rule);
+      //console.log('automation', ruleFunction, currentFile, tools);
+      result = applyFormatOptions(ruleFx(app, currentFile, tools), rule);
       break;
   }
   return result;
 }
 
-export async function executeRule (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile | null, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
+export function executeRule (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile | null, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
   //console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
   if (!rule.active || !currentFile) return returnResult;
   const tools = new ScriptingTools(app, this, settings, rule, frontMatter, currentFile);
-  let fxResult:any;
+  let fxResult = returnResult;
   let oldResult:any;
   let oldFile:TFile | undefined = undefined;
   if (oldPath) {
@@ -111,36 +111,48 @@ export async function executeRule (event: FrontmatterAutomateEvents, app, settin
     }
   }
   try {
-    switch (rule.content) {
+    const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
+    if (functionIndex===-1){
+      console.error(`Rule function ${rule.content} not found!`);
+      return returnResult; // return the original value if the function is not found
+    }
+    const ruleFunctionConfig = ruleFunctions[functionIndex];
+    tools.setCurrentContent(frontMatter[rule.property])
+    tools.setRule(rule);
+    tools.setFrontmatter(frontMatter);
+    switch (ruleFunctionConfig.ruleType) {
       case 'script': 
-        const ruleFunction = parseJSCode(rule.jsCode);
-        if (typeof ruleFunction !== 'function') return;
-        fxResult = applyFormatOptions(ruleFunction(app, currentFile, tools), rule);
+        const customRuleFunction = parseJSCode(rule.jsCode);
+        if (typeof customRuleFunction !== 'function') {
+          console.error(`Could not parse custom function for ${rule.content}!`);
+          return;
+        }
+        fxResult = applyFormatOptions(customRuleFunction(app, currentFile, tools), rule);
         if (oldFile) {
-          oldResult = applyFormatOptions(ruleFunction(app, oldFile, tools), rule);
+          oldResult = applyFormatOptions(customRuleFunction(app, oldFile, tools), rule);
         }
         break;
-      default:
-        const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
-        if (functionIndex!==-1){
-            tools.setCurrentContent(frontMatter[rule.property])
-            tools.setRule(rule);
-            tools.setFrontmatter(frontMatter);
-            const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctions[functionIndex].fx;
-            if (typeof ruleFunction !== 'function') {
-              console.error(`Could not parse custom function for ${rule.content}!`);
-              return;
-            }
-
-            fxResult = await getRuleResult(ruleFunction, app, rule, ruleFunctions[functionIndex], currentFile, tools, frontMatter);
-            if (oldFile) {
-                oldResult = await getRuleResult(ruleFunction, app, rule, ruleFunctions[functionIndex], oldFile, tools, frontMatter);
-            }
-
-        } else {
-            console.error(`Rule function ${rule.content} not found!`);
-            return returnResult; // return the original value if the function is not found
+      case 'buildIn':  
+        const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctionConfig.fx;
+        if (typeof ruleFunction !== 'function') {
+          console.error(`Could not parse custom function for ${rule.content}!`);
+          break;
         }
+        fxResult = getRuleResult(ruleFunction, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
+        if (oldFile) {
+            oldResult = getRuleResult(ruleFunction, app, rule, ruleFunctionConfig, oldFile, tools, frontMatter);
+        }
+        console.log(`executeRule: ${rule.content} ${rule.property} [${rule.type}]= '${fxResult}'`)
+
+        break;
+      case 'autocomplete.modal':
+        fxResult = getRuleResult(ruleFunctionConfig.fx, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
+        break; // handled in the autocomplete modal
+      case 'automation':
+        fxResult = getRuleResult(ruleFunctionConfig.fx, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
+        break; // handled in the automation modal
+      default:
+        break;
     }
   }
   catch (error) {
@@ -245,7 +257,6 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
 
 }
 
-const  tools = new ScriptingTools();
   /**
    * Filters a given file and returns true if it is included in a folder or file list
    * @param file 
@@ -258,7 +269,7 @@ export function filterFile(file: TFile, fileList: any, filterMode: string, type:
     const filterArray = (type==='folders') ? fileList[filterMode].selectedFolders : fileList[filterMode].selectedFiles;
     if (filterArray.length === 0) return (filterMode === 'include')? false : true;
     const filePath = file.path;
-    const fileFolder = tools.getFolderFromPath(file.path);
+    const fileFolder = getFolderFromPath(file.path);
     const fileName = file.basename + '.' + file.extension;
     
     if (type === 'files') {
@@ -274,9 +285,9 @@ export function filterFile(file: TFile, fileList: any, filterMode: string, type:
 }
 
 export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rule?:FolderTagRuleDefinition):boolean {
-      let result = false;
+      let result = true;
       if (!file) return false;
-      if (settings) {
+      if (settings && !rule) {
         try {
           //console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
           if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
@@ -436,7 +447,9 @@ ruleFunctions.push({
     configElements: defaultConfigElements({resultAsLink: false}),
     fx:function (app: App, file:TFile, tools:ScriptingTools){
         const parts = file.path.split('/');
-        const addExtension = tools.getOptionConfig(tools.getRule()?.id,'addExtension') 
+        const rule = tools.getRule();
+        if (!rule) return tools.getCurrentContent();
+        const addExtension = tools.getOptionConfig(rule.id,'addExtension') 
         parts.pop();
         if (parts[parts.length-1] === file.basename) parts.pop();
         let fileName = addExtension? file.basename + '.' + file.extension : file.basename; 
@@ -737,6 +750,7 @@ ruleFunctions.push({
         this.app,
         this.plugin,
         rule,
+        options,
         tools.getActiveFile(),
         tools.getFrontmatter()
       );
@@ -780,7 +794,7 @@ ruleFunctions.push({
     let newContent = new Array<string>();
     const rule = tools.getRule();
     if (!rule) {
-      console.log(`autoLink: rule not found, returning current content ${currentContent}`);
+      console.error(`autoLink: rule not found, returning current content ${currentContent}`);
       return currentContent;
     } 
     const options = tools.getOptionConfig(rule.id);
@@ -791,7 +805,7 @@ ruleFunctions.push({
     } else if (typeof links === 'string') {
       links = [links]; // convert to array if not already an array
     }
-    console.log(`autoLink: links to check`, links, filesToCheck);
+    // console.log(`autoLink: links to check`, links, filesToCheck);
   
     for (const part of links)  {
       let link = tools.extractLinkParts(part);
@@ -803,20 +817,20 @@ ruleFunctions.push({
           options.askConfirmation = !result.data.askConfirmation;
         }
         link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
-        console.log(`autoLink: creating new file ${link.path}`);
+        //console.log(`autoLink: creating new file ${link.path}`);
         linkFile = await tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined); // create the file if it does not exist
-        console.log(`autoLink: new file created ${linkFile.path}`);
+        //console.log(`autoLink: new file created ${linkFile.path}`);
         tools.updateFrontmatter(rule.property, [`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`], linkFile); // add location of new path to itself
       } else {
-        console.log(`autoLink: creating Link to existing File ${linkFile.path}`);
+        //console.log(`autoLink: creating Link to existing File ${linkFile.path}`);
       }
       if (linkFile) {
         link.path = linkFile.path;
         newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
       }
-      console.log(`autoLink: new content`, newContent);
+      //console.log(`autoLink: new content`, newContent);
     }
-    console.log(`autoLink: write content`, newContent);
+    //console.log(`autoLink: write content`, newContent);
     tools.updateFrontmatter(rule.property, newContent); // update the frontmatter with the new content
     return newContent;    
   },
