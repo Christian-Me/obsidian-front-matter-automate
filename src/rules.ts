@@ -294,13 +294,13 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
           if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
               result = filterFile(file, settings, 'exclude', 'files');    
           }        
-          if (settings.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
+          if (result && settings.exclude.selectedFolders.length>0) { // there are folders in the exclude folders list.
               result = filterFile(file, settings, 'exclude', 'folders');
           }
-          if (settings.include.selectedFiles.length>0) { // there are files in the include files list
+          if (!result && settings.include.selectedFiles.length>0) { // there are files in the include files list
               result = filterFile(file, settings, 'include', 'files');
           }
-          if (settings.include.selectedFolders.length>0) { // there are folders in the include folders list
+          if (!result && settings.include.selectedFolders.length>0) { // there are folders in the include folders list
               result = filterFile(file, settings, 'include', 'folders');
           }
           // if (result === false) return false; // if the file is excluded, return false

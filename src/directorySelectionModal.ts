@@ -311,7 +311,7 @@ export class DirectorySelectionModal extends Modal {
                 const parentFolder = file.parent;
                 let parentPath = "";
                 if (parentFolder) {
-                    parentPath = parentFolder.path;
+                    parentPath = "/" + (parentFolder.path=== '/' ? '' : parentFolder.path); // Ensure the path starts with a slash
                 } // Ensure the path starts with a slash
 
                 const parentNode = folderNodes.get(parentPath);
