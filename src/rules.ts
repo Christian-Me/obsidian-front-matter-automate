@@ -258,19 +258,19 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
 
 }
 
-  /**
-   * Filters a given file and returns true if it is included in a folder or file list
-   * @param file 
-   * @param filterMode 'exclude'|'include'
-   * @param type 'folders'|'files'
-   * @returns 
-   */
+/**
+ * Filters a given file and returns true if it is included in a folder or file list
+ * @param file 
+ * @param filterMode 'exclude'|'include'
+ * @param type 'folders'|'files'
+ * @returns 
+ */
 export function filterFile(file: TFile, fileList: any, filterMode: string, type:string):boolean {
     let result = false;
     const filterArray = (type==='folders') ? fileList[filterMode].selectedFolders : fileList[filterMode].selectedFiles;
     if (filterArray.length === 0) return (filterMode === 'include')? false : true;
     const filePath = file.path;
-    const fileFolder = getFolderFromPath(file.path);
+    const fileFolder = getFolderFromPath(file.path); // this.tools.addLeadingSlash(getFolderFromPath(file.path));
     const fileName = file.basename + '.' + file.extension;
     
     if (type === 'files') {
@@ -279,7 +279,7 @@ export function filterFile(file: TFile, fileList: any, filterMode: string, type:
     if (type === 'folders') {
         for (let path of filterArray) {
             result = fileFolder?.startsWith(path.slice(1)) || false; // remove root '/'
-            if (result === true) return (filterMode === 'exclude')? !result : result;;
+            if (result === true) return (filterMode === 'exclude')? !result : result;
         };
     };
     return (filterMode === 'exclude')? !result : result;
@@ -288,7 +288,7 @@ export function filterFile(file: TFile, fileList: any, filterMode: string, type:
 export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rule?:FolderTagRuleDefinition):boolean {
       let result = true;
       if (!file) return false;
-      if (settings && !rule) {
+      if (settings) {
         try {
           //console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
           if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
@@ -312,16 +312,16 @@ export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rul
       if(rule) {
         try {
           //console.log(`check file ${file.path} against rule`, rule.include, rule.exclude);
-          if (rule.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
+          if (result && rule.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
               result = filterFile(file, rule, 'exclude', 'files');
           }        
-          if (rule.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
+          if (result && rule.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
               result = filterFile(file, rule, 'exclude', 'folders');
           }
-          if (rule.include.selectedFiles.length>0) { // there are files in the include files list
+          if (!result && rule.include.selectedFiles.length>0) { // file is excluded but there are files in the include files list
               result = filterFile(file, rule, 'include', 'files');
           }
-          if (rule.include.selectedFolders.length>0) { // there are folders in the include folders list
+          if (!result && rule.include.selectedFolders.length>0) { // file is excluded but there are folders in the include folders list
               result = filterFile(file, rule, 'include', 'folders');
           }
         } catch (error) {

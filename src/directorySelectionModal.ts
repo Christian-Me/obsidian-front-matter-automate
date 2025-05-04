@@ -309,9 +309,11 @@ export class DirectorySelectionModal extends Modal {
         if (this.showFiles) {
             allFiles.forEach(file => {
                 const parentFolder = file.parent;
-                if (!parentFolder) return;
+                let parentPath = "";
+                if (parentFolder) {
+                    parentPath = parentFolder.path;
+                } // Ensure the path starts with a slash
 
-                const parentPath = "/" + parentFolder.path;
                 const parentNode = folderNodes.get(parentPath);
 
                 const fileNode: TreeNode = {
@@ -553,12 +555,8 @@ export class DirectorySelectionModal extends Modal {
 
             // Apply styling to the container (label, icon) based on disabled state
             if (isDisabled) {
-                node.container.style.opacity = '0.5';
-                node.label.style.textDecoration = 'line-through'; // More prominent disabled look
                 node.element.addClass('is-disabled');
             } else {
-                node.container.style.opacity = '1';
-                node.label.style.textDecoration = 'none';
                 node.element.removeClass('is-disabled');
             }
 

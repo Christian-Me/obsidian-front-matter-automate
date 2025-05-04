@@ -1,3 +1,115 @@
+/* styles for SortableList */
+/* Style for the complete list (container) */
+.sortableList-container {
+  display: flex;
+  flex-direction: column; /* Arrange groups vertically */
+  margin-bottom: 10px;
+  padding: 10px;
+
+}
+
+/* Style for individual groups (containers) */
+.sortableList-group {
+  display: flex;
+  align-items: center;
+  flex-direction: row; /* Arrange rows vertically */
+  margin: 5px 0; /* Add spacing between groups */
+  padding: 5px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 5px;
+  background-color: var(---metadata-divider-color);
+}
+
+/* Highlight group header during drag-and-drop */
+.sortableList-group.drag-over {
+  border-color: var(--text-accent);
+}
+
+/* Drag handle */
+.sortableList-drag-handle {
+  cursor: grab;
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* Toggle arrow */
+.sortableList-toggle-arrow {
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* Group name */
+.sortableList-group-name {
+  flex-grow: 1;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+/* Add Row button */
+.sortableList-add-row {
+  margin-left: auto;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+/* Highlight drop targets */
+.drag-over {
+  border: 2px dashed var(--text-accent);
+  margin: 5px 0;
+}
+
+/* Style for rows inside a group */
+.sortableList-row {
+  display: flex;
+  align-items: center;
+  margin: 5px 0; /* Add spacing between rows */
+  margin-left: 20px; /* Indent rows within a group */
+  padding: 5px;
+  border: 1px solid var(--text-muted);
+  border-radius: 3px;
+  background-color: var(--background-primary);
+}
+
+/* Row content */
+.sortableList-row-content {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+/* Remove Row button */
+.sortableList-remove-row {
+  padding: 5px 10px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+/* Drop indicator for rows */
+.sortableList-row-drop-indicator {
+  height: 5px;
+  background-color: transparent;
+  margin: 2px 0;
+  margin-left: 20px; /* Indent drop indicator within a group */
+}
+
+.sortableList-row-drop-indicator.drag-over {
+  background-color: var(--text-accent);
+}
+
+/* Drop indicator for groups */
+.sortableList-group-drop-indicator {
+  height: 5px;
+  background-color: transparent;
+  margin: 2px 0;
+}
+
+.sortableList-group-drop-indicator.drag-over {
+  background-color: var(--text-accent);
+}
+
+/* frontmatter search box */
+
 .frontmatter-automate-search {
   width: 100%; /*calc(100% - 20px);*/
   max-width: 300px;
@@ -243,12 +355,13 @@
 
 /* Style for items visually disabled (greyed out, struck through) */
 .directory-selection-modal .is-disabled > .tree-node-container {
-  opacity: 0.5;
+  opacity: 1;
   /* Optionally remove hover effect for disabled items */
   /* background-color: transparent !important; */
 }
 
 .directory-selection-modal .is-disabled > .tree-node-container > label {
+  opacity: .9;
   text-decoration: line-through;
   /* Make label text non-interactive visually */
   pointer-events: none;

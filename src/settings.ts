@@ -7,6 +7,7 @@ import { AlertModal } from './alertBox';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
 import { randomUUID } from 'crypto';
 import { RulesTable } from './settings-properties';
+import { SortableListComponent } from './SortableListComponent';
 
 export class FolderTagSettingTab extends PluginSettingTab {
     plugin: any; //FolderTagPlugin;
@@ -47,6 +48,8 @@ export class FolderTagSettingTab extends PluginSettingTab {
         containerEl.empty();
         containerEl.createEl('h2', { text: `Front matter automate V${versionString}` });
 
+        //new SortableListComponent(containerEl).display();
+        
         new Setting(containerEl)
         .setName('Exclude Files and Folders globally')
         .setDesc(`Currently ${this.plugin.settings.exclude.selectedFolders.length} folders and ${this.plugin.settings.exclude.selectedFiles.length} files will be ${this.plugin.settings.exclude.mode}d.`)

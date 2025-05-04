@@ -36,7 +36,7 @@
         "selectedFiles": [],
         "mode": "exclude"
       },
-      "value": "2025-04-25T22:28:59.840",
+      "value": "2025-04-25T22:28:07.818",
       "asLink": false,
       "onlyModify": false
     },
@@ -57,7 +57,7 @@
       "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[Tiere/Säugetiere/Affen]]",
+      "value": "[[]]",
       "asLink": true,
       "onlyModify": false,
       "include": {
@@ -90,7 +90,7 @@
       "showContent": true,
       "type": "text",
       "addContent": "overwrite",
-      "value": "affen",
+      "value": "plugin dev",
       "exclude": {
         "selectedFolders": [],
         "selectedFiles": [],
@@ -127,7 +127,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "overwrite",
-      "value": "[[Tiere]]",
+      "value": "[[]]",
       "asLink": true,
       "lowercaseTags": false,
       "onlyModify": false,
@@ -159,11 +159,7 @@
       "jsCode": "",
       "showContent": true,
       "addContent": "overwrite",
-      "value": [
-        "Tiere",
-        "Säugetiere",
-        "Affen"
-      ],
+      "value": [],
       "asLink": false,
       "lowercaseTags": false,
       "onlyModify": false,
@@ -197,7 +193,7 @@
       "jsCode": "",
       "showContent": false,
       "addContent": "end",
-      "value": "2025-05-03T08:25:00.729",
+      "value": "2025-05-01T11:58:24.015",
       "onlyModify": true,
       "include": {
         "selectedFolders": [],
@@ -226,7 +222,7 @@
       "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "addContent": "end",
-      "value": false,
+      "value": true,
       "onlyModify": false,
       "include": {
         "selectedFolders": [],
@@ -259,11 +255,7 @@
       "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
-      "value": [
-        "Tiere",
-        "Säugetiere",
-        "Affen"
-      ],
+      "value": [],
       "spaceReplacement": "_",
       "specialCharReplacement": "-",
       "lowercaseTags": false,
@@ -287,11 +279,7 @@
       "asLink": true,
       "addContent": "end",
       "property": "aliases",
-      "value": [
-        "[[#tiere]]",
-        "[[#säugetiere]]",
-        "[[#affen]]"
-      ],
+      "value": [],
       "customProperty": "",
       "type": "aliases",
       "typeProperty": {
@@ -366,7 +354,8 @@
           "propertyDelimiter": ".",
           "addExtension": true
         }
-      }
+      },
+      "value": ""
     },
     {
       "id": "54218a08-e3ea-4b75-970f-70d1d2e252c0",
@@ -374,7 +363,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullPath",
-      "value": "Tiere/Säugetiere/Affen/Affen 1.md",
+      "value": "Untitled.md",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -557,9 +546,7 @@
       "asLink": false,
       "addContent": "end",
       "property": "cssclasses",
-      "value": [
-        "Tiere"
-      ],
+      "value": [],
       "customProperty": "",
       "type": "multitext",
       "typeProperty": {
@@ -680,7 +667,8 @@
           "propertyDelimiter": ".",
           "addExtension": true
         }
-      }
+      },
+      "value": ""
     },
     {
       "id": "b7ab9f6f-fc3a-4823-8db5-7d54ca4c47b1",
@@ -822,7 +810,7 @@
   "useTextArea": false,
   "exclude": {
     "selectedFolders": [
-      "/global/template"
+      "/global"
     ],
     "selectedFiles": [],
     "mode": "exclude"
