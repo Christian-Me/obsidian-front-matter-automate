@@ -1,13 +1,13 @@
 import { App, ButtonComponent, DropdownComponent, PluginSettingTab, Setting, TextComponent } from 'obsidian';
 import * as fmTools from './frontmatter-tools';
 import { parseJSCode, ScriptingTools } from './tools';
-import { getRuleFunctionById, ruleFunctions, RuleFunction } from './rules';
-import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes} from './types';
+import { versionString, FrontmatterAutomateRuleSettings, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes} from './types';
 import { AlertModal } from './alertBox';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
 import { randomUUID } from 'crypto';
 import { RulesTable } from './settings-properties';
 import { SortableListComponent } from './SortableListComponent';
+import { rulesManager } from './rules/rules';
 
 export class FolderTagSettingTab extends PluginSettingTab {
     plugin: any; //FolderTagPlugin;
@@ -27,7 +27,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
         // update the rules to remove the ones that are not live anymore
         this.plugin.settings.liveRules=[];
         this.plugin.settings.rules.forEach(rule => {
-            let ruleFunction = getRuleFunctionById(rule.content);
+            let ruleFunction = rulesManager.getRuleById(rule.content);
             if (!ruleFunction) return;
             if (ruleFunction.isLiveRule) {
                 this.plugin.settings.liveRules.push(rule);

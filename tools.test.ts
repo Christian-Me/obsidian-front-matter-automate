@@ -60,4 +60,58 @@ describe('isISOString', () => {
     test('invalid ISO string with neither date nor time', () => {
         expect(scriptingTools.isISOString('', { withDate: false, withTime: false })).toBe(false);
     });
+
+    describe('toWikiLink', () => {
+        const scriptingTools = new ScriptingTools();
+
+        test('convert single path string to WikiLink', () => {
+            const input = 'path/to/File';
+            const result = scriptingTools.toWikiLink(input);
+            expect(result).toBe('[[File]]');
+        });
+
+        test('convert single path string with extension to WikiLink', () => {
+            const input = 'path/to/File.md';
+            const result = scriptingTools.toWikiLink(input);
+            expect(result).toBe('[[File]]');
+        });
+
+        test('convert single string with spaces in title to WikiLink', () => {
+            const input = 'path/to/My File';
+            const result = scriptingTools.toWikiLink(input, '_');
+            expect(result).toBe('[[My_File]]');
+        });
+
+        test('convert array of strings to WikiLinks', () => {
+            const input = ['path/to/file1|Title1', 'path/to/file2|Title2'];
+            const result = scriptingTools.toWikiLink(input);
+            expect(result).toBe('[[Title1]], [[Title2]]');
+        });
+
+        test('convert array of strings with spaces in titles to WikiLinks', () => {
+            const input = ['path/to/file1|My Title1', 'path/to/file2|My Title2'];
+            const result = scriptingTools.toWikiLink(input, '_');
+            expect(result).toBe('[[My_Title1]], [[My_Title2]]');
+        });
+
+        test('return input if not a string or array', () => {
+            const input = 12345;
+            const result = scriptingTools.toWikiLink(input);
+            expect(result).toBe(input);
+        });
+
+        test('handle empty string input', () => {
+            const input = '';
+            const result = scriptingTools.toWikiLink(input);
+            expect(result).toBe(input);
+        });
+
+        test('handle array with empty strings', () => {
+            const input = ['', 'path/to/file1|Title1'];
+            const result = scriptingTools.toWikiLink(input);
+            expect(result).toBe('[[Title1]]');
+        });
+
+
+    });
 });

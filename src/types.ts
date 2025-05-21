@@ -1,6 +1,6 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
 
-export const versionString = "0.0.20";
+export const versionString = "0.0.21";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'delete' | 'modify' | 'preview' | 'all';
@@ -18,7 +18,7 @@ export const DEFAULT_FILTER_FILES_AND_FOLDERS: FilterFilesAndFolders = {
     mode: 'exclude',
     display: 'folders',
 }
-export interface FolderTagSettings {
+export interface FrontmatterAutomateSettings {
     tagPrefix: string;
     excludeRootFolder: boolean;
     tagsPropertyName: string;
@@ -26,20 +26,20 @@ export interface FolderTagSettings {
     specialCharReplacement: string;
     lowercaseTags: boolean;
     knownProperties: PropertyTypeInfo[];
-    rules: FolderTagRuleDefinition[];
-    liveRules: FolderTagRuleDefinition[];
+    rules: FrontmatterAutomateRuleSettings[];
+    liveRules: FrontmatterAutomateRuleSettings[];
     useTextArea: boolean;
     exclude: FilterFilesAndFolders;
     include: FilterFilesAndFolders;
     configuredProperties: Array<{ name: string; value: any }>;
 }
 
-export const DEFAULT_SETTINGS: FolderTagSettings = {
+export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings = {
     tagPrefix: '',
     excludeRootFolder: false,
     tagsPropertyName: 'tags',
-    spaceReplacement: '_',
-    specialCharReplacement: '_',
+    spaceReplacement: '',
+    specialCharReplacement: '',
     lowercaseTags: false,
     knownProperties: [],
     rules: [],
@@ -60,11 +60,11 @@ export const DEFAULT_SETTINGS: FolderTagSettings = {
     configuredProperties: []
 };
 
-export interface FolderTagRuleDefinition {
+export interface FrontmatterAutomateRuleSettings {
     id: string;
     active: boolean;
     addContent: 'overwrite' | 'start' | 'end';
-    asLink: boolean;
+    asLink: boolean; //deprecated
     property: string;
     value: string | number | boolean;
     customProperty: string;
@@ -79,17 +79,19 @@ export interface FolderTagRuleDefinition {
     prefix: string;
     spaceReplacement: string;
     specialCharReplacement: string;
-    lowercaseTags: boolean;
+    lowercaseTags: boolean; //deprecated
+    formatter: string; //added
+    linkFormatter: string; //added
     inputProperty: string;
     onlyModify: boolean;
     useCustomCode: boolean;
     optionConfig?:{};
 }
 
-export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
+export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
     id: '',
     active : true,
-    asLink: false,
+    asLink: false, //deprecated
     addContent: 'overwrite',
     property : '',
     value: '',
@@ -115,7 +117,9 @@ export const DEFAULT_RULE_DEFINITION : FolderTagRuleDefinition = {
     prefix: '',
     spaceReplacement: '',
     specialCharReplacement: '',
-    lowercaseTags: false,
+    lowercaseTags: false, //deprecated
+    formatter: 'toOriginal',
+    linkFormatter: 'toOriginalLink',
     inputProperty: '',
     onlyModify: true,
     useCustomCode: false,

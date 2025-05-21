@@ -1,18 +1,20 @@
 import { App, Editor, Plugin, MarkdownView, MarkdownPostProcessor, PluginManifest, TFile, TFolder, Vault, parseFrontMatterTags, Notice} from 'obsidian';
 import { FolderTagSettingTab } from './src/settings';
 //import { FolderTagSettingTab } from './src/settings-properties';
-import { checkIfFileAllowed, executeRule, getRuleFunctionById, removeRule, ruleFunctions } from './src/rules';
+import { checkIfFileAllowed, executeRuleObject } from './src/rules';
 import { parseJSCode, ScriptingTools } from './src/tools';
-import { versionString, FolderTagSettings, DEFAULT_SETTINGS, FolderTagRuleDefinition, PropertyTypeInfo} from './src/types'
-
+import { versionString, FrontmatterAutomateSettings, DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS, FrontmatterAutomateRuleSettings, PropertyTypeInfo} from './src/types'
+import "./src/rules/index";
+import { rulesManager } from './src/rules/rules';
 export default class FolderTagPlugin extends Plugin {
-    settings: FolderTagSettings;
+    settings: FrontmatterAutomateSettings;
     private tools: ScriptingTools;
     //private oldFolderPaths = new Map<string, string | null>();
 
     async onload() {
         await this.loadSettings();
-        this.tools = new ScriptingTools(this.app, this);;
+        this.tools = new ScriptingTools(this.app, this);
+        rulesManager.init(this.app, this, this.tools);
         let noticeMessage = `Front Matter Automate ${versionString}\n loading ...`;
         const loadingNotice = new Notice(noticeMessage,0)
 
@@ -58,21 +60,18 @@ export default class FolderTagPlugin extends Plugin {
                 }
                 if (cache.frontmatter && Array.isArray(this.settings.liveRules) && this.settings.liveRules.length > 0) {
                     console.log(`Event metadata changed: ${file.path} ${this.settings.liveRules.length} rules live`);
+                    // apply all live rules to frontmatter
                     this.app.fileManager.processFrontMatter(file, async (frontmatter) => {
-                        // apply all live rules to frontmatter
                         for (const rule of this.settings.liveRules)  {
                             if (checkIfFileAllowed(file, this.settings, rule)){
-                                let result;
-                                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) return; // only modify if property exists
-                                if (frontmatter) {// cache.frontmatter)
-                                    result = await executeRule('modify',this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter);
-                                    if (result) frontmatter[rule.property] = result;
-                                }
+                                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) continue; // only modify if property exists
+                                let result = executeRuleObject('modify',this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter);
+                                if (result) frontmatter[rule.property] = result;
+                                console.log(` Done: rule '${rule.property}'(${rule.content}) File ${file.path} result: `, result, frontmatter[rule.property], frontmatter);
                             } else {
-                                console.log(`file ${file.path} rejected ny rule ${rule.content}!`)
+                                console.log(`file ${file.path} rejected by rule ${rule.content}!`)
                             }
                         }
-                        console.log(`${this.settings.liveRules.length} rules updated metadata: `, frontmatter);
                     },{'mtime':file.stat.mtime}); // do not change the modify time.
                 };
             })
@@ -82,7 +81,7 @@ export default class FolderTagPlugin extends Plugin {
         loadingNotice.setMessage(noticeMessage);
         this.settings.liveRules = [];
         this.settings.rules.forEach(rule => {
-            let ruleFunction = getRuleFunctionById(rule.content);
+            let ruleFunction = rulesManager.getRuleById(rule.content);
             if (!ruleFunction) return;
             switch (ruleFunction.ruleType) {
                 case 'autocomplete.modal':
@@ -105,7 +104,7 @@ export default class FolderTagPlugin extends Plugin {
 
     async loadSettings() {
         let data = await this.loadData();
-        this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+        this.settings = Object.assign({}, DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS, data);
     }
     
     async saveSettings() {
@@ -152,7 +151,7 @@ export default class FolderTagPlugin extends Plugin {
         }
     }
 
-    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FolderTagRuleDefinition[], oldPath?: string) {
+    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FrontmatterAutomateRuleSettings[], oldPath?: string) {
         if (!checkIfFileAllowed(file, this.settings)) {
             console.log(`file ${file.path} globally rejected!`)
             return;
@@ -173,10 +172,10 @@ export default class FolderTagPlugin extends Plugin {
                     console.log(`file ${file.path} has not ${rule.property}(${rule.content}) onlyModify`);
                     continue; // only modify if property exists
                 }
-                switch (this.tools.getRuleFunction(rule)?.ruleType) {
+                switch (rulesManager.getRuleById(rule.content)?.ruleType) {
                     case 'buildIn':
                     case 'script':
-                        result = executeRule(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                        result = executeRuleObject(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
                         break;
                     default:
                 }
@@ -185,8 +184,8 @@ export default class FolderTagPlugin extends Plugin {
             console.log('Frontmatter updated',frontmatter);
         },{'mtime':file.stat.mtime}); // do not change the modify time.
     }
-    
-    async removeFrontmatterParamsFromAllFiles(rule: FolderTagRuleDefinition){
+    /*
+    async removeFrontmatterParamsFromAllFiles(rule: FrontmatterAutomateRuleSettings){
         let count = {files:0, items: 0}
         this.app.vault.getMarkdownFiles().forEach(file => {
             count.files++;
@@ -195,7 +194,7 @@ export default class FolderTagPlugin extends Plugin {
         return count;
     }
 
-    async removeFrontmatterParameter(file: TFile, rule: FolderTagRuleDefinition, count) {
+    async removeFrontmatterParameter(file: TFile, rule: FrontmatterAutomateRuleSettings, count) {
         if (!checkIfFileAllowed(file, this.settings, rule)) return;
         const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         let content = await this.app.vault.read(file);
@@ -206,4 +205,5 @@ export default class FolderTagPlugin extends Plugin {
         },{'mtime':file.stat.mtime}); // do not change the modify time.
         return count;
     }
+    */
 }

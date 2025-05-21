@@ -1,13 +1,13 @@
 import { App, renderResults, SearchComponent, Setting, TFile, TFolder } from 'obsidian';
 import { getFolderFromPath, parseJSCode, ScriptingTools } from './tools';
-import { ObsidianPropertyTypes, FolderTagRuleDefinition, FolderTagSettings, FrontmatterAutomateEvents } from './types';
+import { ObsidianPropertyTypes, FrontmatterAutomateRuleSettings, FrontmatterAutomateSettings, FrontmatterAutomateEvents } from './types';
 import { AutocompleteModal, autocompleteModalResult, openAutocompleteModal } from './autocompleteModal';
 import { codeEditorModalResult } from './editorModal';
 import { FolderSuggest } from "./suggesters/FolderSuggester";
 import { FileSuggest } from "./suggesters/FileSuggester";
 import { DirectorySelectionResult, openDirectorySelectionModal } from './directorySelectionModal';
-import { testFunktion } from './simpleAlertBox';
 import { AlertModal } from './alertBox';
+import { rulesManager } from './rules/rules';
 
 export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' | 'autocomplete.modal' | 'automation' | 'script';
 
@@ -37,15 +37,21 @@ export interface RuleFunction {
     type:ObsidianPropertyTypes[];
     fx:Function;
     configElements: ConfigElements;
-    configTab?: (optionEl: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent:any) => void; // function to render the config tab for the rule
+    configTab?: (optionEl: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent:any) => void; // function to render the config tab for the rule
 }
-
+/*
 export const ruleFunctions:RuleFunction[]=[];
-export function getRuleFunctionById (id : string):RuleFunction | undefined {
-    return ruleFunctions.find(rule => rule.id === id);
-}
 
-function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
+export function getRuleFunctionById (id : string):RuleFunction | undefined {
+    const ruleFunction = ruleFunctions.find(rule => rule.id === id);
+    if (!ruleFunction) {
+        console.error(`Rule function ${id} not found!`);
+        return undefined;
+    }
+    return ruleFunction;
+}
+*/
+function applyFormatOptions(value:any, rule:FrontmatterAutomateRuleSettings):any {
   if (rule.type === 'date' || rule.type === 'datetime') return value; // leave date and dateTime untouched
   switch (typeof value) {
     case 'boolean':
@@ -54,9 +60,13 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
     case 'string':
       if (rule.spaceReplacement && rule.spaceReplacement !== '') value = value.replace(/\s+/g, rule.spaceReplacement);
       if (rule.specialCharReplacement && rule.specialCharReplacement !=='') value = value.replace(/[^a-zA-Z0-9\-_\/äöüßÄÖÜáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕ]/g, rule.specialCharReplacement);
-      if (rule.lowercaseTags) value = value.toLowerCase();
+      if (rule.formatter && rule.formatter !== '') {
+        value = rulesManager.executeRuleById(rule.formatter, this.app, this.activeFile, this.tools, value); // execute the formatter rule
+      }
+      if (rule.linkFormatter && rule.linkFormatter !== '') {
+        value = rulesManager.executeRuleById(rule.linkFormatter, this.app, this.activeFile, this.tools, value); // execute the link formatter rule
+      }
       if (rule.prefix && rule.prefix !== '') value = rule.prefix + value;
-      if (rule.asLink) value = `[[${value}]]`;
       return value
     case 'object':
       if (Array.isArray(value)) {
@@ -67,7 +77,7 @@ function applyFormatOptions(value:any, rule:FolderTagRuleDefinition):any {
   return
 }
 
-function getRuleResult(ruleFx: Function, app: App, rule: FolderTagRuleDefinition, ruleFunction: RuleFunction, currentFile: TFile, tools:ScriptingTools, frontMatter:any):Promise<any> {
+function getRuleResult(ruleFx: Function, app: App, rule: FrontmatterAutomateRuleSettings, ruleFunction: RuleFunction, currentFile: TFile, tools:ScriptingTools, frontMatter:any):Promise<any> {
   let result:any = undefined;
   //console.log('getRuleResult', ruleFx, ruleFunction, currentFile, tools, frontMatter);
   switch (ruleFunction.ruleType) {
@@ -91,7 +101,42 @@ function getRuleResult(ruleFx: Function, app: App, rule: FolderTagRuleDefinition
   return result;
 }
 
-export function executeRule (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile | null, returnResult: any, rule:FolderTagRuleDefinition, frontMatter, oldPath?:string) {
+export function executeRuleObject (
+  event: FrontmatterAutomateEvents,
+  app, 
+  settings: FrontmatterAutomateSettings, 
+  currentFile: TFile | null, 
+  currentContent: any, 
+  rule:FrontmatterAutomateRuleSettings, 
+  frontMatter, 
+  oldPath?:string):any {
+
+  if (!rule) return currentContent;
+  if (!rule.active) return currentContent;
+  if (!currentFile) return currentContent;
+  if (!checkIfFileAllowed(currentFile, settings, rule)) return currentContent;
+  const tools = new ScriptingTools(app, this, settings, rule, frontMatter);
+  let result = currentContent;
+  let oldResult:any = undefined;
+  let oldFile = tools.getMockFileFromPath(oldPath);
+  tools.setCurrentContent(frontMatter[rule.property])
+  tools.setRule(rule);
+  tools.setFrontmatter(frontMatter);
+  tools.setActiveFile(currentFile);
+  const ruleObject = rulesManager.getRuleById(rule.content);
+  if (!ruleObject) return currentContent;
+
+  result = rulesManager.executeRule(ruleObject, app, currentFile, tools, frontMatter); // execute the formatter rule
+  result = rulesManager.applyFormatOptions(result, rule, currentFile, tools); // apply format options
+  if (oldFile && rule.addContent !== 'overwrite') {
+    oldResult = rulesManager.executeRule(ruleObject, app, oldFile, tools, frontMatter);
+    oldResult = rulesManager.applyFormatOptions(oldResult, rule, oldFile, tools); // apply format options on the old file location
+    result = rulesManager.mergeResult(result, oldResult, currentContent, rule); // merge the result with the current content. Remove old result if necessary
+  }
+  return result;
+}
+/*
+export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile | null, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter, oldPath?:string) {
   //console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
   if (!rule.active || !currentFile) return returnResult;
   const tools = new ScriptingTools(app, this, settings, rule, frontMatter, currentFile);
@@ -143,14 +188,16 @@ export function executeRule (event: FrontmatterAutomateEvents, app, settings, cu
         if (oldFile) {
             oldResult = getRuleResult(ruleFunction, app, rule, ruleFunctionConfig, oldFile, tools, frontMatter);
         }
-        console.log(`executeRule: ${rule.content} ${rule.property} [${rule.type}]= '${fxResult}'`)
+        console.log(`  executeRule: ${rule.content} ${rule.property} [${rule.type}]= '${fxResult}'`)
 
         break;
       case 'autocomplete.modal':
         fxResult = getRuleResult(ruleFunctionConfig.fx, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
         break; // handled in the autocomplete modal
       case 'automation':
-        fxResult = getRuleResult(ruleFunctionConfig.fx, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
+        // fxResult = getRuleResult(ruleFunctionConfig.fx, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
+        fxResult = rulesManager.executeRuleById(rule.content, app, currentFile, tools, frontMatter); // execute the formatter rule
+
         break; // handled in the automation modal
       default:
         break;
@@ -200,8 +247,11 @@ export function executeRule (event: FrontmatterAutomateEvents, app, settings, cu
   return returnResult;
 
 }
-
-export function removeRule (app, settings, currentFile: TFile, returnResult: any, rule:FolderTagRuleDefinition, frontMatter) {
+*/
+export function removeRuleObject (app, settings, currentFile: TFile, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter) {
+}
+/*
+export function removeRule (app, settings, currentFile: TFile, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter) {
   const tools = new ScriptingTools(app, settings, frontMatter);
   let fxResult:any;
   if (rule.content === 'script') {
@@ -257,7 +307,7 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
   return returnResult;
 
 }
-
+*/
 /**
  * Filters a given file and returns true if it is included in a folder or file list
  * @param file 
@@ -285,7 +335,7 @@ export function filterFile(file: TFile, fileList: any, filterMode: string, type:
     return (filterMode === 'exclude')? !result : result;
 }
 
-export function checkIfFileAllowed(file: TFile, settings?:FolderTagSettings, rule?:FolderTagRuleDefinition):boolean {
+export function checkIfFileAllowed(file: TFile, settings?:FrontmatterAutomateSettings, rule?:FrontmatterAutomateRuleSettings):boolean {
       let result = true;
       if (!file) return false;
       if (settings) {
@@ -363,7 +413,7 @@ export function useRuleOption(ruleFn : RuleFunction | undefined, option : string
   if (ruleFn?.configElements[option] === undefined) return true;
   return ruleFn.configElements[option];
 }
-
+/**
 ruleFunctions.push({
     id:'default',
     ruleType: 'buildIn',
@@ -376,7 +426,8 @@ ruleFunctions.push({
         return result;
       }
 });
-
+*/
+/*
 ruleFunctions.push({
   id:'constant',
   ruleType: 'buildIn',
@@ -469,7 +520,7 @@ ruleFunctions.push({
         let fileName = addExtension? file.basename + '.' + file.extension : file.basename; 
         return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;
     },
-    configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+    configTab: function (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
 
       that.setOptionConfigDefaults(rule.id, {
         addExtension: true
@@ -778,7 +829,7 @@ ruleFunctions.push({
     }
     return tools.getCurrentContent() || 'autocomplete.modal'; // return current content if not implemented yet
   },
-  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+  configTab: function (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
 
     that.setOptionConfigDefaults(rule.id, {
       propertyDelimiter: '.',
@@ -794,176 +845,4 @@ ruleFunctions.push({
         }));
   }
 })
-
-ruleFunctions.push({
-  id: 'autoLink',
-  ruleType: 'automation',
-  description: 'Auto Link (advanced)',
-  isLiveRule: true,
-  source: '',
-  type: ['text','multitext'],
-  configElements: defaultConfigElements({removeContent: false,  inputProperty: false, addPrefix: false, spaceReplacement: false, specialCharacterReplacement: false, convertToLowerCase: false, resultAsLink: false, script: false}),
-  fx: async function (app, file, tools:ScriptingTools) { // do not change this line!
-    const currentContent = tools.getCurrentContent();
-    let newContent = new Array<string>();
-    const rule = tools.getRule();
-    if (!rule) {
-      console.error(`autoLink: rule not found, returning current content ${currentContent}`);
-      return currentContent;
-    } 
-    const options = tools.getOptionConfig(rule.id);
-    const filesToCheck = tools.getFilesInVault(options.destinationFolder);
-    let links = currentContent || [];
-    if (typeof links === 'object' && !Array.isArray(links)) {
-      links = []; // convert object to array
-    } else if (typeof links === 'string') {
-      links = [links]; // convert to array if not already an array
-    }
-    // console.log(`autoLink: links to check`, links, filesToCheck);
-  
-    for (const part of links)  {
-      let link = tools.extractLinkParts(part);
-      let linkFile = tools.getFileFromPath(link.path, filesToCheck);
-      if (!linkFile) { // create new File
-        if (options.askConfirmation) {
-          const result = await new AlertModal(app, 'Create new file', `File ${link.path} does not exist. Do you want to create it?`, 'Create', 'Cancel', "Don't ask again.").openAndGetValue();
-          if (!result.proceed) return; // do not create the file if the user does not confirm
-          options.askConfirmation = !result.data.askConfirmation;
-        }
-        link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
-        //console.log(`autoLink: creating new file ${link.path}`);
-        linkFile = await tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined); // create the file if it does not exist
-        //console.log(`autoLink: new file created ${linkFile.path}`);
-        tools.updateFrontmatter(rule.property, [`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`], linkFile); // add location of new path to itself
-      } else {
-        //console.log(`autoLink: creating Link to existing File ${linkFile.path}`);
-      }
-      if (linkFile) {
-        link.path = linkFile.path;
-        newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
-      }
-      //console.log(`autoLink: new content`, newContent);
-    }
-    //console.log(`autoLink: write content`, newContent);
-    tools.updateFrontmatter(rule.property, newContent); // update the frontmatter with the new content
-    return newContent;    
-  },
-  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
-
-    that.setOptionConfigDefaults(rule.id, {
-      addTemplate: true,
-      askConfirmation: true,
-      destinationFolder: '/',
-      templateFile: '',
-    })
-
-    new Setting(optionEL)
-      .setName('Add template to new files')
-      .setDesc('Automatically add template to new files')
-      .addToggle(toggle => toggle
-          .setValue(that.getOptionConfig(rule.id ,'addTemplate') || false)
-          .onChange(async (value) => {
-              that.setOptionConfig(rule.id,'addTemplate', value);
-          }));
-
-    new Setting(optionEL)
-      .setName('Ask for confirmation')
-      .setDesc('Ask for confirmation before creating new files')
-      .addToggle(toggle => toggle
-          .setValue(that.getOptionConfig(rule.id ,'askConfirmation') || false)
-          .onChange(async (value) => {
-              that.setOptionConfig(rule.id,'askConfirmation', value);
-          }));
-
-    let destinationFolderEl:SearchComponent;  
-    new Setting(optionEL)
-      .setName('Destination Folder')
-      .setDesc('Folder to place new files')
-      .addSearch((cb) => {
-          destinationFolderEl = cb;
-          new FolderSuggest(that.app, cb.inputEl);
-          cb.setPlaceholder("enter folder or browse ...")
-              .setValue(that.getOptionConfig(rule.id ,'destinationFolder') || '')
-              .onChange((newFolder) => {
-                  newFolder = newFolder.trim()
-                  newFolder = newFolder.replace(/\/$/, "");
-                  that.setOptionConfig(rule.id,'destinationFolder', newFolder);
-              });
-          // @ts-ignore
-          cb.containerEl.addClass("frontmatter-automate-search");
-      })
-      .addExtraButton((button) =>
-        button
-          .setIcon('folder-tree')
-          .setTooltip('Select template folder')
-          .onClick(async () => {
-            openDirectorySelectionModal(
-              that.app,
-              [that.getOptionConfig(rule.id ,'destinationFolder')],
-              [],
-              { 
-                  title: 'Select folder to place new files',
-                  selectionMode: 'include',
-                  displayMode: 'folder',
-                  optionSelectionMode: false,
-                  optionShowFiles: false,
-              },
-              (result: DirectorySelectionResult | null) => {
-                  if (!result) return;
-                  if (result.folders.length === 0 || !result.folders[0] || typeof result.folders[0] !== 'string') return;
-                  let selectedFolder = result.folders[0].trim().replace(/\/$/, ""); // remove leading and trailing slashes (/^\/|\/$/g, "")
-                  if (selectedFolder === '') selectedFolder = '/'; // if empty, set to root folder
-                  if (!selectedFolder) return;
-                  destinationFolderEl.setValue(selectedFolder);
-                  that.setOptionConfig(rule.id,'destinationFolder', selectedFolder);
-              }
-          );
-          })
-      );
-    
-    let destinationFileEl:SearchComponent;  
-    new Setting(optionEL)
-      .setName('Template File')
-      .setDesc('Select a template file to add to new files')
-      .addSearch((cb) => {
-          destinationFileEl = cb;
-          new FileSuggest(cb.inputEl, that.plugin, '');
-          cb.setPlaceholder("enter folder or browse ...")
-              .setValue(that.getOptionConfig(rule.id ,'templateFile') || '')
-              .onChange((newFile) => {
-                  newFile = newFile.trim()
-                  newFile = newFile.replace(/\/$/, "");
-                  that.setOptionConfig(rule.id,'templateFile', newFile);
-              });
-          // @ts-ignore
-          cb.containerEl.addClass("frontmatter-automate-search");
-      })
-      .addExtraButton((button) =>
-        button
-          .setIcon('folder-tree')
-          .setTooltip('Select template file')
-          .onClick(async () => {
-            openDirectorySelectionModal(
-              that.app,
-              [],
-              [that.getOptionConfig(rule.id,'templateFile')],
-              { 
-                  title: 'Select template for new files',
-                  selectionMode: 'include',
-                  displayMode: 'file',
-                  optionSelectionMode: false,
-                  optionShowFiles: true,
-              },
-              (result: DirectorySelectionResult | null) => {
-                  if (!result) return;
-                  if (result.files.length === 0 || !result.files[0] || typeof result.files[0] !== 'string') return;
-                  let selectedFile = result.files[0].trim().replace(/\/$/, "");
-                  if (!selectedFile) return;
-                  destinationFileEl.setValue(selectedFile);
-                  that.setOptionConfig(rule.id,'templateFile', selectedFile);
-              }
-            );
-          })
-      );
-    }
-  })
+*/

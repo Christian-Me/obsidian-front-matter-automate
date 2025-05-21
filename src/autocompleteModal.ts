@@ -1,6 +1,6 @@
 
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon,ButtonComponent, TextComponent, Constructor } from 'obsidian'; // Added setIcon
-import { FolderTagRuleDefinition, ObsidianPropertyTypes, PropertyInfo } from './types';
+import { FrontmatterAutomateRuleSettings, ObsidianPropertyTypes, PropertyInfo } from './types';
 import { ScriptingTools } from './tools';
 import { renderValueInput, updatePropertyIcon } from './uiElements'; // Import the function to render value input
 
@@ -25,7 +25,7 @@ export class AutocompleteModal extends Modal {
     private options: any;
     private tools: ScriptingTools;
     private expectedType: ObsidianPropertyTypes;
-    private rule: FolderTagRuleDefinition;
+    private rule: FrontmatterAutomateRuleSettings;
     private knownProperties: Record<string, PropertyInfo> = {};
 
     // Current state being modified within the modal
@@ -50,7 +50,7 @@ export class AutocompleteModal extends Modal {
     constructor(
         app: App,
         plugin: any,
-        rule: FolderTagRuleDefinition,
+        rule: FrontmatterAutomateRuleSettings,
         options: any,
         activeFile: TFile | TFolder | undefined,
         frontmatter: any,   
@@ -245,14 +245,18 @@ export class AutocompleteModal extends Modal {
  * @returns A promise that resolves to the result of the autocomplete modal, or `null` if no selection was made.
  */
 export async function openAutocompleteModal(
-    app: App,
+    app: App | undefined,
     plugin: any,
-    rule: FolderTagRuleDefinition,
+    rule: FrontmatterAutomateRuleSettings,
     options: any,
     activeFile: TFile | TFolder | undefined,
     frontmatter: any
 ): Promise<autocompleteModalResult | null> {
     // Create and open the modal instance
+    if (!app) {
+        console.error("App is undefined");
+        return null;
+    }
     const modal = new AutocompleteModal(app, plugin, rule, options, activeFile, frontmatter);
     return await modal.openAndGetValues(); // Wait for the promise to resolve
 }

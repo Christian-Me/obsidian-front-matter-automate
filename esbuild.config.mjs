@@ -1,6 +1,10 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process"; // Import execSync
+import { fileURLToPath } from "url";
 
 const banner =
 `/*
@@ -10,40 +14,76 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = (process.argv[2] === "production");
+// Define __dirname for ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Path to the rules directory and the index generator script
+const rulesDir = path.resolve(__dirname,"./src/rules");
+const buildRulesIndexScript = path.resolve(__dirname,"./build-rules-index.js");
+
+console.log("__dirname:", __dirname);
+console.log("rulesDir:", path.resolve(__dirname, "./src/rules"));
+console.log("buildRulesIndexScript:", path.resolve(__dirname, "./build-rules-index.js"));
+
+// Function to run the index generator script
+function generateRulesIndex() {
+    console.log("Generating rules index...");
+    execSync(`node "${buildRulesIndexScript}"`, { stdio: "inherit" });
+    console.log("Rules index generated successfully.");
+}
+
+// Watch for changes in the rules directory
+if (!prod) {
+    console.log("Watching for changes in the rules directory...");
+    fs.watch(rulesDir, { recursive: false }, (eventType, filename) => {
+        if (
+            filename &&
+            (filename.endsWith(".ts") || filename.endsWith(".js")) &&
+            filename !== "index.ts" // Exclude index.ts to prevent infinite loop
+        ) {
+            console.log(`Detected change in ${filename}. Regenerating rules index...`);
+            generateRulesIndex();
+        }
+    });
+}
+
+// Always generate the rules index before building
+generateRulesIndex();
 
 const context = await esbuild.context({
-	banner: {
-		js: banner,
-	},
-	entryPoints: ["main.ts"],
-	bundle: true,
-	external: [
-		"obsidian",
-		"electron",
-		"@codemirror/autocomplete",
-		"@codemirror/collab",
-		"@codemirror/commands",
-		"@codemirror/language",
-		"@codemirror/lint",
-		"@codemirror/search",
-		"@codemirror/state",
-		"@codemirror/view",
-		"@lezer/common",
-		"@lezer/highlight",
-		"@lezer/lr",
-		...builtins],
-	format: "cjs",
-	target: "es2018",
-	logLevel: "info",
-	sourcemap: prod ? false : "inline",
-	treeShaking: true,
-	outfile: "main.js",
-	minify: prod,
+    banner: {
+        js: banner,
+    },
+    entryPoints: ["main.ts"],
+    bundle: true,
+    external: [
+        "obsidian",
+        "electron",
+        "@codemirror/autocomplete",
+        "@codemirror/collab",
+        "@codemirror/commands",
+        "@codemirror/language",
+        "@codemirror/lint",
+        "@codemirror/search",
+        "@codemirror/state",
+        "@codemirror/view",
+        "@lezer/common",
+        "@lezer/highlight",
+        "@lezer/lr",
+        ...builtins],
+    format: "cjs",
+    target: "es2018",
+    logLevel: "info",
+    sourcemap: prod ? false : "inline",
+    treeShaking: true,
+    outfile: "main.js",
+    minify: prod,
 });
 
 if (prod) {
-	await context.rebuild();
-	process.exit(0);
+    await context.rebuild();
+    process.exit(0);
 } else {
-	await context.watch();
+    await context.watch();
 }

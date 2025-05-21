@@ -1,13 +1,14 @@
 import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion, TFile } from 'obsidian';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
-import { versionString, FolderTagRuleDefinition, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS, PropertyInfo} from './types';
-import { getRuleFunctionById, useRuleOption, ruleFunctions, RuleFunction, executeRule, checkIfFileAllowed } from './rules';
+import { versionString, FrontmatterAutomateRuleSettings, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS, PropertyInfo} from './types';
+import { checkIfFileAllowed, executeRuleObject } from './rules';
 import { AlertModal } from './alertBox';
 import { randomUUID } from 'crypto';
 import { codeEditorModal, codeEditorModalResult, openCodeEditorModal } from './editorModal';
 import { copyFileSync } from 'fs';
 import { ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
+import { rulesManager } from './rules/rules';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
@@ -30,10 +31,9 @@ export class RulesTable extends PluginSettingTab {
 
     // Helper to render one rule
 
-    renderPropertyRow(containerEl: HTMLElement, rule: FolderTagRuleDefinition, index: number) {
+    renderPropertyRow(containerEl: HTMLElement, rule: FrontmatterAutomateRuleSettings, index: number) {
         
         //const activeFile = this.app.workspace.getActiveFile();
-        const ruleFn = getRuleFunctionById(rule.content);
 
         const rowEl = containerEl.createDiv({ cls: 'property-setting-row setting-item' });
         rowEl.id = rule.id;
@@ -81,27 +81,29 @@ export class RulesTable extends PluginSettingTab {
         const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
         if (this.activeFile) {
             this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
-                rule.value = await executeRule('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
+                rule.value = await executeRuleObject('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter); //TODO: implement using only updatePerview
             },{'mtime':this.activeFile.stat.mtime}); // do not change the modify time.
         }
         const previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
+        this.updatePreview(rule, previewComponent);
 
         const propertyDevDropdown =  new DropdownComponent(middleContainer);
         propertyDevDropdown.selectEl.setAttribute('style','width:35%');
         propertyDevDropdown.addOption("", "Select a content");
-        for (let ruleFunction of ruleFunctions) {
-            if (ruleFunction.type.contains(rule.type)) {
-                propertyDevDropdown.addOption(ruleFunction.id, ruleFunction.description);
-            }
-        }
+
+        // add rule functions to dropdown
+        rulesManager.getRulesByType('buildIn', rule.type).forEach(rule => {
+            propertyDevDropdown.addOption(rule.id, rule.name);
+        });
+
         propertyDevDropdown.addOption("script", "JavaScript function (advanced)");
         propertyDevDropdown.setValue(rule.content);
         propertyDevDropdown.onChange(async (value) => {
             if (value !== '') {
-                const ruleFunction = getRuleFunctionById(value);
+                const ruleFunction = rulesManager.getRuleById(value);
                 switch (ruleFunction?.ruleType) {
                     case 'script':
-                        let oldOriginalCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                        let oldOriginalCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
                         if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
                             const shouldProceed = await new AlertModal(
                                     this.app,
@@ -111,21 +113,21 @@ export class RulesTable extends PluginSettingTab {
                                 ).openAndGetValue();
                             
                             if (shouldProceed.proceed) {
-                                rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                                rule.buildInCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
                                 rule.useCustomCode = false;
                             } else {
                                 rule.buildInCode; // keep the existing code
                             }
                             await this.plugin.saveSettings();
                         } else {
-                            rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                            rule.buildInCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
                             rule.useCustomCode = false;
                             await this.plugin.saveSettings();
                         }
                         break;
                     case 'buildIn.inputProperty':
                     case 'buildIn':
-                        rule.buildInCode = getRuleFunctionById(value)?.source || ruleFunctions[0].source;
+                        rule.buildInCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
                         rule.useCustomCode = false;
                         await this.plugin.saveSettings();
                         break;
@@ -191,10 +193,12 @@ export class RulesTable extends PluginSettingTab {
         optionEL.style.display = 'none';
     }
 
-    renderPropertyOptions(optionEL: HTMLDivElement, rule: FolderTagRuleDefinition, previewComponent: TextComponent) {
+    renderPropertyOptions(optionEL: HTMLDivElement, rule: FrontmatterAutomateRuleSettings, previewComponent: TextComponent) {
         optionEL.empty(); // clear previous options
-        const ruleFn = getRuleFunctionById(rule.content);
-        if (useRuleOption(ruleFn,'removeContent')) {
+        //const ruleFn = getRuleFunctionById(rule.content);
+        const ruleFn = rulesManager.getRuleById(rule.content);
+        if (!ruleFn) return;
+        if (ruleFn.useRuleOption('removeContent')) {
             const removeContentButton = new Setting(optionEL)
                 .setName('Remove content')
                 .setDesc(`Before making changes you might consider to remove content generated by this rule`)
@@ -212,7 +216,7 @@ export class RulesTable extends PluginSettingTab {
                     }
                 );
         }
-        if (useRuleOption(ruleFn,'ruleActive')) {
+        if (ruleFn.useRuleOption('ruleActive')) {
             new Setting(optionEL)
                 .setName('Rule active')
                 .setDesc('If enabled, the rule will be executed')
@@ -224,7 +228,7 @@ export class RulesTable extends PluginSettingTab {
                     })
                 );
         }
-        if (useRuleOption(ruleFn,'modifyOnly')) {
+        if (ruleFn.useRuleOption('modifyOnly')) {
             new Setting(optionEL)
             .setName('Modify only')
             .setDesc('Only modify existing properties')
@@ -237,32 +241,7 @@ export class RulesTable extends PluginSettingTab {
                 }));
         }
         if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
-            if (useRuleOption(ruleFn,'inputProperty')) {
-                const ruleFunction = ruleFunctions.find(item => item.id === rule.content)
-                if (ruleFunction && ruleFunction.inputProperty !== undefined) {
-                    let inputPropertiesDropdown;
-                    new Setting(optionEL)
-                        .setName('Input Property')
-                        .setDesc('Select a property as input')
-                        .addDropdown(dropdown => {
-                            inputPropertiesDropdown = dropdown;
-                            dropdown
-                            .setValue(rule.addContent)
-                            .onChange(async (value) => {
-                                if (value !== '') {
-                                    rule.inputProperty = value;
-                                    await this.plugin.saveSettings();
-                                    this.updatePreview(rule, previewComponent);
-                                }
-                            })
-                        });
-                    Object.entries(this.knownProperties).forEach(item => {
-                        inputPropertiesDropdown.addOption(item[1].name,item[1].name);
-                    })
-                    inputPropertiesDropdown.setValue(rule.inputProperty);
-                }
-            }
-            if (useRuleOption(ruleFn,'addPrefix')) {
+            if (ruleFn.useRuleOption('addPrefix')) {
                 if (rule.type === 'tags' || rule.type === 'aliases') {
                     new Setting(optionEL)
                     .setName('Prefix')
@@ -277,7 +256,7 @@ export class RulesTable extends PluginSettingTab {
                         }));
                 }
             }
-            if (useRuleOption(ruleFn,'spaceReplacement')) {
+            if (ruleFn.useRuleOption('spaceReplacement')) {
                 new Setting(optionEL)
                     .setName('Space replacement')
                     .setDesc('Character to replace spaces in folder names (suggested: "_")')
@@ -290,7 +269,7 @@ export class RulesTable extends PluginSettingTab {
                             this.updatePreview(rule, previewComponent);
                         }));
             }
-            if (useRuleOption(ruleFn,'specialCharacterReplacement')) {
+            if (ruleFn.useRuleOption('specialCharacterReplacement')) {
                 new Setting(optionEL)
                     .setName('Special character replacement')
                     .setDesc('Character to replace special characters (suggested: "-") - preserves letters with diacritics')
@@ -303,34 +282,61 @@ export class RulesTable extends PluginSettingTab {
                             this.updatePreview(rule, previewComponent);
                         }));
             }
-            if (useRuleOption(ruleFn,'convertToLowerCase')) {
+            let formatRule = rulesManager.getRuleById(rule.formatter);
+            let formatOptionsButton;
+            if (ruleFn.useRuleOption('convertToLowerCase')) {
                 new Setting(optionEL)
-                    .setName('Convert to lowercase')
-                    .setDesc('Convert values to lowercase')
-                    .addToggle(toggle => toggle
-                        .setValue(rule.lowercaseTags)
-                        .onChange(async (value) => {
-                            rule.lowercaseTags = value;
+                    .setName('Format output')
+                    .setDesc('Format output using selected option')
+                    .addDropdown(dropdown => {
+                        rulesManager.getRulesByType('formatter').forEach(rule => {
+                            dropdown.addOption(rule.id, rule.name);
+                        });
+                        dropdown.setValue(rule.formatter || 'toOriginal')
+                        dropdown.onChange(async (value) => {
+                            rule.formatter = value;
+                            formatRule = rulesManager.getRuleById(rule.formatter);
+                            formatOptionsButton.extraSettingsEl.style.display = !formatRule?.hasOwnConfigTab() ? 'none' : 'block';
+                            formatRule?.configTab(converterOptionDiv, rule, this, previewComponent);
                             await this.plugin.saveSettings();
                             this.updatePreview(rule, previewComponent);
-                        }));
+                        });
+                    })
+                    .addExtraButton(button => {
+                        formatOptionsButton = button;
+                        formatOptionsButton
+                            .setIcon('gear')
+                            .setTooltip('format options')
+                            .onClick(async () => {
+                                converterOptionDiv.style.display = converterOptionDiv.style.display === 'block' ? 'none' : 'block';
+                            });
+                        formatOptionsButton.extraSettingsEl.style.display = !formatRule?.hasOwnConfigTab() ? 'none' : 'block';
+                        
+                    })
             }
-            if (useRuleOption(ruleFn,'resultAsLink')) {
+            let converterOptionDiv = optionEL.createDiv({ cls: 'property-converter-option' });
+            converterOptionDiv.style.display = 'none';
+            converterOptionDiv.style.marginLeft = '20px';
+            formatRule?.configTab(converterOptionDiv, rule, this, previewComponent);
+            if (ruleFn.useRuleOption('resultAsLink')) {
                 new Setting(optionEL)
                     .setName('Result as Link')
                     .setDesc('Format Result as Link')
-                    .addToggle(toggle => toggle
-                        .setValue(rule.asLink)
-                        .onChange(async (value) => {
-                            rule.asLink = value;
+                    .addDropdown(dropdown => {
+                        rulesManager.getRulesByType('linkFormatter').forEach(rule => {
+                            dropdown.addOption(rule.id, rule.name);
+                        });
+                        dropdown.setValue(rule.linkFormatter || 'toOriginalLink')
+                        dropdown.onChange(async (value) => {
+                            rule.linkFormatter = value;
                             await this.plugin.saveSettings();
                             this.updatePreview(rule, previewComponent);
-                        })
-                    );
+                        });
+                    })
             }
         }
         if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
-            if (useRuleOption(ruleFn,'addContent')) {
+            if (ruleFn.useRuleOption('addContent')) {
                 new Setting(optionEL)
                     .setName('Add content')
                     .setDesc('select how the content should be stored')
@@ -349,7 +355,7 @@ export class RulesTable extends PluginSettingTab {
                     );
             }
         }
-        if (useRuleOption(ruleFn,'excludeFolders')) {
+        if (ruleFn.useRuleOption('excludeFolders')) {
             const excludeEL = new Setting(optionEL)
                 .setName('Exclude Files and Folders from this rule')
                 .setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
@@ -389,7 +395,7 @@ export class RulesTable extends PluginSettingTab {
                         });
                 });   
         }
-        if (useRuleOption(ruleFn,'includeFolders')) {
+        if (ruleFn.useRuleOption('includeFolders')) {
             const includeEL = new Setting(optionEL)
                 .setName('Include Files and Folders for this rule ')
                 .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even if they are excluded globally.`)
@@ -428,7 +434,7 @@ export class RulesTable extends PluginSettingTab {
                     });
             }); 
         }      
-        if (useRuleOption(ruleFn,'script')) {
+        if (ruleFn.useRuleOption('script')) {
             new Setting(optionEL)
                 .setName('Script')
                 .setDesc('edit the script for own modifications')
@@ -464,15 +470,24 @@ export class RulesTable extends PluginSettingTab {
                     }
                 });
         }
+
         // add custom config
-        const ruleFunction = getRuleFunctionById(rule.content);
-        if (ruleFunction && typeof ruleFunction.configTab ==='function') {
-            ruleFunction.configTab(optionEL, rule, this, previewComponent);
-        }
+        let ruleOptionDiv = optionEL.createDiv({ cls: 'property-rule-option' });
+        ruleOptionDiv.style.marginLeft = '20px';
+        rulesManager.buildConfigTab(rule.content, ruleOptionDiv, rule, this, previewComponent);
+        
+        this.updatePreview(rule, previewComponent);
     }
 
+    /**
+     * Retrieves the configuration option for a specific rule and property.
+     *
+     * @param ruleId - The unique identifier of the rule.
+     * @param propertyId - The specific property for which the configuration is being retrieved.
+     * @returns The configuration value for the specified property, or undefined if not found.
+     */
     getOptionConfig(ruleId:string,propertyId:string){
-        const rule = this.plugin.settings.rules.find((rule: FolderTagRuleDefinition) => rule.id === ruleId);
+        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
         if (rule) {
             const optionConfig = rule.optionsConfig[ruleId]
             if (optionConfig[propertyId]) {
@@ -482,8 +497,15 @@ export class RulesTable extends PluginSettingTab {
         return undefined;
     }
 
+    /**
+     * Sets the configuration option for a specific rule and property.
+     *
+     * @param ruleId - The unique identifier of the rule.
+     * @param propertyId - The specific property for which the configuration is being set.
+     * @param config - The configuration value to be set.
+     */
     setOptionConfig(ruleId:string,propertyId:string,config:any){
-        const rule = this.plugin.settings.rules.find((rule: FolderTagRuleDefinition) => rule.id === ruleId);
+        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
             if (!rule.optionsConfig[ruleId]) rule.optionsConfig[ruleId] = {};
@@ -493,8 +515,18 @@ export class RulesTable extends PluginSettingTab {
         }
     }
 
+    hasOptionConfig(ruleId:string):boolean{
+        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
+        if (rule) {
+            if (!rule.optionsConfig) rule.optionsConfig = {}
+            if (!rule.optionsConfig[ruleId]) rule.optionsConfig[ruleId] = {};
+            return Object.keys(rule.optionsConfig[ruleId]).length > 0;
+        }
+        return false;
+    }
+
     setOptionConfigDefaults(ruleId:string, defaults:any){
-        const rule = this.plugin.settings.rules.find((rule: FolderTagRuleDefinition) => rule.id === ruleId);
+        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
             rule.optionsConfig[ruleId] = Object.assign({}, defaults, rule.optionsConfig[ruleId] || {});
@@ -710,7 +742,8 @@ export class RulesTable extends PluginSettingTab {
         if (this.activeFile) {
             let ruleResult;
             await this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
-                ruleResult = await executeRule('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
+                // ruleResult = await executeRule('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
+                ruleResult = await executeRuleObject('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
             },{'mtime':this.activeFile.stat.mtime});  
 
             switch (typeof ruleResult) {

@@ -1,8 +1,9 @@
 import { App, normalizePath, TAbstractFile, TFile, TFolder, Vault } from 'obsidian';
-import { FolderTagRuleDefinition, FolderTagSettings, PropertyInfo, PropertyTypeInfo } from './types'
+import { FrontmatterAutomateRuleSettings, FrontmatterAutomateSettings, PropertyInfo, PropertyTypeInfo } from './types'
 import { ErrorManager } from "./Error";
 import { AlertModal } from './alertBox';
-import { ruleFunctions } from './rules';
+import { delimiter } from 'path';
+import { rulesManager } from './rules/rules';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -226,14 +227,14 @@ export function resolveFile(app: App, file_str: string): TFile {
   export class ScriptingTools {
     app: App | undefined;
     plugin: any; //FolderTagPlugin;
-    settings: FolderTagSettings | undefined;
-    rule: FolderTagRuleDefinition | undefined;
+    settings: FrontmatterAutomateSettings | undefined;
+    rule: FrontmatterAutomateRuleSettings | undefined;
     frontmatter: any;
     currentContent: any;
     activeFile: TFile | undefined;
     knownProperties: Record<string, PropertyInfo>;
 
-    constructor(app?:App, plugin?:any, settings?:FolderTagSettings, rule?: FolderTagRuleDefinition, frontmatter?: any, activeFile?: TFile) {
+    constructor(app?:App, plugin?:any, settings?:FrontmatterAutomateSettings, rule?: FrontmatterAutomateRuleSettings, frontmatter?: any, activeFile?: TFile) {
         this.app = app;
         this.plugin = plugin;
         this.settings = settings
@@ -260,20 +261,17 @@ export function resolveFile(app: App, file_str: string): TFile {
     getActiveFile() {
       return this.activeFile;
     }
-    setRule(rule:FolderTagRuleDefinition) {
+    setRule(rule:FrontmatterAutomateRuleSettings) {
       this.rule = rule;
     }
     getRule() {
       return this.rule;
     }
-    getRuleFunction(rule?:FolderTagRuleDefinition) {
+    getRuleFunction(rule?:FrontmatterAutomateRuleSettings) {
       if (!rule) rule = this.rule;
       if (rule) {
-        const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
-          if (functionIndex!==-1){
-            return ruleFunctions[functionIndex];
-          }
-        }
+        return rulesManager.getRuleById(rule.content);
+      }
     }
     setCurrentContent(content:any) {
       this.currentContent = content;
@@ -308,7 +306,7 @@ export function resolveFile(app: App, file_str: string): TFile {
      */
     getOptionConfig(ruleId:string|undefined, optionId?:string){
       if (!ruleId || ruleId === undefined || !this.settings ) return undefined;
-      const rule = this.settings.rules.find((rule: FolderTagRuleDefinition) => rule.id === ruleId);
+      const rule = this.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
       if (rule && rule.hasOwnProperty('optionsConfig')) {
           //@ts-ignore
           const optionConfig = rule.optionsConfig[ruleId]
@@ -330,14 +328,52 @@ export function resolveFile(app: App, file_str: string): TFile {
         return matchingFiles;
     }
 
-    getFileFromPath(path: string, filesCheck: TFile[] | undefined) {
+    /**
+     * Creates a mock `TFile` object from a given file path string.
+     *
+     * This method parses the provided path to construct a `TFile`-like object,
+     * extracting the file name, extension, and base name. The returned object
+     * contains placeholder values for file statistics and parent, as these details
+     * are unknown. If the input path is empty or undefined, the method returns `undefined`.
+     *
+     * @param path - The file path string to generate the mock `TFile` from.
+     * @returns A mock `TFile` object representing the file at the given path, or `undefined` if the path is invalid.
+     */
+    getMockFileFromPath(path: string|undefined): TFile |undefined {
+      if (!path) return undefined;
+
+      let oldFile:TFile;
+      let oldFileParts = path.split('/');
+      oldFile = {
+        path: path,
+        extension: oldFileParts[oldFileParts.length-1].split('.')[1],
+        name: oldFileParts[oldFileParts.length-1],
+        stat: {mtime: 0, ctime: 0, size: 0}, // stats are unknown
+        basename: this.removeAllExtensions(oldFileParts[oldFileParts.length-1]),
+        vault: this.app!.vault,
+        parent: null // parent is unknown
+      }
+
+      return oldFile
+    }
+
+    /**
+     * Retrieves a `TFile` object from a given file path.
+     *
+     * @param path - The file path to search for. If `undefined`, the function returns `undefined`.
+     * @param filesCheck - An optional array of `TFile` objects to search within. If not provided, all markdown files in the vault are used.
+     * @returns The matching `TFile` if found; otherwise, `undefined`.
+     */
+    getTFileFromPath(path: string | undefined, filesCheck: TFile[] | undefined = undefined) {
+      if (!path) return undefined;
       const files = filesCheck ? filesCheck : this.app!.vault.getMarkdownFiles(); // Retrieve all markdown files
       const matchingFiles = files.filter(file => 
         file instanceof TFile && 
-        file.path.toLocaleLowerCase().includes(path.toLocaleLowerCase())
+        file.path.toLocaleLowerCase() === path.toLocaleLowerCase()
       );
       return matchingFiles.length > 0 ? matchingFiles[0] : undefined;
     }
+
     async createFileFromPath(fileNameWithPath:string, templateFileWithPath:string) {
         const fileName = fileNameWithPath.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
         const templateFile = templateFileWithPath.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
@@ -417,6 +453,17 @@ export function resolveFile(app: App, file_str: string): TFile {
         return this.knownProperties;
     }
     
+    /**
+     * Extracts the path and title from a given link string.
+     *
+     * The input link is expected to be in the format `[[path|title]]` or `[[path]]`.
+     * This function removes square brackets, splits the link by the `|` character,
+     * and determines the path and title. If the title is not provided, the path is
+     * used as the title.
+     *
+     * @param link - The link string to extract parts from, typically in the format `[[path|title]]` or `[[path]]`.
+     * @returns An object containing the `path` and `title` extracted from the link.
+     */
     extractLinkParts(link: string): { path: string; title: string } {
       // Remove all square brackets from the string
       const cleanedLink = link.replace(/[\[\]]/g, "");
@@ -430,6 +477,20 @@ export function resolveFile(app: App, file_str: string): TFile {
       //console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
       return { path, title };
     }
+    
+    extractPathParts(link: string): { path: string; title: string; fileName: string } {
+ 
+      // Split the string by the "/" character
+      const parts = link.split("/");
+  
+      // If only one part exists, use it as both path and title
+      const fileName = parts.pop() || "";
+      const title = this.removeAllExtensions(fileName).trim();
+      const path = parts.join("/").trim();
+      //console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
+      return { path, title, fileName };
+    }
+
     removeLeadingSlash(path: string): string {
       return path.replace(/^\/+/, "");
     }
@@ -594,6 +655,61 @@ export function resolveFile(app: App, file_str: string): TFile {
       }
     }
 
+    /**
+     * Converts an input string or array of strings into a Markdown Link format.
+     * 
+     * @param input - The input to be converted. Can be a string or an array of strings.
+     * @param replaceSpaces - Optional parameter to specify a replacement for spaces in the path or title.
+     *                        If provided, spaces will be replaced with this value.
+     * @returns A string in Markdown Link format if the input is a single string, or a concatenated string
+     *          of Markdown Links if the input is an array of strings.
+     * 
+     * The Markdown Link format is `[title](path)`, where:
+     * - `path` is the formatted path of the link.
+     * - `title` is the formatted title of the link.
+     * 
+     * If the input is an array, each element is converted to a WikiLink and joined with a comma.
+     */
+    toMarkdownLink(input, replaceSpaces?): string | string[] {
+      if (Array.isArray(input)) {
+        return input.map(item => this.toWikiLink(item)).join(', ');
+      }
+      if (typeof input === 'string') {
+        const { path, title, fileName } = this.extractPathParts(input);
+        const formattedPath = this.replaceSpaces(input, replaceSpaces);
+        const formattedTitle = this.replaceSpaces(title, replaceSpaces);
+        return `[[${formattedPath}|${formattedTitle}]]`;
+      }
+      return input;
+    }
+
+    /**
+     * Converts an input string or array of strings into a WikiLink format string or array of strings.
+     * 
+     * @param input - The input to be converted. Can be a string or an array of strings.
+     * @param replaceSpaces - Optional parameter to specify a replacement for spaces in the path or title.
+     *                        If provided, spaces will be replaced with this value.
+     * @returns A string in WikiLink format if the input is a single string, or a concatenated string
+     *          of WikiLinks if the input is an array of strings.
+     * 
+     * The WikiLink format is `[[fileName]]`, where:
+     * - `fileName` is the formatted unique fileName of the link.
+     * 
+     * If the input is an array, each element is converted to a WikiLink and joined with a comma.
+     */
+    toWikiLink(input, replaceSpaces = ' '): string | string[] {
+      if (Array.isArray(input)) {
+        return input.flatMap(item => this.toWikiLink(item));
+        //return input.map(item => this.toWikiLink(item)).join(', ');
+      }
+      if (typeof input === 'string') {
+        const { path, title } = this.extractLinkParts(input);
+        const formattedTitle = this.replaceSpaces(this.removeAllExtensions(title), replaceSpaces);
+        return `[[${formattedTitle}]]`;
+      }
+      return input;
+    }
+
     replaceSpaces(text:string, replaceBy:string | undefined = undefined):string {
       let replaceString = '_';
       if (!replaceBy && this.settings) {
@@ -602,6 +718,28 @@ export function resolveFile(app: App, file_str: string): TFile {
         if (replaceBy) replaceString = replaceBy;
       }
       return text.replace(/\s+/g, replaceString);
+    }
+
+    /**
+     * Removes the ALL file extension(s) from a given file name.
+     *
+     * @param fileName - The name of the file, including its extension.
+     * @returns The file name without its extension.
+     */
+    removeAllExtensions(fileName: string): string {
+        return fileName.split('.')[0];
+    }
+    /**
+     * Removes the last file extension(s) from a given file name.
+     *
+     * @param fileName - The name of the file, including its extension.
+     * @returns The file name without its extension.
+     */
+    removeExtensions(fileName: string): string {
+        const result = fileName.split('.');
+        result.pop(); // remove the last part
+        if (result.length === 0) return fileName; // no extension
+        return result.join('.') || fileName;
     }
 
     formatCamelCase(text:string):string {
