@@ -530,13 +530,15 @@
       "spaceReplacement": "",
       "specialCharReplacement": "",
       "lowercaseTags": false,
-      "formatter": "toOriginal",
+      "formatter": "toTitleCaseDe",
       "linkFormatter": "toSimpleLink",
       "inputProperty": "",
       "onlyModify": true,
       "useCustomCode": false,
       "optionsConfig": {
         "0f337f99-ad3c-471e-8c9c-f670ba21abc7": {
+          "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
+          "doNotCapitalizeSmallWords": true,
           "delimiter": "|",
           "inputProperties": [
             "fullPath",
