@@ -1,7 +1,7 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
 import { WARNING } from './Log';
 
-export const versionString = "0.0.21";
+export const versionString = "0.0.22";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all';
