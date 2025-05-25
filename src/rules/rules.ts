@@ -297,15 +297,17 @@ export class Rules {
           case 'number':
             return value;
           case 'string':
-            if (rule.spaceReplacement && rule.spaceReplacement !== '') value = value.replace(/\s+/g, rule.spaceReplacement);
-            if (rule.specialCharReplacement && rule.specialCharReplacement !=='') value = value.replace(/[^a-zA-Z0-9\-_\/äöüßÄÖÜáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕ]/g, rule.specialCharReplacement);
-            if (rule.formatter && rule.formatter !== '') {
-              value = this.executeRuleById(rule.formatter, rule, this.app, activeFile, tools, value); // execute the formatter rule
+            //if (rule.spaceReplacement && rule.spaceReplacement !== '') value = value.replace(/\s+/g, rule.spaceReplacement);
+            //if (rule.specialCharReplacement && rule.specialCharReplacement !=='') value = value.replace(/[^a-zA-Z0-9\-_\/äöüßÄÖÜáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕ]/g, rule.specialCharReplacement);
+            if (rule.formatters && rule.formatters.length > 0) {
+              rule.formatters.forEach(formatterId => {
+                value = this.executeRuleById(formatterId, rule, this.app, activeFile, tools, value); // execute the formatter rule
+              });
             }
             if (rule.linkFormatter && rule.linkFormatter !== '') {
               value = this.executeRuleById(rule.linkFormatter, rule, this.app, activeFile, tools, value); // execute the link formatter rule
             }
-            if (rule.prefix && rule.prefix !== '') value = rule.prefix + value;
+            //if (rule.prefix && rule.prefix !== '') value = rule.prefix + value;
             return value
           case 'object':
             if (Array.isArray(value)) {

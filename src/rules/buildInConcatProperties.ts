@@ -3,6 +3,7 @@ import { ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings, PropertyTypeInfo } from "../types";
 import { App, ExtraButtonComponent, Setting, TFile } from "obsidian";
 import { delimiter } from "path";
+import { MultiPropertySetting } from "../uiMultiPropertySetting";
 
 /**
  * Represents a built-in rule for retrieving a property value from the frontmatter of a file.
@@ -80,137 +81,37 @@ export class RuleBuildInConcatProperties extends RulePrototype {
         inputProperties: [],
         onlyWhenAllPropertiesExist: true, // Default to false
     });
-
-    const styleDisabled = (el: ExtraButtonComponent, disabled: boolean) => {
-      if (disabled) {
-          el.extraSettingsEl.addClass('mod-disabled');
-          el.extraSettingsEl.setAttr('aria-disabled', 'true');
-          el.extraSettingsEl.tabIndex = -1;
-          // Optionally, remove tooltip if disabled:
-          el.extraSettingsEl.removeAttribute('aria-label');
-      } else {
-          el.extraSettingsEl.removeClass('mod-disabled');
-          el.extraSettingsEl.setAttr('aria-disabled', 'false');
-      }
-    };
-
-    const render = () => {
-      optionEL.empty();
-      const inputProperties: string[] = that.getOptionConfig(rule.id, 'inputProperties') || [];
-      // Remove any empty trailing entries except for the last one
-      while (inputProperties.length > 2 && inputProperties[inputProperties.length - 2] === "") {
-          inputProperties.pop();
-      }
-      // Always ensure at least one selection
-      if (inputProperties.length === 0) inputProperties.push("");
-
-      inputProperties.forEach((selected, idx) => {
-          const setting = new Setting(optionEL)
-              .setName(idx === 0 ? "Input Properties" : "")
-              .setDesc(idx === 0 ? "Select properties as input. Use 'Space replacement' as delimiter." : "")
-              .addDropdown(dd => {
-                  Object.keys(that.knownProperties).forEach((key) => {
-                      const item = that.knownProperties[key] as PropertyTypeInfo;
-                      dd.addOption(item.name, item.name);
-                  });
-                  dd.setValue(selected || "");
-                  dd.onChange(async (value) => {
-                      inputProperties[idx] = value;
-                      that.setOptionConfig(rule.id, 'inputProperties', inputProperties);
-                      that.updatePreview(rule, previewComponent);
-                      render();
-                  });
-              });
-          if (idx > 0) {
-            setting.settingEl.style.borderTop = 'none'; // Remove border for all but the first item
-            setting.settingEl.style.padding = '0 0 0.75em'; // Remove margin for all but the first item
-          } else {
-            setting.settingEl.style.padding = '0.75em 0'; // Remove margin for all but the first item
-          }
-          const settingControl= setting.controlEl;
-          if (settingControl) {
-              settingControl.style.gap = '0.1em'; // Add gap between buttons
-          }
-          // Move up button (disable for first item)
-          setting.addExtraButton(btn => {
-              btn.setIcon('arrow-up')
-                .setTooltip('Move up')
-                .setDisabled(idx === 0) // Disable for the first item
-                .onClick(() => {
-                    [inputProperties[idx - 1], inputProperties[idx]] = [inputProperties[idx], inputProperties[idx - 1]];
-                    that.setOptionConfig(rule.id, 'inputProperties', inputProperties);
-                    render();
-                });
-              styleDisabled(btn, idx === 0); // Style disabled state
-          });
-
-          // Move down button (disable for last item)
-          setting.addExtraButton(btn => {
-              btn.setIcon('arrow-down')
-                .setTooltip('Move down')
-                .setDisabled(idx === inputProperties.length - 1) // Disable for the last item
-                .onClick(() => {
-                    [inputProperties[idx], inputProperties[idx + 1]] = [inputProperties[idx + 1], inputProperties[idx]];
-                    that.setOptionConfig(rule.id, 'inputProperties', inputProperties);
-                    render();
-                });
-              styleDisabled(btn, idx === inputProperties.length - 1); // Style disabled state
-          });
-          // Minus button for every row (disable if only one row left)
-          setting.addExtraButton(btn => {
-              btn.setIcon('minus-circle')
-                  .setTooltip('Remove property')
-                  .setDisabled(inputProperties.length === 1)
-                  .onClick(() => {
-                      inputProperties.splice(idx, 1);
-                      that.setOptionConfig(rule.id, 'inputProperties', inputProperties);
-                      render();
-                  });
-              styleDisabled(btn, inputProperties.length === 1);
-          });
+    
+    const multiProp = new MultiPropertySetting(optionEL)
+      .setName("Input Properties")
+      .setDesc("Select properties as input. Use 'Space replacement' as delimiter.")
+      .setOptions(Object.keys(that.knownProperties).map((key) => key))
+      .setValue(that.getOptionConfig(rule.id, 'inputProperties') || [])
+      .onChange((arr) => {
+          that.setOptionConfig(rule.id, 'inputProperties', arr);
+          that.updatePreview(rule, previewComponent);
       });
-      // Plus button UNDER the last row
-      const plusButton = new Setting(optionEL)
-        .addExtraButton(btn => {
-            btn.setIcon('plus-circle')
-                .setTooltip('Add property')
-                .setDisabled(inputProperties[inputProperties.length - 1] === "" || !inputProperties[inputProperties.length - 1])
-                .onClick(() => {
-                    if (inputProperties[inputProperties.length - 1] !== "" && inputProperties[inputProperties.length - 1]) {
-                        inputProperties.push("");
-                        that.setOptionConfig(rule.id, 'inputProperties', inputProperties);
-                        render();
-                    }
-                });
-            styleDisabled(btn, inputProperties[inputProperties.length - 1] === "" || !inputProperties[inputProperties.length - 1]);
-        });
-      plusButton.settingEl.style.borderTop = 'none'; // Remove border for all but the first item
-      plusButton.settingEl.style.padding = '0 0 0.75em'; // Remove margin for all but the first item
-      // Create a setting for the constant value
-      new Setting(optionEL)
-          .setName('Delimiter')
-          .setDesc('Specify a delimiter to use when concatenating properties. Default is a space.')
-          .addText(text => text
-              .setValue(that.getOptionConfig(rule.id ,'delimiter') || '')
-              .setPlaceholder('Enter delimiter')
-              .onChange(async (value) => {
-                  that.setOptionConfig(rule.id,'delimiter', value);
-                  that.updatePreview(rule, previewComponent);
-              })
-          );
-      new Setting(optionEL)
-          .setName('Only when all properties exist')
-          .setDesc('If enabled, the rule will only return a value if all selected properties exist and not empty.')
-          .addToggle(toggle => toggle
-              .setValue(that.getOptionConfig(rule.id, 'onlyWhenAllPropertiesExist') || true)
-              .onChange(async (value) => {
-                  that.setOptionConfig(rule.id, 'onlyWhenAllPropertiesExist', value);
-                  that.updatePreview(rule, previewComponent);
-              })
-          );
-    };
-
-    render();
-
+    
+    new Setting(optionEL)
+        .setName('Delimiter')
+        .setDesc('Specify a delimiter to use when concatenating properties. Default is a space.')
+        .addText(text => text
+            .setValue(that.getOptionConfig(rule.id ,'delimiter') || '')
+            .setPlaceholder('Enter delimiter')
+            .onChange(async (value) => {
+                that.setOptionConfig(rule.id,'delimiter', value);
+                that.updatePreview(rule, previewComponent);
+            })
+        );
+    new Setting(optionEL)
+        .setName('Only when all properties exist')
+        .setDesc('If enabled, the rule will only return a value if all selected properties exist and not empty.')
+        .addToggle(toggle => toggle
+            .setValue(that.getOptionConfig(rule.id, 'onlyWhenAllPropertiesExist') || true)
+            .onChange(async (value) => {
+                that.setOptionConfig(rule.id, 'onlyWhenAllPropertiesExist', value);
+                that.updatePreview(rule, previewComponent);
+            })
+        );
   };
 }

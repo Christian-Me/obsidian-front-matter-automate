@@ -14,9 +14,8 @@
       "addContent": "end",
       "property": "tags",
       "value": [
-        "tiere",
-        "säugetiere",
-        "affen"
+        "Tiere",
+        "Vögel"
       ],
       "customProperty": "",
       "type": "tags",
@@ -56,7 +55,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullPath",
-      "value": "Tiere/Säugetiere/Affen/Untitled.md",
+      "value": "Tiere/Vögel/Untitled.md",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -104,7 +103,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "path",
-      "value": "[[Tiere/Säugetiere/Affen/Untitled|undefined]]",
+      "value": "[[Tiere/Vögel/Untitled|Wombats 🐻]]",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -149,7 +148,9 @@
       "asLink": false,
       "addContent": "end",
       "property": "location",
-      "value": "Konstante",
+      "value": [
+        "Konstante"
+      ],
       "customProperty": "",
       "type": "multitext",
       "typeProperty": {
@@ -240,8 +241,7 @@
       "property": "link",
       "value": [
         "Tiere",
-        "Säugetiere",
-        "Affen"
+        "Vögel"
       ],
       "customProperty": "",
       "type": "multitext",
@@ -283,9 +283,8 @@
       "addContent": "overwrite",
       "property": "folders",
       "value": [
-        "tiere",
-        "säugetiere",
-        "affen"
+        "Tiere",
+        "Vögel"
       ],
       "customProperty": "",
       "type": "multitext",
@@ -335,7 +334,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "title",
-      "value": "Property Not Found",
+      "value": "Property not found",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -382,7 +381,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "rootFolder",
-      "value": "TIERE",
+      "value": "Tiere",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -502,7 +501,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "Localtion.type",
-      "value": "[[]]",
+      "value": "[[Tiere/Vögel/Untitled.md|Wombats 🐻]]",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -537,14 +536,14 @@
       "useCustomCode": false,
       "optionsConfig": {
         "0f337f99-ad3c-471e-8c9c-f670ba21abc7": {
-          "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
-          "doNotCapitalizeSmallWords": true,
           "delimiter": "|",
           "inputProperties": [
             "fullPath",
             "constant"
           ],
-          "onlyWhenAllPropertiesExist": true
+          "onlyWhenAllPropertiesExist": true,
+          "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
+          "doNotCapitalizeSmallWords": true
         }
       }
     },
@@ -554,7 +553,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "location-type",
-      "value": "",
+      "value": "?wombats_??_ENDE",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -589,12 +588,115 @@
       "useCustomCode": true,
       "optionsConfig": {
         "797182ad-b5d4-4032-89fe-8e569ed875c4": {
+          "prefix": "#",
+          "suffix": "ENDE",
           "delimiter": " ",
           "inputProperties": [
-            "constant"
+            "constant",
+            "ddd"
           ],
-          "onlyWhenAllPropertiesExist": true,
+          "onlyWhenAllPropertiesExist": false,
+          "spaceReplacement": "_",
+          "specialCharReplacement": "?",
+          "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
+          "doNotCapitalizeSmallWords": true,
           "constantValue": ""
+        }
+      },
+      "formatters": [
+        "toLowerCase",
+        "addPrefix",
+        "addSuffix",
+        "replaceSpaces",
+        "replaceSpecialChars"
+      ]
+    },
+    {
+      "id": "9f71fdc0-6552-45d5-a05b-f3656c658ba8",
+      "active": true,
+      "asLink": false,
+      "addContent": "end",
+      "property": "aliases",
+      "value": [
+        "Vögel"
+      ],
+      "customProperty": "",
+      "type": "aliases",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "folder",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false
+    },
+    {
+      "id": "0541dccd-85c9-449a-ae9a-836c07ea883a",
+      "active": true,
+      "asLink": false,
+      "addContent": "end",
+      "property": "aliases",
+      "value": [
+        "Tiere"
+      ],
+      "customProperty": "",
+      "type": "aliases",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "rootFolder",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  return parts.length > 1 ? parts[0] : ''; // return root folder or empty string if in root\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "0541dccd-85c9-449a-ae9a-836c07ea883a": {
+          "constantValue": "Test"
         }
       }
     }

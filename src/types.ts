@@ -1,7 +1,7 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
 import { WARNING } from './Log';
 
-export const versionString = "0.0.22";
+export const versionString = "0.0.23";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all';
@@ -85,7 +85,8 @@ export interface FrontmatterAutomateRuleSettings {
     spaceReplacement: string;
     specialCharReplacement: string;
     lowercaseTags: boolean; //deprecated
-    formatter: string; //added
+    formatter: string; //deprecated
+    formatters: string[]; //added
     linkFormatter: string; //added
     inputProperty: string;
     onlyModify: boolean;
@@ -123,7 +124,8 @@ export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
     spaceReplacement: '',
     specialCharReplacement: '',
     lowercaseTags: false, //deprecated
-    formatter: 'toOriginal',
+    formatter: 'toOriginal', //deprecated
+    formatters: ['toOriginal'],
     linkFormatter: 'toOriginalLink',
     inputProperty: '',
     onlyModify: true,

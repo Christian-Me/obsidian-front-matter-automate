@@ -135,6 +135,8 @@ export function executeRuleObject (
     oldResult = rulesManager.executeRule(rule, ruleObject, app, oldFile, tools, frontMatter);
     oldResult = rulesManager.applyFormatOptions(oldResult, rule, oldFile, tools); // apply format options on the old file location
     result = rulesManager.mergeResult(result, oldResult, currentContent, rule); // merge the result with the current content. Remove old result if necessary
+  } else {
+    result = rulesManager.mergeResult(result, result, currentContent, rule); // merge the result with the current content. Remove old result if necessary
   }
   return result;
 }

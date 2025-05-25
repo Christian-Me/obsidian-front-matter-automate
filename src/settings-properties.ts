@@ -10,6 +10,7 @@ import { ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
 import { rulesManager } from './rules/rules';
 import { DEBUG, logger } from './Log';
+import { MultiPropertySetting } from './uiMultiPropertySetting';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
@@ -241,6 +242,7 @@ export class RulesTable extends PluginSettingTab {
                 }));
         }
         if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
+            /*
             if (ruleFn.useRuleOption('addPrefix')) {
                 if (rule.type === 'tags' || rule.type === 'aliases') {
                     new Setting(optionEL)
@@ -282,9 +284,36 @@ export class RulesTable extends PluginSettingTab {
                             this.updatePreview(rule, previewComponent);
                         }));
             }
+            */
             let formatRule = rulesManager.getRuleById(rule.formatter);
+            const formatterRules = rulesManager.getRulesByType('formatter') || [];
             let formatOptionsButton: any;
             if (ruleFn.useRuleOption('convertToLowerCase')) {
+                const multiProp = new MultiPropertySetting(optionEL)
+                    .setName("Format output")
+                    .setDesc("Format output using selected options.")
+                    .setOptions(formatterRules)
+                    .setValue(rule.formatters || ['toOriginal'])
+                    .onChange((formatter) => {
+                        rule.formatters = formatter;
+                        formatRule = rulesManager.getRuleById(rule.formatter);
+                        this.updatePreview(rule, previewComponent);
+                    });
+                multiProp.addExtraButton((setting, idx) => {
+                        setting.addExtraButton(btn => {
+                            btn.setIcon('gear')
+                            .setTooltip('Options')
+                            .setDisabled(!rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal")?.hasOwnConfigTab() || false)
+                            .onClick(() => {
+                                converterOptionDiv.style.display = 'block';
+                                converterOptionDiv.empty(); // clear previous options
+                                formatRule = rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal");
+                                formatRule?.configTab(converterOptionDiv, rule, this, previewComponent);
+                            });
+                            multiProp.styleDisabled(btn, !rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal")?.hasOwnConfigTab() || false);
+                        });
+                    });
+                /*
                 new Setting(optionEL)
                     .setName('Format output')
                     .setDesc('Format output using selected option')
@@ -309,15 +338,17 @@ export class RulesTable extends PluginSettingTab {
                             .setTooltip('format options')
                             .onClick(async () => {
                                 converterOptionDiv.style.display = converterOptionDiv.style.display === 'block' ? 'none' : 'block';
+                                
                             });
                         formatOptionsButton.extraSettingsEl.style.display = !formatRule?.hasOwnConfigTab() ? 'none' : 'block';
                         
                     })
+                    */
             }
             let converterOptionDiv = optionEL.createDiv({ cls: 'property-converter-option' });
             converterOptionDiv.style.display = 'none';
             converterOptionDiv.style.marginLeft = '20px';
-            formatRule?.configTab(converterOptionDiv, rule, this, previewComponent);
+            
             if (ruleFn.useRuleOption('resultAsLink')) {
                 new Setting(optionEL)
                     .setName('Result as Link')

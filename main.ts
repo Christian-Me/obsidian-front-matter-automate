@@ -76,8 +76,9 @@ export default class FolderTagPlugin extends Plugin {
                     logger.log(DEBUG,`Event metadata changed: ${file.path} not a markdown file!`);
                     return;
                 }
-                logger.log(DEBUG,`Event metadata changed: ${file.path} `, data, this.settings);
+                logger.groupCollapsed(DEBUG,`Event metadata changed: ${file.path} `);
                 if (file) this.updateFrontmatterParameters('metadata-changed', file, this.settings.rules);
+                logger.groupEnd();
                 /*
                 if (cache.frontmatter && Array.isArray(this.settings.liveRules) && this.settings.liveRules.length > 0) {
                     logger.log(DEBUG,`Event metadata changed: ${file.path} ${this.settings.liveRules.length} rules live`);
