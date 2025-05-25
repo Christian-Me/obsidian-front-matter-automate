@@ -1,4 +1,5 @@
 import { PluginSettingTab, Setting, TextComponent, ButtonComponent, App } from 'obsidian';
+import { logger, TRACE } from './Log';
 
 interface Row {
     id: string;
@@ -15,7 +16,7 @@ interface group {
 export class SortableListComponent {
     private groups: group[] = [];
     private containerEl: HTMLElement;
-    private listContainerEl: HTMLElement;
+    private listContainerEl!: HTMLElement;
     private dragData: any = null;
 
     constructor(containerEl: HTMLElement) {
@@ -162,7 +163,7 @@ export class SortableListComponent {
         dropIndicator.addEventListener('drop', (e) => {
             e.preventDefault();
             dropIndicator.classList.remove('drag-over');
-            console.log('row dropped on indicator',this.dragData);
+            logger.log(TRACE,'row dropped on indicator',this.dragData);
             if (this.dragData.type === 'row') {
                 this.moveRow(this.dragData.rowId, row.id, groupId); // Move the dragged row before this row
             }
@@ -199,7 +200,7 @@ export class SortableListComponent {
         this.groups.forEach(group => group.isOpen = false);
         this.renderGroups();
     }
-
+/*
     private filterRows() {
         const searchTerm = this.searchInput.getValue().toLowerCase();
         this.groups.forEach(group => {
@@ -213,7 +214,7 @@ export class SortableListComponent {
             });
         });
     }
-
+*/
     private generateId(): string {
         return Math.random().toString(36).substr(2, 9);
     }
@@ -249,12 +250,12 @@ export class SortableListComponent {
                 const targetRowIndex = group.rows.findIndex(row => row.id === targetRowId);
 
                 // Prevent moving the row to the gap above itself
-                if (sourceRow.id === targetRowId) {
+                if (sourceRow && sourceRow.id === targetRowId) {
                     group.rows.splice(targetRowIndex, 0, sourceRow); // Reinsert the row in its original position
                     return;
                 }
 
-                if (targetRowIndex !== -1) {
+                if (targetRowIndex !== -1 && sourceRow) {
                     group.rows.splice(targetRowIndex, 0, sourceRow);
                 }
             }

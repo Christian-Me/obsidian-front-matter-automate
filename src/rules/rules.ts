@@ -1,6 +1,7 @@
 import { App, Plugin, TFile } from "obsidian";
-import { ScriptingTools } from "../tools";
+import { parseJSCode, ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings, ObsidianPropertyTypes } from "../types";
+import { ERROR, logger, WARNING } from "../Log";
 
 export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' | 'autocomplete.modal' | 'automation' | 'script' | 'formatter' | 'linkFormatter' ;
 /**
@@ -10,6 +11,7 @@ export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' |
  * @interface RuleConfigElements
  */
 export interface RuleConfigElements {
+    [key: string]: boolean; // Allow string keys with boolean values
     removeContent: boolean;
     ruleActive: boolean;
     modifyOnly: boolean;
@@ -28,9 +30,9 @@ export interface RuleConfigElements {
 export class RulePrototype {
     rulesConfigDiv: HTMLDivElement | undefined = undefined;
     scriptingTools: ScriptingTools;
-    id: string;
-    name: string;
-    description: string;
+    id!: string;
+    name!: string;
+    description!: string;
     ruleType: FrontmatterAutomateRuleTypes = 'buildIn';
     isLiveRule: boolean = false; // If true, the rule is a live rule and will be executed on file change
     type: string[] = ['text']; // Types that are supported by this rule
@@ -46,7 +48,7 @@ export class RulePrototype {
     }
 
     fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any) { // Default function signature
-        if (!input) input = tools.getCurrentContent(); // Get the current content of property
+        if (input === undefined || input === null) input = tools.getCurrentContent(); // Get the current content of property
         return input; // Return the input unaltered
     };
 
@@ -58,7 +60,7 @@ export class RulePrototype {
      * @param that - The context or reference to the calling object.
      * @param previewComponent - The component used to render a preview of the rule's effect.
      */
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         optionEL.empty();
     };
 
@@ -87,10 +89,10 @@ export class RulePrototype {
      * @returns {boolean} - Returns true if the option is enabled, false otherwise.
      */
     useRuleOption(option:string):boolean {
-        if (this.configElements[option] === undefined) {
+        if ((this.configElements as RuleConfigElements)[option] === undefined) {
             return false;
         }
-        return this.configElements[option] || false;
+        return (this.configElements as RuleConfigElements)[option] || false;
     }
     /**
      * Checks if the rule has any configuration options.
@@ -128,7 +130,7 @@ export class RulePrototype {
                         result = res;
                     })
                     .catch((err: any) => {
-                        console.error(`Error executing async automation rule: ${err}`);
+                        logger.log(ERROR,`Error executing async automation rule: ${err}`);
                     });
                 return result; // Return the resolved result as a string
 
@@ -214,10 +216,24 @@ export class Rules {
     getRuleById(id: string): RulePrototype | undefined {
         const ruleObject = this.rules.find(rule => rule.id === id);
         if (!ruleObject) {
-            console.warn(`Rule with id "${id}" not found.`);
+            logger.log(WARNING,`Rule with id "${id}" not found.`);
             return undefined;
         }
         return ruleObject;
+    }
+    /**
+     * Retrieves the source code of a rule by its unique identifier.
+     *
+     * @param id - The unique identifier of the rule for which to retrieve the source code.
+     * @returns The source code of the rule, or `undefined` if the rule is not found.
+     */
+    getSource(id: string): string | undefined {
+        const ruleObject = this.getRuleById(id);
+        if (!ruleObject) {
+            logger.log(WARNING,`Source for rule with id "${id}" not found.`);
+            return undefined;
+        }
+        return ruleObject.getSource();
     }
 
     /**
@@ -230,13 +246,13 @@ export class Rules {
      * @param {any} [input] - Optional input for rules that require it.
      * @returns {string | null} - The result of the `fx` function, or `null` if the rule is not found.
     */
-    executeRuleById(id: string, app: App | undefined, file: any, tools: ScriptingTools, input?: any): string | null {
+    executeRuleById(id: string, ruleSettings: FrontmatterAutomateRuleSettings, app: App | undefined, file: any, tools: ScriptingTools, input?: any): string | null {
         const rule = this.rules.find(rule => rule.id === id);
         if (!rule) {
-            console.warn(`Rule with id "${id}" not found.`);
+            logger.log(WARNING,`Rule with id "${id}" not found.`);
             return null;
         }
-        return this.executeRule(rule, app, file, tools, input);
+        return this.executeRule(ruleSettings, rule, app, file, tools, input);
     }
     /**
      * Executes the `fx` function of a given rule and returns its result.
@@ -248,7 +264,7 @@ export class Rules {
      * @param input - Optional input for rules that require it.
      * @returns {string | null} - The result of the `fx` function, or `null` if the rule is not found.
      */
-    executeRule(rule: RulePrototype, app: App | undefined, file: any, tools: ScriptingTools, input?: any): string | null {
+    executeRule(ruleSettings: FrontmatterAutomateRuleSettings, rule: RulePrototype, app: App | undefined, file: any, tools: ScriptingTools, input?: any): string | null {
         switch (rule.ruleType) {
             case 'formatter':
             case 'linkFormatter':
@@ -257,7 +273,18 @@ export class Rules {
             case 'automation':
                 return rule.execute(app, file, tools);
             default:
-                return rule.execute(app, file, tools);
+                if (ruleSettings.useCustomCode && ruleSettings.buildInCode && ruleSettings.buildInCode !== '') {
+                    // If the rule has custom code, execute it
+                    const code = parseJSCode(ruleSettings.buildInCode);
+                    if (typeof code === 'function') {
+                        return code(app, file, tools); // Pass input if available
+                    } else {
+                        logger.log(ERROR,`Invalid custom code for rule "${ruleSettings.content}": ${ruleSettings.buildInCode}`);
+                        return `Invalid custom code for rule "${ruleSettings.id}"`;
+                    }
+                } else {
+                    return rule.execute(app, file, tools, input);
+                }
         }
     }
 
@@ -273,10 +300,10 @@ export class Rules {
             if (rule.spaceReplacement && rule.spaceReplacement !== '') value = value.replace(/\s+/g, rule.spaceReplacement);
             if (rule.specialCharReplacement && rule.specialCharReplacement !=='') value = value.replace(/[^a-zA-Z0-9\-_\/äöüßÄÖÜáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕ]/g, rule.specialCharReplacement);
             if (rule.formatter && rule.formatter !== '') {
-              value = this.executeRuleById(rule.formatter, this.app, activeFile, tools, value); // execute the formatter rule
+              value = this.executeRuleById(rule.formatter, rule, this.app, activeFile, tools, value); // execute the formatter rule
             }
             if (rule.linkFormatter && rule.linkFormatter !== '') {
-              value = this.executeRuleById(rule.linkFormatter, this.app, activeFile, tools, value); // execute the link formatter rule
+              value = this.executeRuleById(rule.linkFormatter, rule, this.app, activeFile, tools, value); // execute the link formatter rule
             }
             if (rule.prefix && rule.prefix !== '') value = rule.prefix + value;
             return value
@@ -304,7 +331,7 @@ export class Rules {
                     if (typeof result === 'string') result = [result]; // convert string to array 
                     if (!Array.isArray(returnResult)) returnResult = [returnResult];
                     if (!Array.isArray(oldResult)) oldResult = [oldResult];
-                    let filtered = returnResult.filter((value) => !oldResult.includes(value))
+                    let filtered = returnResult.filter((value:any) => !oldResult.includes(value))
                     returnResult = this.tools.removeDuplicateStrings(filtered.concat(result));
                 } else {
                     if (!returnResult) returnResult = '';
@@ -318,7 +345,7 @@ export class Rules {
                     if (typeof result === 'string') result = [result]; // convert string to array 
                     if (!Array.isArray(returnResult)) returnResult = [returnResult];
                     if (!Array.isArray(oldResult)) oldResult = [oldResult];
-                    let filtered = returnResult.filter((value) => !oldResult.includes(value))
+                    let filtered = returnResult.filter((value:any) => !oldResult.includes(value))
                     returnResult = this.tools.removeDuplicateStrings(result.concat(filtered));
                 } else {
                     if (!returnResult) returnResult = '';

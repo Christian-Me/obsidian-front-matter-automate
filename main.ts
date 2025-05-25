@@ -6,13 +6,18 @@ import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FrontmatterAutomateSettings, DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS, FrontmatterAutomateRuleSettings, PropertyTypeInfo} from './src/types'
 import "./src/rules/index";
 import { rulesManager } from './src/rules/rules';
+import { DEBUG, INFO, logger } from './src/Log';
+import { log } from 'console';
 export default class FolderTagPlugin extends Plugin {
-    settings: FrontmatterAutomateSettings;
-    private tools: ScriptingTools;
+    settings!: FrontmatterAutomateSettings;
+    private tools!: ScriptingTools;
+    fileInProgress: TFile | null = null; // Track the file currently being processed
     //private oldFolderPaths = new Map<string, string | null>();
 
     async onload() {
         await this.loadSettings();
+        logger.log(INFO,`Front Matter Automate ${versionString} loaded with settings: `, this.settings);
+        logger.setLevel(this.settings.debugLevel);
         this.tools = new ScriptingTools(this.app, this);
         rulesManager.init(this.app, this, this.tools);
         let noticeMessage = `Front Matter Automate ${versionString}\n loading ...`;
@@ -23,9 +28,15 @@ export default class FolderTagPlugin extends Plugin {
         // File creation handler
         this.registerEvent(
             this.app.vault.on('create', (file) => {
+                logger.log(DEBUG,`Event creating file: ${file.path} starting in ${this.settings.delayCreateEvent}ms`);
                 if (file instanceof TFile && file.extension === 'md') {
-                    console.log(`creating file: `, file.path);
-                    this.updateFrontmatterParameters('create', file, this.settings.rules);
+                    this.fileInProgress = file; // Set the file in progress
+                    setTimeout(() => {
+                        logger.log(DEBUG,`Event creating file started: `, file.path);
+                        this.updateFrontmatterParameters('create', file, this.settings.rules);
+                        this.fileInProgress = null; // Clear the file in progress after processing
+                    }
+                    , this.settings.delayCreateEvent);
                 }
             })
         );
@@ -33,33 +44,43 @@ export default class FolderTagPlugin extends Plugin {
         // File rename/move handler
         this.registerEvent(
             this.app.vault.on('rename', (file, oldPath) => {
+                if (this.fileInProgress) return; // Ignore if file is in progress
                 if (file instanceof TFile && file.extension === 'md') {
-                    console.log(`renaming file: `, file.path);
+                    logger.log(DEBUG,`Event renaming file: `, file.path);
                     this.updateFrontmatterParameters('rename', file, this.settings.rules, oldPath);
                 }
             })
         );
 
         // File close handler
+        /*
         this.registerEvent(
             this.app.workspace.on('active-leaf-change', (leaf) => {
                 if (leaf?.view instanceof MarkdownView) {
                     const activeFile = this.app.workspace.getActiveFile();
-                    console.log(`active-leaf-change file: `, activeFile?.path);
+                    logger.log(DEBUG,`Event active-leaf-change file: `, activeFile);
                     if (activeFile) this.updateFrontmatterParameters('active-leaf-change', activeFile, this.settings.rules);
                 }
             })
         );
-
+        */
         // Metadata changed handler
         this.registerEvent(
             this.app.metadataCache.on('changed', async (file, data, cache) => {
+                if (this.fileInProgress) return; // Ignore if file is in progress
                 if (!checkIfFileAllowed(file, this.settings)) {
-                    console.log(`file ${file.path} globally rejected!`)
+                    logger.log(DEBUG,`file ${file.path} globally rejected!`)
                     return;
                 }
+                if (!(file instanceof TFile) || file.extension !== 'md') {
+                    logger.log(DEBUG,`Event metadata changed: ${file.path} not a markdown file!`);
+                    return;
+                }
+                logger.log(DEBUG,`Event metadata changed: ${file.path} `, data, this.settings);
+                if (file) this.updateFrontmatterParameters('metadata-changed', file, this.settings.rules);
+                /*
                 if (cache.frontmatter && Array.isArray(this.settings.liveRules) && this.settings.liveRules.length > 0) {
-                    console.log(`Event metadata changed: ${file.path} ${this.settings.liveRules.length} rules live`);
+                    logger.log(DEBUG,`Event metadata changed: ${file.path} ${this.settings.liveRules.length} rules live`);
                     // apply all live rules to frontmatter
                     this.app.fileManager.processFrontMatter(file, async (frontmatter) => {
                         for (const rule of this.settings.liveRules)  {
@@ -67,13 +88,14 @@ export default class FolderTagPlugin extends Plugin {
                                 if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) continue; // only modify if property exists
                                 let result = executeRuleObject('modify',this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter);
                                 if (result) frontmatter[rule.property] = result;
-                                console.log(` Done: rule '${rule.property}'(${rule.content}) File ${file.path} result: `, result, frontmatter[rule.property], frontmatter);
+                                logger.log(DEBUG,` Done: rule '${rule.property}'(${rule.content}) File ${file.path} result: `, result, frontmatter[rule.property], frontmatter);
                             } else {
-                                console.log(`file ${file.path} rejected by rule ${rule.content}!`)
+                                logger.log(DEBUG,`file ${file.path} rejected by rule ${rule.content}!`)
                             }
                         }
                     },{'mtime':file.stat.mtime}); // do not change the modify time.
                 };
+                */
             })
         );
             
@@ -151,37 +173,42 @@ export default class FolderTagPlugin extends Plugin {
         }
     }
 
-    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change', file: TFile, rules: FrontmatterAutomateRuleSettings[], oldPath?: string) {
+    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed', file: TFile, rules: FrontmatterAutomateRuleSettings[], oldPath?: string) {
         if (!checkIfFileAllowed(file, this.settings)) {
-            console.log(`file ${file.path} globally rejected!`)
+            logger.log(DEBUG,`file ${file.path} globally rejected!`)
             return;
         }
         const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFolderFromPath(oldPath))
 
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-           // apply all rules to frontmatter
-           console.log(`Event start ${eventName}: ${file.path} ${rules.length} rules`,frontmatter);
+            // apply all rules to frontmatter
+            logger.groupCollapsed(DEBUG,`Event ${eventName}: ${file.path} ${rules.length} rules`,frontmatter);
             for (let rule of rules) {
                 let result = frontmatter[rule.property];
+                logger.groupCollapsed(DEBUG,`Execute Rule: ${rule.property}(${rule.content})`,result, rule);
                 if (!checkIfFileAllowed(file, this.settings, rule)) {
-                    console.log(`file ${file.path} rejected by rule (${rule.property}|${rule.content}) settings`);
+                    logger.log(DEBUG,`file ${file.path} rejected by rule (${rule.property}|${rule.content}) settings`);
+                    logger.groupEnd();
                     continue; // only modify if file is allowed
                 }
                 if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) {
-                    console.log(`file ${file.path} has not ${rule.property}(${rule.content}) onlyModify`);
+                    logger.log(DEBUG,`file "${file.path}" has not "${rule.property}"(Rule:${rule.content}) onlyModify set: skipped`);
+                    logger.groupEnd();
                     continue; // only modify if property exists
                 }
                 switch (rulesManager.getRuleById(rule.content)?.ruleType) {
                     case 'buildIn':
                     case 'script':
-                        result = executeRuleObject(eventName, this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                        result = executeRuleObject(eventName, this.app, this, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
                         break;
                     default:
                 }
                 frontmatter[rule.property] = result;
+                logger.groupEnd();
             }
-            console.log('Frontmatter updated',frontmatter);
+            logger.log(DEBUG,'Frontmatter updated',frontmatter);
+            logger.groupEnd();
         },{'mtime':file.stat.mtime}); // do not change the modify time.
     }
     /*

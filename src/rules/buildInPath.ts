@@ -39,7 +39,7 @@ export class RuleBuildInPath extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'Full path';
         this.description = 'Returns the folder path the file is stored in.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  return parts.join('/');\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  return parts.join('/');\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
@@ -50,7 +50,7 @@ export class RuleBuildInPath extends RulePrototype {
         return parts.join('/');
     };
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
 }

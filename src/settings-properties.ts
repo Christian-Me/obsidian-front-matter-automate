@@ -9,12 +9,13 @@ import { copyFileSync } from 'fs';
 import { ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
 import { rulesManager } from './rules/rules';
+import { DEBUG, logger } from './Log';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
     knownProperties: Record<string, PropertyInfo> = {}; 
     container: HTMLDivElement;
-    propertiesListEl: HTMLDivElement;
+    propertiesListEl!: HTMLDivElement;
     settingsParameter: string;
     tools: ScriptingTools;
     activeFile: TFile | null = null;
@@ -81,7 +82,7 @@ export class RulesTable extends PluginSettingTab {
         const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
         if (this.activeFile) {
             this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
-                rule.value = await executeRuleObject('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter); //TODO: implement using only updatePerview
+                rule.value = await executeRuleObject('preview',this.app, this, this.plugin.settings, this.activeFile, '', rule, frontmatter); //TODO: implement using only updatePerview
             },{'mtime':this.activeFile.stat.mtime}); // do not change the modify time.
         }
         const previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
@@ -96,14 +97,17 @@ export class RulesTable extends PluginSettingTab {
             propertyDevDropdown.addOption(rule.id, rule.name);
         });
 
-        propertyDevDropdown.addOption("script", "JavaScript function (advanced)");
+        // propertyDevDropdown.addOption("script", "JavaScript function (advanced)");
         propertyDevDropdown.setValue(rule.content);
         propertyDevDropdown.onChange(async (value) => {
             if (value !== '') {
                 const ruleFunction = rulesManager.getRuleById(value);
                 switch (ruleFunction?.ruleType) {
                     case 'script':
-                        let oldOriginalCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
+                    case 'buildIn.inputProperty':
+                    case 'buildIn':
+                        //rule.buildInCode = rulesManager.getSource(value) || rulesManager.getSource('default') || '';
+                        let oldOriginalCode = rulesManager.getSource(value) || rulesManager.getSource('default') || '';
                         if ((rule.buildInCode !== '') && (rule.buildInCode !== oldOriginalCode)) {
                             const shouldProceed = await new AlertModal(
                                     this.app,
@@ -113,22 +117,17 @@ export class RulesTable extends PluginSettingTab {
                                 ).openAndGetValue();
                             
                             if (shouldProceed.proceed) {
-                                rule.buildInCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
+                                rule.buildInCode = rulesManager.getSource(value) || rulesManager.getSource('default') || '';
                                 rule.useCustomCode = false;
                             } else {
                                 rule.buildInCode; // keep the existing code
                             }
                             await this.plugin.saveSettings();
                         } else {
-                            rule.buildInCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
+                            rule.buildInCode = rulesManager.getSource(value) || rulesManager.getSource('default') || '';
                             rule.useCustomCode = false;
                             await this.plugin.saveSettings();
                         }
-                        break;
-                    case 'buildIn.inputProperty':
-                    case 'buildIn':
-                        rule.buildInCode = rulesManager.getRuleById(value)?.source || rulesManager.getRuleById('default')?.getSource() || '';
-                        rule.useCustomCode = false;
                         await this.plugin.saveSettings();
                         break;
                     case 'automation':
@@ -193,7 +192,8 @@ export class RulesTable extends PluginSettingTab {
         optionEL.style.display = 'none';
     }
 
-    renderPropertyOptions(optionEL: HTMLDivElement, rule: FrontmatterAutomateRuleSettings, previewComponent: TextComponent) {
+    renderPropertyOptions(optionEL: HTMLDivElement, rule: FrontmatterAutomateRuleSettings, previewComponent: HTMLDivElement | TextComponent | undefined) {
+        if (!(previewComponent instanceof TextComponent)) return;
         optionEL.empty(); // clear previous options
         //const ruleFn = getRuleFunctionById(rule.content);
         const ruleFn = rulesManager.getRuleById(rule.content);
@@ -283,7 +283,7 @@ export class RulesTable extends PluginSettingTab {
                         }));
             }
             let formatRule = rulesManager.getRuleById(rule.formatter);
-            let formatOptionsButton;
+            let formatOptionsButton: any;
             if (ruleFn.useRuleOption('convertToLowerCase')) {
                 new Setting(optionEL)
                     .setName('Format output')
@@ -387,7 +387,7 @@ export class RulesTable extends PluginSettingTab {
                                     rule.exclude.mode = 'exclude';
                                     rule.exclude.display = result.display;
                                     this.plugin.saveSettings();
-                                    console.log(rule.exclude);
+                                    logger.log(DEBUG,rule.exclude);
                                     this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
                                     excludeEL.setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
                                 }
@@ -426,7 +426,7 @@ export class RulesTable extends PluginSettingTab {
                                 rule.include.mode = 'include';
                                 rule.include.display = result.display;
                                 this.plugin.saveSettings();
-                                console.log(rule.include);
+                                logger.log(DEBUG,rule.include);
                                 this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
                                 includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
                             }
@@ -441,23 +441,24 @@ export class RulesTable extends PluginSettingTab {
                 .addButton(button => { button
                     .setButtonText('JS Editor')
                     .onClick(() => {
+                        logger.log(
+                            DEBUG,
+                            `Opening code editor for rule ${rule.id} with content ${rule.content}, file: ${this.activeFile?.path}`,
+                            this.activeFile,
+                            this.activeFile ? this.app.metadataCache.getFileCache(this.activeFile) || {} : {}
+                        );
                         openCodeEditorModal(
                             this.app,
                             this.plugin,
-                            rule.content === 'script' ? rule.jsCode : rule.buildInCode,
+                            rule.buildInCode,
                             rule.typeProperty?.type || 'text',
                             this.activeFile,
                             this.activeFile ? this.app.metadataCache.getFileCache(this.activeFile)?.frontmatter || {} : {},
                             (result: codeEditorModalResult | null) => {
                                 if (!result) return;
-                                if (rule.content === 'script') {
-                                    rule.jsCode = result.code;
-                                    rule.useCustomCode = false;
-                                } else {
-                                    rule.buildInCode = result.code;
-                                    rule.useCustomCode = true;
-                                    button.setCta();
-                                }
+                                rule.buildInCode = result.code;
+                                rule.useCustomCode = true;
+                                button.setCta();
                                 this.plugin.saveSettings();
                                 this.updatePreview(rule, previewComponent);
                             }
@@ -620,8 +621,7 @@ export class RulesTable extends PluginSettingTab {
     }
 
     renderValueInput(containerEl: HTMLElement, propertyInfo: PropertyInfo | undefined, currentValue: any, index: number) {
-        let returnComponent;
-        containerEl.empty(); 
+        let returnComponent: any;
 
         if (!propertyInfo) {
              containerEl.setText('');
@@ -738,12 +738,12 @@ export class RulesTable extends PluginSettingTab {
         return returnComponent;
     }
 
-    async updatePreview( rule, previewComponent) {
+    async updatePreview(rule: FrontmatterAutomateRuleSettings, previewComponent: any) {
         if (this.activeFile) {
-            let ruleResult;
+            let ruleResult:any;
             await this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
                 // ruleResult = await executeRule('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
-                ruleResult = await executeRuleObject('preview',this.app, this.plugin.settings, this.activeFile, '', rule, frontmatter);
+                ruleResult = await executeRuleObject('preview',this.app, this, this.plugin.settings, this.activeFile, '', rule, frontmatter);
             },{'mtime':this.activeFile.stat.mtime});  
 
             switch (typeof ruleResult) {
@@ -751,7 +751,7 @@ export class RulesTable extends PluginSettingTab {
                     if (Array.isArray(ruleResult)) previewComponent.inputEl.value = ruleResult.toString();
                     break;
                 default:
-                    previewComponent.inputEl.value = ruleResult;
+                    if (previewComponent?.inputEl) previewComponent.inputEl.value = ruleResult;
                     break;
 
             }
@@ -768,7 +768,7 @@ export class RulesTable extends PluginSettingTab {
         
         this.propertiesListEl = containerEl.createDiv('properties-list');
 
-        this.plugin.settings.rules.forEach((rule, index) => {
+        this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings, index: number) => {
             this.renderPropertyRow(this.propertiesListEl, rule, index);
         });
 
@@ -793,9 +793,9 @@ export class RulesTable extends PluginSettingTab {
             .buttonEl.className='property-plus-button';
     }
 
-    private updateFilterIndicator(activeFile, propertiesListEl: HTMLDivElement) {
+    private updateFilterIndicator(activeFile:TFile | null, propertiesListEl: HTMLDivElement) {
         if (activeFile) {
-            this.plugin.settings.rules.forEach((rule, index) => {
+            this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings, index: number) => {
                 const propertyRowEl = propertiesListEl.getElementsByClassName('property-setting-row')[index];
                 const propertyLeftDiv = propertyRowEl.querySelector('.property-left-container');
                 if (checkIfFileAllowed(activeFile, this.plugin.settings, rule)) {

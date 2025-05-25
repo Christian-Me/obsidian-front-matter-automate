@@ -31,7 +31,7 @@ export class RuleBuildInRootFolder extends RulePrototype {
     this.ruleType = 'buildIn';
     this.name = 'Root folder';
     this.description = 'Returns the root folder where the file is stored.';
-    this.source = "";
+    this.source = "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  return parts.length > 1 ? parts[0] : ''; // return root folder or empty string if in root\n}";
     this.type = ['text', 'tags', 'aliases', 'multitext'];
     this.configElements = this.defaultConfigElements({});
   }
@@ -47,7 +47,7 @@ export class RuleBuildInRootFolder extends RulePrototype {
     return result;
   }
 
-  configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+  configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent:any) {
       // Configuration tab logic can be added here if needed
   };
     

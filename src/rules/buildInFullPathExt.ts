@@ -32,7 +32,7 @@ export class RuleBuildInFullPathExt extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'Full path, filename and extension';
         this.description = 'Returns the full path of the file, including its filename and extension.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  return `${file.path}`;\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  return `${file.path}`;\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };

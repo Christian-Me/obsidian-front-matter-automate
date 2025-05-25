@@ -43,15 +43,15 @@ export class DirectorySelectionModal extends Modal {
     private readonly okCallback: (result: DirectorySelectionResult | null) => void;
 
     // Current state being modified within the modal
-    private currentFolders: Set<string>;
-    private currentFiles: Set<string>;
-    private currentMode: DirectorySelectionMode;
-    private currentDisplay: DirectoryDisplayMode;
-    private includeExcludeSelectable: boolean;
+    private currentFolders!: Set<string>;
+    private currentFiles!: Set<string>;
+    private currentMode!: DirectorySelectionMode;
+    private currentDisplay!: DirectoryDisplayMode;
+    private includeExcludeSelectable!: boolean;
     private showFiles: boolean = false; // State for showing files in the tree
 
     // UI Elements
-    private treeRootElement: HTMLElement; // Container for the tree view
+    private treeRootElement!: HTMLElement; // Container for the tree view
     private treeNodes: Map<string, TreeNode> = new Map(); // Map path to node info for quick access
     private modeDropdown: Setting | null = null; // Reference to update dropdown on reset
 
@@ -232,7 +232,7 @@ export class DirectorySelectionModal extends Modal {
         const cancelButton = buttonsEl.createEl('button', { text: 'Cancel' });
         cancelButton.ariaLabel = 'close and discard changes'; // Accessibility
         cancelButton.onclick = () => {
-            // console.log("Cancel Clicked - Returning"); // Debug log
+            // logger.log(DEBUG,"Cancel Clicked - Returning"); // Debug log
             this.okCallback( null ); // Pass the final selection back
             this.close();
         };
@@ -646,7 +646,7 @@ export class DirectorySelectionModal extends Modal {
      * Combines building the tree data, rendering the DOM, and applying initial appearance.
      */
     private buildAndRenderTree() {
-        // console.log('Building and rendering tree...');
+        // logger.log(DEBUG,'Building and rendering tree...');
         this.renderTree(); // Build data and render DOM elements
         this.updateTreeAppearance(); // Apply styles based on current mode/selection
     }
@@ -663,7 +663,7 @@ export class DirectorySelectionModal extends Modal {
             mode: this.currentMode,
             display: this.currentDisplay,
         };
-        // console.log("OK Clicked - Returning Result:", result); // Debug log
+        // logger.log(DEBUG,"OK Clicked - Returning Result:", result); // Debug log
         this.okCallback(result); // Pass the final selection back
         const { contentEl } = this;
         contentEl.empty(); // Clear the modal's content
@@ -758,7 +758,7 @@ export class YourPluginSettingsTab extends PluginSettingTab {
                             currentMode,
                             // This is the okCallback function:
                             (result: DirectorySelectionResult) => {
-                                console.log('Auswahl bestätigt:', result); // Log result in German console
+                                logger.log(DEBUG,'Auswahl bestätigt:', result); // Log result in German console
 
                                 // --- IMPORTANT: Save the results back to your plugin settings ---
                                 this.plugin.settings.selectedFolders = result.folders;

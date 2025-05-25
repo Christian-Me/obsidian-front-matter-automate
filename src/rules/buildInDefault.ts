@@ -33,7 +33,7 @@ export class RuleBuildInDefault extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'Pass parameter unaltered';
         this.description = 'Pass the content of the frontmatter parameter unaltered.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     }
@@ -43,7 +43,7 @@ export class RuleBuildInDefault extends RulePrototype {
         return input; // Return the input unaltered
     };
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

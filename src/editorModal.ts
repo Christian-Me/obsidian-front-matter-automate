@@ -4,6 +4,7 @@ import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon,Butt
 import { ObsidianPropertyTypes } from './types';
 import { parseJSCode, ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
+import { DEBUG, ERROR, logger, TRACE } from './Log';
 //import { chdir } from 'node:process';
 //import { EditorView } from '@codemirror/view';
 //import { EditorState } from '@codemirror/state';
@@ -36,10 +37,10 @@ export class codeEditorModal extends Modal {
     private frontmatter: any; // Frontmatter data for the active file
 
     // UI Elements
-    private editorRootElement: HTMLElement;
-    private functionTestButton: ButtonComponent;
+    private editorRootElement!: HTMLElement;
+    private functionTestButton!: ButtonComponent;
     private functionResultTextComponent: TextComponent | undefined;
-    private cmEditor: CodeMirror.Editor | null;
+    private cmEditor!: CodeMirror.Editor | null;
 
     /**
      * Creates an instance of the DirectorySelectionModal.
@@ -70,9 +71,15 @@ export class codeEditorModal extends Modal {
         this.frontmatter = frontmatter; // Store frontmatter data
         this.currentType = expectedType; // Initialize current type to expected type
         this.currentCode = initialCode; // Initialize current code to initial code
-
         this.plugin = plugin;
-        this.scriptingTools= new ScriptingTools(app, this.plugin, this.frontmatter);
+        this.scriptingTools = new ScriptingTools(
+            app,
+            this.plugin,
+            this.plugin.settings,
+            undefined,
+            this.frontmatter,
+            this.activeFile instanceof TFile ? this.activeFile : undefined
+        );
         this.okCallback = okCallback;
 
         // Initialize current state from initial state for editing
@@ -101,9 +108,9 @@ export class codeEditorModal extends Modal {
         try {
           // Verwende require (könnte in zukünftigen Versionen weniger zuverlässig sein)
           require(`obsidian/lib/codemirror/mode/${mode}/${mode}.js`);
-          console.log(`CodeMirror mode '${mode}' loaded successfully (using require).`);
+          logger.log(DEBUG,`CodeMirror mode '${mode}' loaded successfully (using require).`);
         } catch (error) {
-          console.error(`Failed to load CodeMirror mode '${mode}' (using require):`, error);
+          logger.log(ERROR,`Failed to load CodeMirror mode '${mode}' (using require):`, error);
         }
     }
     /**
@@ -166,7 +173,7 @@ export class codeEditorModal extends Modal {
                 // JavaScript-Modus laden (falls noch nicht geladen)
                 if (!CodeMirror.modes.javascript) {
                     await this.loadCodeMirrorMode('javascript');
-                    console.log('javaScript support loaded')
+                    logger.log(TRACE,'javaScript support loaded')
                 }
             } 
             let jsCode = this.currentCode;
@@ -222,14 +229,15 @@ export class codeEditorModal extends Modal {
                                     }
                                     catch (e) {
                                         if (this.functionResultTextComponent) {
-                                            this.functionResultTextComponent.setValue(`Syntax error: ${e.message}! See console for details!`);
+                                            const errorMessage = (e instanceof Error) ? e.message : String(e);
+                                            this.functionResultTextComponent.setValue(`Syntax error: ${errorMessage}! See console for details!`);
                                         }
-                                        console.error("Syntax error. ", e, jsCode, userFunction);
+                                        logger.log(ERROR,"Syntax error. ", e, jsCode, userFunction);
                                         this.checkedSuccessfully = false;
                                         button.buttonEl.addClass('mod-warning');    
                                     }
                                 } else {
-                                    console.error("syntax error");
+                                    logger.log(ERROR,"syntax error");
                                     this.checkedSuccessfully = false;  
                                 }
                             }
@@ -261,11 +269,9 @@ export class codeEditorModal extends Modal {
         if (newType === 'string') {
             if (!this.scriptingTools.isISOString(value, {withDate: true})) {
                 typeIcons[newType].splice(typeIcons[newType].indexOf('date'), 1);
-                console.error("Invalid date format:", value);
             }
             if (!this.scriptingTools.isISOString(value, {withDate: true, withTime: true})) {
                 typeIcons[newType].splice(typeIcons[newType].indexOf('datetime'), 1); 
-                console.error("Invalid date format:", value);
             }
         }
         container.empty(); // Clear the container before adding new icons
@@ -310,7 +316,7 @@ export class codeEditorModal extends Modal {
         const cancelButton = buttonsEl.createEl('button', { text: 'Cancel' });
         cancelButton.ariaLabel = 'close and discard changes'; // Accessibility
         cancelButton.onclick = () => {
-            console.log("Cancel Clicked - Returning"); // Debug log
+            logger.log(TRACE,"Cancel Clicked - Returning"); // Debug log
             this.okCallback( null ); // Pass the final selection back
             this.close();
         };
@@ -335,7 +341,7 @@ export class codeEditorModal extends Modal {
             checked: this.checkedSuccessfully,
             type: 'text',
         };
-        console.log("OK Clicked - Returning Result:", result); // Debug log
+        logger.log(TRACE,"OK Clicked - Returning Result:", result); // Debug log
         this.okCallback(result); // Pass the final selection back
         const { contentEl } = this;
         contentEl.empty(); // Clear the modal's content

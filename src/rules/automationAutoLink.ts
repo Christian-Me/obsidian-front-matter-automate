@@ -1,11 +1,12 @@
 import { RulePrototype, rulesManager } from "./rules";
 import { ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings } from "../types";
-import { SearchComponent, Setting } from "obsidian";
+import { App, SearchComponent, Setting, TFile } from "obsidian";
 import { FolderSuggest } from "../suggesters/FolderSuggester";
 import { DirectorySelectionResult, openDirectorySelectionModal } from "../directorySelectionModal";
 import { FileSuggest } from "../suggesters/FileSuggester";
 import { AlertModal } from "../alertBox";
+import { ERROR, logger } from "../Log";
 
 export class RuleAutomationAutoLink extends RulePrototype {
     constructor() {
@@ -25,12 +26,12 @@ export class RuleAutomationAutoLink extends RulePrototype {
      * @param tools - The scripting tools instance.
      * @returns The new content for the frontmatter property.
      */
-    async fx (app, file, tools:ScriptingTools) { // do not change this line!
+    async fx (app:App, file:TFile, tools:ScriptingTools) { // do not change this line!
         const currentContent = tools.getCurrentContent();
         let newContent = new Array<string>();
         const rule = tools.getRule();
         if (!rule) {
-            console.error(`autoLink: rule not found, returning current content ${currentContent}`);
+            logger.log(ERROR,`autoLink: rule not found, returning current content ${currentContent}`);
             return currentContent;
         } 
         const options = tools.getOptionConfig(rule.id);
@@ -41,7 +42,7 @@ export class RuleAutomationAutoLink extends RulePrototype {
         } else if (typeof links === 'string') {
             links = [links]; // convert to array if not already an array
         }
-        // console.log(`autoLink: links to check`, links, filesToCheck);
+        // logger.log(DEBUG,`autoLink: links to check`, links, filesToCheck);
         
         for (const part of links)  {
             let link = tools.extractLinkParts(part);
@@ -53,25 +54,25 @@ export class RuleAutomationAutoLink extends RulePrototype {
                 options.askConfirmation = !result.data.askConfirmation;
             }
             link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
-            //console.log(`autoLink: creating new file ${link.path}`);
+            //logger.log(DEBUG,`autoLink: creating new file ${link.path}`);
             linkFile = await tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined); // create the file if it does not exist
-            //console.log(`autoLink: new file created ${linkFile.path}`);
+            //logger.log(DEBUG,`autoLink: new file created ${linkFile.path}`);
             tools.updateFrontmatter(rule.property, [`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`], linkFile); // add location of new path to itself
             } else {
-            //console.log(`autoLink: creating Link to existing File ${linkFile.path}`);
+            //logger.log(DEBUG,`autoLink: creating Link to existing File ${linkFile.path}`);
             }
             if (linkFile) {
             link.path = linkFile.path;
             newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
             }
-            //console.log(`autoLink: new content`, newContent);
+            //logger.log(DEBUG,`autoLink: new content`, newContent);
         }
-        //console.log(`autoLink: write content`, newContent);
+        //logger.log(DEBUG,`autoLink: write content`, newContent);
         tools.updateFrontmatter(rule.property, newContent); // update the frontmatter with the new content
         return newContent;    
     };
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         optionEL.empty();
         // Create a setting for the auto link
         that.setOptionConfigDefaults(rule.id, {

@@ -1,5 +1,6 @@
 import { App, Notice, SuggestModal, TFile } from 'obsidian';
 import { PropertyTypeInfo, PropertyType, ObsidianPropertyTypes} from './types';
+import { DEBUG, ERROR, logger } from './Log';
 
 export const DEFAULT_PROPERTY_TYPE_INFO: PropertyTypeInfo = {
     name : "",
@@ -43,7 +44,7 @@ export async function getAllPropertiesWithTypes(app: App): Promise<PropertyTypeI
 export function getPropertiesFromMetadataManager(app: App): PropertyTypeInfo[] {
     try {
         const metadataManager = (app as any).metadataTypeManager;
-        console.log("get properties:",metadataManager);
+        logger.log(DEBUG,"get properties:",metadataManager);
         return Object.values(metadataManager.properties).map( (value:any):PropertyTypeInfo => ({
             name: value.name,
             type: value.type,
@@ -52,7 +53,7 @@ export function getPropertiesFromMetadataManager(app: App): PropertyTypeInfo[] {
         })).sort((a, b) => a.name.localeCompare(b.name));
 
     } catch (e) {
-        console.error("Couldn't access properties from Metadata Manager", e);
+        logger.log(ERROR,"Couldn't access properties from Metadata Manager", e);
         return [];
     }
 }
@@ -62,7 +63,7 @@ export function getPropertiesFromMetadataManager(app: App): PropertyTypeInfo[] {
 export function getTypesFromMetadataManager(app: App): any {
     try {
         const metadataManager = (app as any).metadataTypeManager;
-        console.log("get types:",metadataManager);
+        logger.log(DEBUG,"get types:",metadataManager);
         return Object.values(metadataManager.registeredTypeWidgets).map( (value:any, index, array):PropertyType  => ({
             type: value.type,
             icon: value.icon,
@@ -70,7 +71,7 @@ export function getTypesFromMetadataManager(app: App): any {
         })).sort((a, b) => a.type.localeCompare(b.type));
 
     } catch (e) {
-        console.error("Couldn't access properties from Metadata Manager", e);
+        logger.log(ERROR,"Couldn't access properties from Metadata Manager", e);
         return [];
     }
 }
@@ -80,7 +81,7 @@ export function getTypesFromMetadataManager(app: App): any {
 async function getRegisteredPropertiesSafe(app: App): Promise<PropertyTypeInfo[]> {
     try {
         const metadataManager = (app as any).metadataTypeManager;
-        console.log(metadataManager);
+        logger.log(DEBUG,metadataManager);
         if (!metadataManager) return [];
         
         // Try different ways to get properties based on Obsidian version
@@ -102,7 +103,7 @@ async function getRegisteredPropertiesSafe(app: App): Promise<PropertyTypeInfo[]
             }));
         }
     } catch (e) {
-        console.error("Couldn't access registered properties:", e);
+        logger.log(ERROR,"Couldn't access registered properties:", e);
     }
     return [];
 }
@@ -134,7 +135,7 @@ async function getPropertiesFromFiles(app: App): Promise<PropertyTypeInfo[]> {
                 }
             }
         } catch (error) {
-            console.error(`Error processing file ${file.path}:`, error);
+            logger.log(ERROR,`Error processing file ${file.path}:`, error);
         }
     }
     
@@ -160,7 +161,10 @@ function determinePrimaryType(types: Set<string>): ObsidianPropertyTypes {
     if (types.size === 0) return 'text';
     
     // If only one type observed, use that
-    if (types.size === 1) return types.values().next().value;
+    if (types.size === 1) {
+        const onlyType = types.values().next().value;
+        return (onlyType !== undefined ? onlyType : 'text') as ObsidianPropertyTypes;
+    }
     
     // Priority order for type resolution
     const typePriority: ObsidianPropertyTypes[] = [
@@ -284,9 +288,9 @@ export class SelectProperty extends SuggestModal<PropertyTypeInfo> {
     // Perform action on the selected suggestion.
     onChooseSuggestion(property: PropertyTypeInfo, evt: MouseEvent | KeyboardEvent) {
         if (evt instanceof KeyboardEvent) {
-            console.log(`keyboard ${this.typedText} ${this.newTextFlag}`, property)
+            logger.log(DEBUG,`keyboard ${this.typedText} ${this.newTextFlag}`, property)
         }
-        console.log('onChooseSuggestion', evt)
+        logger.log(DEBUG,'onChooseSuggestion', evt)
         this.onSubmit(property);
     }
   }

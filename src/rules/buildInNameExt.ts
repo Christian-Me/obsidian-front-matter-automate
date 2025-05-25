@@ -25,7 +25,7 @@ export class RuleBuildInNameExt extends RulePrototype {
     this.ruleType = 'buildIn';
     this.name = 'File name with extension';
     this.description = 'Returns the file name with extension.';
-    this.source = "";
+    this.source = "function (app, file, tools) { // do not change this line!\n  // acquire file name with extension\n  const result = file.name;\n  return result;\n}";
     this.type = ['text', 'tags', 'aliases', 'multitext'];
     this.configElements = this.defaultConfigElements({});
   }
@@ -36,7 +36,7 @@ export class RuleBuildInNameExt extends RulePrototype {
     return result;
   }
 
-  public configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+  public configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
     // Configuration tab logic can be added here if needed
   };
     

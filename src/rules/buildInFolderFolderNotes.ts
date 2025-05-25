@@ -40,7 +40,7 @@ export class RuleBuildInFolderFolderNotes extends RulePrototype {
       this.ruleType = 'buildIn';
       this.name = 'Parent Folder (complies with "folder notes")';
       this.description = 'Returns the parent folder of the file compatible with Folder Notes.';
-      this.source = "";
+      this.source = "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;const parts = file.path.split('/');\n  let index = parts.length-2; // index of parent folder\n  if (parts[parts.length-2]===file.basename) {\n      index--; // folder note parent is the child\n  }\n  if (index >= 0) {\n    return parts[index]; // file in folder\n  } else {\n    return tools.app?.vault?.getName() || 'Vault'; // file in root = vault\n  }\n}";
       this.type = ['text', 'tags', 'aliases', 'multitext'];
       this.configElements = this.defaultConfigElements({});
     }
@@ -59,7 +59,7 @@ export class RuleBuildInFolderFolderNotes extends RulePrototype {
       }
     }
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

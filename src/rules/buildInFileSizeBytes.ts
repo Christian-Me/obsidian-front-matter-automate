@@ -40,7 +40,7 @@ export class RuleBuildInFileSizeBytes extends RulePrototype {
         return result; // return you result.
     }
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

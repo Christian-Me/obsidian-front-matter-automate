@@ -50,7 +50,7 @@ export class RuleBuildInPathFolderNotes extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'Path (folder notes)';
         this.description = 'Path compatible with folder notes.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop(); // remove parent folder if same name as the file\n  return parts.join('/');\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop(); // remove parent folder if same name as the file\n  return parts.join('/');\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     }
@@ -62,7 +62,7 @@ export class RuleBuildInPathFolderNotes extends RulePrototype {
         return parts.join('/');
     }
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

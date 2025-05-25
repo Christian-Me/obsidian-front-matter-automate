@@ -8,53 +8,6 @@
   "knownProperties": [],
   "rules": [
     {
-      "id": "ae457d67-de32-4daa-a8a6-47729c7eb6aa",
-      "active": true,
-      "asLink": false,
-      "addContent": "overwrite",
-      "property": "constant",
-      "customProperty": "",
-      "type": "text",
-      "typeProperty": {
-        "name": "",
-        "type": "text",
-        "source": "registered"
-      },
-      "content": "rootFolder",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = input;\n  return result;\n}",
-      "jsCode": "",
-      "showContent": false,
-      "exclude": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
-      },
-      "include": {
-        "selectedFolders": [],
-        "selectedFiles": [],
-        "mode": "include",
-        "display": "folders"
-      },
-      "prefix": "",
-      "spaceReplacement": "",
-      "specialCharReplacement": "",
-      "lowercaseTags": false,
-      "inputProperty": "Gattung",
-      "onlyModify": false,
-      "useCustomCode": true,
-      "optionsConfig": {
-        "ae457d67-de32-4daa-a8a6-47729c7eb6aa": {
-          "inputProperty": "#?:{}\"'",
-          "addExtension": true,
-          "constantValue": "harry potter und das verwunschene kind"
-        }
-      },
-      "value": "Tiere",
-      "formatter": "toOriginal",
-      "linkFormatter": "toOriginalLink"
-    },
-    {
       "id": "214f3745-a2e6-47b0-a51f-95dfc0c637b4",
       "active": true,
       "asLink": false,
@@ -62,7 +15,8 @@
       "property": "tags",
       "value": [
         "tiere",
-        "fische"
+        "säugetiere",
+        "affen"
       ],
       "customProperty": "",
       "type": "tags",
@@ -72,8 +26,8 @@
         "source": "registered"
       },
       "content": "folders",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const path = file.path; // acquire file path\n  const result = path.split('/');\n  result.pop(); // remove file name\n  return result;\n}",
-      "jsCode": "",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
       "showContent": false,
       "exclude": {
         "selectedFolders": [],
@@ -94,7 +48,7 @@
       "formatter": "toLowerCase",
       "inputProperty": "",
       "onlyModify": false,
-      "useCustomCode": false
+      "useCustomCode": true
     },
     {
       "id": "ec9bed27-1680-4592-a5b7-c8faa2adcb6f",
@@ -102,7 +56,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullPath",
-      "value": "[[Tiere/Fische]]",
+      "value": "Tiere/Säugetiere/Affen/Untitled.md",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -110,15 +64,14 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "path",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+      "content": "fullPathExtFolderNotes",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return parts.join('/');\n};",
       "jsCode": "",
       "showContent": false,
       "exclude": {
         "selectedFolders": [],
         "selectedFiles": [],
-        "mode": "exclude",
-        "display": "folders"
+        "mode": "exclude"
       },
       "include": {
         "selectedFolders": [],
@@ -134,7 +87,16 @@
       "inputProperty": "",
       "onlyModify": false,
       "useCustomCode": false,
-      "linkFormatter": "toWikiLink"
+      "linkFormatter": "toOriginalLink",
+      "optionsConfig": {
+        "ec9bed27-1680-4592-a5b7-c8faa2adcb6f": {
+          "delimiter": " ",
+          "inputProperties": [
+            ""
+          ],
+          "onlyWhenAllPropertiesExist": true
+        }
+      }
     },
     {
       "id": "365b81ab-48a1-4dea-8d92-af5fd0b5275e",
@@ -142,7 +104,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "path",
-      "value": "Tiere/Fische",
+      "value": "[[Tiere/Säugetiere/Affen/Untitled|undefined]]",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -150,8 +112,8 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "pathFolderNotes",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const result = file.path;\n  return result;\n}",
+      "content": "fullPathFolderNotes",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return `[[${parts.join('/')}|${tools.getFrontmatterProperty('constant')}]]`;\n};",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -173,8 +135,13 @@
       "formatter": "toOriginal",
       "inputProperty": "",
       "onlyModify": true,
-      "useCustomCode": false,
-      "linkFormatter": "toOriginalLink"
+      "useCustomCode": true,
+      "linkFormatter": "toOriginalLink",
+      "optionsConfig": {
+        "365b81ab-48a1-4dea-8d92-af5fd0b5275e": {
+          "constantValue": ""
+        }
+      }
     },
     {
       "id": "3a16d7ed-0f85-47a4-8c46-0192a74f2652",
@@ -231,7 +198,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "dateTimeCreated",
-      "value": "2025-04-25T22:28:59.896",
+      "value": "",
       "customProperty": "",
       "type": "datetime",
       "typeProperty": {
@@ -273,7 +240,8 @@
       "property": "link",
       "value": [
         "Tiere",
-        "Fische"
+        "Säugetiere",
+        "Affen"
       ],
       "customProperty": "",
       "type": "multitext",
@@ -315,8 +283,9 @@
       "addContent": "overwrite",
       "property": "folders",
       "value": [
-        "[[tiere]]",
-        "[[fische]]"
+        "tiere",
+        "säugetiere",
+        "affen"
       ],
       "customProperty": "",
       "type": "multitext",
@@ -326,7 +295,7 @@
         "source": "registered"
       },
       "content": "folders",
-      "buildInCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -346,12 +315,18 @@
       "specialCharReplacement": "",
       "lowercaseTags": false,
       "formatter": "toLowerCase",
-      "linkFormatter": "toWikiLink",
+      "linkFormatter": "toOriginalLink",
       "inputProperty": "",
       "onlyModify": true,
-      "useCustomCode": true,
+      "useCustomCode": false,
       "optionsConfig": {
-        "37660875-87bf-4cf3-9b75-f2f75a791fb2": {}
+        "37660875-87bf-4cf3-9b75-f2f75a791fb2": {
+          "delimiter": " ",
+          "inputProperties": [
+            ""
+          ],
+          "onlyWhenAllPropertiesExist": true
+        }
       }
     },
     {
@@ -360,7 +335,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "title",
-      "value": "Der Herr der Ringe. Die Rückkehr des Königs mit Vielen Äpfeln. Sucht mit einem iPhone mit google.com nach IBM.",
+      "value": "Property Not Found",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -400,6 +375,226 @@
           "inputProperty": "#?:{}\"'"
         }
       }
+    },
+    {
+      "id": "590159bc-7b9c-4aff-b559-b99db9ba386d",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "rootFolder",
+      "value": "TIERE",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "rootFolder",
+      "buildInCode": "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toUpperCase",
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false
+    },
+    {
+      "id": "38379907-3458-4e66-9cbf-53fd7d1991de",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "isroot",
+      "value": false,
+      "customProperty": "",
+      "type": "checkbox",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "isRoot",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false
+    },
+    {
+      "id": "9d4e4181-3025-44ea-ba31-aef6f18efb1c",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "autocompleteTest.Text",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "script",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const input = \"test\";\n  return input; // Return the input unaltered\n};",
+      "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = 'Test';\n  return result; // return you result.\n}",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": true,
+      "value": "test"
+    },
+    {
+      "id": "0f337f99-ad3c-471e-8c9c-f670ba21abc7",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "Localtion.type",
+      "value": "[[]]",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "concatProperties",
+      "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties'); \n if (!Array.isArray(propertyIds) || propertyIds.length === 0) { \n return 'No properties selected'; \n } \n const results = propertyIds.map(id => tools.getFrontmatterProperty(id)); \n return results.filter(res => res !== undefined).join(' '); \n }",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "linkFormatter": "toSimpleLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "0f337f99-ad3c-471e-8c9c-f670ba21abc7": {
+          "delimiter": "|",
+          "inputProperties": [
+            "fullPath",
+            "constant"
+          ],
+          "onlyWhenAllPropertiesExist": true
+        }
+      }
+    },
+    {
+      "id": "797182ad-b5d4-4032-89fe-8e569ed875c4",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "location-type",
+      "value": "",
+      "customProperty": "",
+      "type": "text",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "concatProperties",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties');\n  if (!Array.isArray(propertyIds) || propertyIds.length === 0) {\n    return 'No properties selected';\n  }\n  const delimiter = tools.getOptionConfig(tools.getRule()?.id,'delimiter');\n  const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;\n  if (onlyWhenAllPropertiesExist) {\n    // Check if all properties exist\n    const allExist = propertyIds.every(id => { \n      if (id === undefined || id === null || id === '') {\n        return true; // Skip empty or undefined property IDs\n      }\n      const propertyValue = tools.getFrontmatterProperty(id);\n      const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';\n      return result;\n    });\n    if (!allExist) {\n      return '';\n    }\n  }\n  const result = propertyIds.map(id => {\n    let value = tools.getFrontmatterProperty(id);\n    if (value === undefined || value === null || value === '') {\n      return ''; // Skip empty or undefined properties\n    }\n    return value.toString();\n  }).filter(res => res !== undefined).join(delimiter);\n  return result;\n};",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": true,
+      "optionsConfig": {
+        "797182ad-b5d4-4032-89fe-8e569ed875c4": {
+          "delimiter": " ",
+          "inputProperties": [
+            "constant"
+          ],
+          "onlyWhenAllPropertiesExist": true,
+          "constantValue": ""
+        }
+      }
     }
   ],
   "liveRules": [],
@@ -421,6 +616,8 @@
       "name": ""
     }
   ],
+  "debugLevel": 5,
+  "delayCreateEvent": 1000,
   "selectedFolders": [
     "/Tiere/Säugetiere",
     "/Tiere/Vögel"

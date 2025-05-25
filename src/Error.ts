@@ -18,7 +18,8 @@ export async function errorWrapper<T>(
         return await fn();
     } catch (e) {
         if (!(e instanceof ErrorManager)) {
-            logError(new ErrorManager(msg, e.message));
+            const errorMessage = (e && typeof e === "object" && "message" in e) ? (e as { message: string }).message : String(e);
+            logError(new ErrorManager(msg, errorMessage));
         } else {
             logError(e);
         }
@@ -30,7 +31,11 @@ export function errorWrapperSync<T>(fn: () => T, msg: string): T {
     try {
         return fn();
     } catch (e) {
-        logError(new ErrorManager(msg, e.message));
+        if (e instanceof Error) {
+            logError(new ErrorManager(msg, e.message));
+        } else {
+            logError(new ErrorManager(msg, String(e)));
+        }
         return null as T;
     }
 }

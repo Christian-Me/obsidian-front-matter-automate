@@ -2,7 +2,7 @@ import { setIcon, TextComponent } from "obsidian";
 import { ObsidianPropertyTypes, PropertyInfo } from "./types";
 
 export function renderValueInput(containerEl: HTMLElement, propertyInfo: PropertyInfo | undefined, currentValue: any, changeCallback: (propertyInfo: PropertyInfo | undefined, value: any) => void) {
-    let returnComponent;
+    let returnComponent:any;
     containerEl.empty(); 
 
     if (!propertyInfo) {

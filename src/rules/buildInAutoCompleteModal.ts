@@ -3,6 +3,7 @@ import { ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings } from "../types";
 import { App, Setting, TFile } from "obsidian";
 import { openAutocompleteModal } from "../autocompleteModal";
+import { DEBUG, ERROR, logger } from "../Log";
 
 
 export class RuleBuildInAutoCompleteModal extends RulePrototype {
@@ -12,13 +13,13 @@ export class RuleBuildInAutoCompleteModal extends RulePrototype {
         this.ruleType = 'autocomplete.modal';
         this.name = 'Auto-Complete Modal';
         this.description = 'Displays an auto-complete modal for the frontmatter parameter.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     }
     
     fx (app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line!
-        console.log(`autocomplete modal, work in progress...`);
+        logger.log(DEBUG,`autocomplete modal, work in progress...`);
         const currentContent = tools.getCurrentContent();
         const rule = tools.getRule();
         if (!rule) return currentContent;
@@ -41,10 +42,10 @@ export class RuleBuildInAutoCompleteModal extends RulePrototype {
             tools.getFrontmatter()
             )
             .then((result) => {
-                console.log('autocomplete modal result', result, tools.getFrontmatter());
+                logger.log(DEBUG,'autocomplete modal result', result, tools.getFrontmatter());
                 if (result?.values) {
                     if (!tools.app) {
-                        console.error('App is not defined');
+                        logger.log(ERROR,'App is not defined');
                         return tools.getCurrentContent() || 'autocomplete.modal Error. See console for details.'; // return current content if not implemented yet  
                     }
                     tools.app.fileManager.processFrontMatter(file, (frontmatter) => {
@@ -56,12 +57,12 @@ export class RuleBuildInAutoCompleteModal extends RulePrototype {
                 return tools.getCurrentContent(); // return current content. Frontmatter is already updated.
             })
             .catch((error) => {
-                console.error('Error opening autocomplete modal:', error);
+                logger.log(ERROR,'Error opening autocomplete modal:', error);
                 return tools.getCurrentContent() || 'autocomplete.modal Error. See console for details.'; // return current content if not implemented yet
             });
     };
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         optionEL.empty();
         
         that.setOptionConfigDefaults(rule.id, {

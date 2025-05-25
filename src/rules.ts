@@ -8,10 +8,12 @@ import { FileSuggest } from "./suggesters/FileSuggester";
 import { DirectorySelectionResult, openDirectorySelectionModal } from './directorySelectionModal';
 import { AlertModal } from './alertBox';
 import { rulesManager } from './rules/rules';
+import { ERROR, logger } from './Log';
 
 export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' | 'autocomplete.modal' | 'automation' | 'script';
 
 export interface ConfigElements {
+    [key: string]: boolean | undefined;
     removeContent: boolean;
     ruleActive: boolean;
     modifyOnly: boolean;
@@ -45,13 +47,13 @@ export const ruleFunctions:RuleFunction[]=[];
 export function getRuleFunctionById (id : string):RuleFunction | undefined {
     const ruleFunction = ruleFunctions.find(rule => rule.id === id);
     if (!ruleFunction) {
-        console.error(`Rule function ${id} not found!`);
+        logger.log(ERROR,`Rule function ${id} not found!`);
         return undefined;
     }
     return ruleFunction;
 }
 */
-function applyFormatOptions(value:any, rule:FrontmatterAutomateRuleSettings):any {
+function applyFormatOptions(this: any, value:any, rule:FrontmatterAutomateRuleSettings):any {
   if (rule.type === 'date' || rule.type === 'datetime') return value; // leave date and dateTime untouched
   switch (typeof value) {
     case 'boolean':
@@ -79,7 +81,7 @@ function applyFormatOptions(value:any, rule:FrontmatterAutomateRuleSettings):any
 
 function getRuleResult(ruleFx: Function, app: App, rule: FrontmatterAutomateRuleSettings, ruleFunction: RuleFunction, currentFile: TFile, tools:ScriptingTools, frontMatter:any):Promise<any> {
   let result:any = undefined;
-  //console.log('getRuleResult', ruleFx, ruleFunction, currentFile, tools, frontMatter);
+  //logger.log(DEBUG,'getRuleResult', ruleFx, ruleFunction, currentFile, tools, frontMatter);
   switch (ruleFunction.ruleType) {
     case 'script':
     case 'buildIn':
@@ -90,11 +92,11 @@ function getRuleResult(ruleFx: Function, app: App, rule: FrontmatterAutomateRule
       break
     case 'autocomplete.modal':
       ruleFx(app, currentFile, tools);
-      //console.log('autocomplete modal', ruleFx, ruleFunction, currentFile, tools);
+      //logger.log(DEBUG,'autocomplete modal', ruleFx, ruleFunction, currentFile, tools);
       result = null;
       break;
     case 'automation':
-      //console.log('automation', ruleFunction, currentFile, tools);
+      //logger.log(DEBUG,'automation', ruleFunction, currentFile, tools);
       result = applyFormatOptions(ruleFx(app, currentFile, tools), rule);
       break;
   }
@@ -103,19 +105,20 @@ function getRuleResult(ruleFx: Function, app: App, rule: FrontmatterAutomateRule
 
 export function executeRuleObject (
   event: FrontmatterAutomateEvents,
-  app, 
+  app: App,
+  plugin: any,
   settings: FrontmatterAutomateSettings, 
   currentFile: TFile | null, 
   currentContent: any, 
   rule:FrontmatterAutomateRuleSettings, 
-  frontMatter, 
+  frontMatter: any, 
   oldPath?:string):any {
 
   if (!rule) return currentContent;
   if (!rule.active) return currentContent;
   if (!currentFile) return currentContent;
   if (!checkIfFileAllowed(currentFile, settings, rule)) return currentContent;
-  const tools = new ScriptingTools(app, this, settings, rule, frontMatter);
+  const tools = new ScriptingTools(app, plugin, settings, rule, frontMatter);
   let result = currentContent;
   let oldResult:any = undefined;
   let oldFile = tools.getMockFileFromPath(oldPath);
@@ -126,10 +129,10 @@ export function executeRuleObject (
   const ruleObject = rulesManager.getRuleById(rule.content);
   if (!ruleObject) return currentContent;
 
-  result = rulesManager.executeRule(ruleObject, app, currentFile, tools, frontMatter); // execute the formatter rule
+  result = rulesManager.executeRule(rule, ruleObject, app, currentFile, tools, frontMatter); // execute the formatter rule
   result = rulesManager.applyFormatOptions(result, rule, currentFile, tools); // apply format options
   if (oldFile && rule.addContent !== 'overwrite') {
-    oldResult = rulesManager.executeRule(ruleObject, app, oldFile, tools, frontMatter);
+    oldResult = rulesManager.executeRule(rule, ruleObject, app, oldFile, tools, frontMatter);
     oldResult = rulesManager.applyFormatOptions(oldResult, rule, oldFile, tools); // apply format options on the old file location
     result = rulesManager.mergeResult(result, oldResult, currentContent, rule); // merge the result with the current content. Remove old result if necessary
   }
@@ -137,7 +140,7 @@ export function executeRuleObject (
 }
 /*
 export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings, currentFile: TFile | null, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter, oldPath?:string) {
-  //console.log(`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
+  //logger.log(DEBUG,`Event: ${event} for rule ${rule.property}|${rule.content}`, rule);
   if (!rule.active || !currentFile) return returnResult;
   const tools = new ScriptingTools(app, this, settings, rule, frontMatter, currentFile);
   let fxResult = returnResult;
@@ -158,7 +161,7 @@ export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings,
   try {
     const functionIndex = ruleFunctions.findIndex(fx => fx.id === rule.content);
     if (functionIndex===-1){
-      console.error(`Rule function ${rule.content} not found!`);
+      logger.log(ERROR,`Rule function ${rule.content} not found!`);
       return returnResult; // return the original value if the function is not found
     }
     const ruleFunctionConfig = ruleFunctions[functionIndex];
@@ -169,7 +172,7 @@ export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings,
       case 'script': 
         const customRuleFunction = parseJSCode(rule.jsCode);
         if (typeof customRuleFunction !== 'function') {
-          console.error(`Could not parse custom function for ${rule.content}!`);
+          logger.log(ERROR,`Could not parse custom function for ${rule.content}!`);
           return;
         }
         fxResult = applyFormatOptions(customRuleFunction(app, currentFile, tools), rule);
@@ -181,14 +184,14 @@ export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings,
       case 'buildIn':  
         const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctionConfig.fx;
         if (typeof ruleFunction !== 'function') {
-          console.error(`Could not parse custom function for ${rule.content}!`);
+          logger.log(ERROR,`Could not parse custom function for ${rule.content}!`);
           break;
         }
         fxResult = getRuleResult(ruleFunction, app, rule, ruleFunctionConfig, currentFile, tools, frontMatter);
         if (oldFile) {
             oldResult = getRuleResult(ruleFunction, app, rule, ruleFunctionConfig, oldFile, tools, frontMatter);
         }
-        console.log(`  executeRule: ${rule.content} ${rule.property} [${rule.type}]= '${fxResult}'`)
+        logger.log(DEBUG,`  executeRule: ${rule.content} ${rule.property} [${rule.type}]= '${fxResult}'`)
 
         break;
       case 'autocomplete.modal':
@@ -204,7 +207,7 @@ export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings,
     }
   }
   catch (error) {
-    console.error(`Error executing rule ${rule.property}|${rule.content} for file ${currentFile.path}: ${error}`);
+    logger.log(ERROR,`Error executing rule ${rule.property}|${rule.content} for file ${currentFile.path}: ${error}`);
     return returnResult; // return the original value if there is an error
   }
 
@@ -248,7 +251,7 @@ export function executeRuleOld (event: FrontmatterAutomateEvents, app, settings,
 
 }
 */
-export function removeRuleObject (app, settings, currentFile: TFile, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter) {
+export function removeRuleObject (app: App, settings: any, currentFile: TFile, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter: any) {
 }
 /*
 export function removeRule (app, settings, currentFile: TFile, returnResult: any, rule:FrontmatterAutomateRuleSettings, frontMatter) {
@@ -263,7 +266,7 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
       if (functionIndex!==-1){
           const ruleFunction = rule.useCustomCode ? parseJSCode(rule.buildInCode) : ruleFunctions[functionIndex].fx;
           if (typeof ruleFunction !== 'function') {
-            console.error(`Could not parse custom function for ${rule.content}!`);
+            logger.log(ERROR,`Could not parse custom function for ${rule.content}!`);
             return;
           }
           if (ruleFunctions[functionIndex].inputProperty) {
@@ -340,7 +343,7 @@ export function checkIfFileAllowed(file: TFile, settings?:FrontmatterAutomateSet
       if (!file) return false;
       if (settings) {
         try {
-          //console.log(`check file ${file.path} against settings`, settings.include, settings.exclude);
+          //logger.log(DEBUG,`check file ${file.path} against settings`, settings.include, settings.exclude);
           if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
               result = filterFile(file, settings, 'exclude', 'files');    
           }        
@@ -355,13 +358,13 @@ export function checkIfFileAllowed(file: TFile, settings?:FrontmatterAutomateSet
           }
           // if (result === false) return false; // if the file is excluded, return false
         } catch (error) {
-          console.error(`Error filtering file ${file.path} globally: ${error}`);
+          logger.log(ERROR,`Error filtering file ${file.path} globally: ${error}`);
           return false; // default to false if there is an error
         }
       }
       if(rule) {
         try {
-          //console.log(`check file ${file.path} against rule`, rule.include, rule.exclude);
+          //logger.log(DEBUG,`check file ${file.path} against rule`, rule.include, rule.exclude);
           if (result && rule.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
               result = filterFile(file, rule, 'exclude', 'files');
           }        
@@ -375,7 +378,7 @@ export function checkIfFileAllowed(file: TFile, settings?:FrontmatterAutomateSet
               result = filterFile(file, rule, 'include', 'folders');
           }
         } catch (error) {
-          console.error(`Error filtering file ${file.path} by rule ${rule.property}|${rule.content}: ${error}`);
+          logger.log(ERROR,`Error filtering file ${file.path} by rule ${rule.property}|${rule.content}: ${error}`);
           return false; // default to false if there is an error
         }
       }
@@ -444,7 +447,7 @@ ruleFunctions.push({
       const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');
       return result;
   },
-  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent) {
+  configTab: function (optionEL: HTMLElement, rule:FolderTagRuleDefinition, that:any, previewComponent: any) {
 
     that.setOptionConfigDefaults(rule.id, {
       constantValue: '',
@@ -520,7 +523,7 @@ ruleFunctions.push({
         let fileName = addExtension? file.basename + '.' + file.extension : file.basename; 
         return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;
     },
-    configTab: function (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab: function (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
 
       that.setOptionConfigDefaults(rule.id, {
         addExtension: true
@@ -797,7 +800,7 @@ ruleFunctions.push({
   type: ['text', 'tags', 'aliases','multitext'],
   configElements: defaultConfigElements({removeContent: false,  inputProperty: false, addPrefix: false, spaceReplacement: false, specialCharacterReplacement: false, convertToLowerCase: false, resultAsLink: false, addContent: false, script: false}),
   fx: async function (app, file, tools:ScriptingTools) { // do not change this line!
-    console.log(`autocomplete modal, work in progress...`);
+    logger.log(DEBUG,`autocomplete modal, work in progress...`);
     const currentContent = tools.getCurrentContent();
     const rule = tools.getRule();
     if (!rule) return currentContent;
@@ -819,7 +822,7 @@ ruleFunctions.push({
         tools.getActiveFile(),
         tools.getFrontmatter()
       );
-    console.log('autocomplete modal result', result, tools.getFrontmatter());
+    logger.log(DEBUG,'autocomplete modal result', result, tools.getFrontmatter());
     if (result?.values) {
       this.app.fileManager.processFrontMatter(file, (frontmatter) => {
         for (const [key, value] of Object.entries(result.values)) {
@@ -829,7 +832,7 @@ ruleFunctions.push({
     }
     return tools.getCurrentContent() || 'autocomplete.modal'; // return current content if not implemented yet
   },
-  configTab: function (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+  configTab: function (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
 
     that.setOptionConfigDefaults(rule.id, {
       propertyDelimiter: '.',

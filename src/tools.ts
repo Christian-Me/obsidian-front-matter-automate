@@ -4,10 +4,10 @@ import { ErrorManager } from "./Error";
 import { AlertModal } from './alertBox';
 import { delimiter } from 'path';
 import { rulesManager } from './rules/rules';
+import { DEBUG, ERROR, logger, WARNING } from './Log';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
- * @export
  * @param {string} jsCode
  * @return {*}  {(Function | string | undefined)}
  */
@@ -22,8 +22,8 @@ export function parseJSCode(jsCode:string): Function | string | undefined {
         args.push(match[2]);
         return new Function(...args);
         } catch (error) {
-            console.error('error parsing JS function!', error);
-            return error.message;
+            logger.log(ERROR,'error parsing JS function!', error);
+            return (error as Error).message;
         }
     };
     return parseFunction(jsCode);
@@ -232,7 +232,7 @@ export function resolveFile(app: App, file_str: string): TFile {
     frontmatter: any;
     currentContent: any;
     activeFile: TFile | undefined;
-    knownProperties: Record<string, PropertyInfo>;
+    knownProperties: Record<string, PropertyInfo> = {};
 
     constructor(app?:App, plugin?:any, settings?:FrontmatterAutomateSettings, rule?: FrontmatterAutomateRuleSettings, frontmatter?: any, activeFile?: TFile) {
         this.app = app;
@@ -242,56 +242,136 @@ export function resolveFile(app: App, file_str: string): TFile {
         this.frontmatter = frontmatter;
         this.activeFile = activeFile;
     }
+    /**
+     * Retrieves the frontmatter object associated with the current instance.
+     *
+     * @returns The frontmatter data.
+     */
     getFrontmatter() { 
       return this.frontmatter;
     }
+    /**
+     * Sets the frontmatter property for the current instance.
+     *
+     * @param frontmatter - The frontmatter object to assign.
+     */
     setFrontmatter(frontmatter:any) {
         this.frontmatter = frontmatter;
     }
+    /**
+     * Sets a property in the frontmatter object. If the frontmatter does not exist, it initializes it as an empty object.
+     *
+     * @param key - The property name to set in the frontmatter.
+     * @param value - The value to assign to the specified property.
+     */
     setFrontmatterProperty(key:string, value:any) {
       if (!this.frontmatter) this.frontmatter = {};
       this.frontmatter[key] = value;
     }
+    /**
+     * Retrieves the value of a specified property from the frontmatter object.
+     *
+     * @param key - The name of the property to retrieve from the frontmatter.
+     * @returns The value associated with the specified key in the frontmatter, or `undefined` if the key does not exist.
+     */
     getFrontmatterProperty(key:string) {
       return this.frontmatter[key]
     }
+    /**
+     * Sets the currently active file.
+     *
+     * @param file - The file to set as active. Must be an instance of `TFile`.
+     */
     setActiveFile(file:TFile) {
       this.activeFile = file;
     }
+    /**
+     * Returns the currently active file.
+     *
+     * @returns The active file object, or `undefined` if no file is active.
+     */
     getActiveFile() {
       return this.activeFile;
     }
+    /**
+     * Sets the current rule configuration for the frontmatter automation.
+     *
+     * @param rule - The rule settings to apply, represented by a `FrontmatterAutomateRuleSettings` object.
+     */
     setRule(rule:FrontmatterAutomateRuleSettings) {
       this.rule = rule;
     }
+    /**
+     * Retrieves the current rule associated with this instance.
+     *
+     * @returns The rule object or value stored in the `rule` property.
+     */
     getRule() {
       return this.rule;
     }
+    /**
+     * Retrieves a rule function based on the provided rule settings.
+     *
+     * @param rule - Optional. The rule settings to use for retrieving the rule function.
+     *               If not provided, the method uses the instance's default rule.
+     * @returns The rule function associated with the specified rule settings, or `undefined` if no rule is found.
+     */
     getRuleFunction(rule?:FrontmatterAutomateRuleSettings) {
       if (!rule) rule = this.rule;
       if (rule) {
         return rulesManager.getRuleById(rule.content);
       }
     }
+    /**
+     * Sets the current content to the provided value.
+     *
+     * @param content - The content to set as the current content. Can be of any type.
+     */
     setCurrentContent(content:any) {
       this.currentContent = content;
     }
+    /**
+     * Retrieves the current content stored in the instance.
+     *
+     * @returns The current content.
+     */
     getCurrentContent() {
       return this.currentContent;
     }
-    updateFrontmatter(property, newContent, file?:TFile) {
+    /**
+     * Updates the specified frontmatter property of a given file with new content.
+     *
+     * If no file is provided, the currently active file is used. If neither is available, the method returns early.
+     * The method logs the update operation and only supports updating properties with primitive values or arrays.
+     * If `newContent` is an object (but not an array), a warning is issued and the update is not performed.
+     * The file's modification time (`mtime`) is preserved and not changed during the update.
+     *
+     * @param property - The frontmatter property to update.
+     * @param newContent - The new value to assign to the property. Objects (except arrays) are not supported.
+     * @param file - (Optional) The file whose frontmatter should be updated. If omitted, the active file is used.
+     */
+    updateFrontmatter(property:string, newContent:any, file?:TFile) {
       if (!this.app) return;
       if (!file) file = this.activeFile;
       if (!file) return;
       this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-        console.log(`updateFrontmatter '${file.path}' frontmatter '${property}' to '${newContent.toString()}'`);
+        logger.log(DEBUG,`updateFrontmatter '${file.path}' frontmatter '${property}' to '${newContent.toString()}'`);
         if (typeof newContent === 'object' && !Array.isArray(newContent)) {
-          console.warn(`updateFrontmatter '${file.path}'|'${property}' object not supported!`);
+          logger.log(WARNING,`updateFrontmatter '${file.path}'|'${property}' object not supported!`);
         } else {
           frontmatter[property] = newContent;
         }
       },{'mtime':file.stat.mtime}); // do not change the modify time.
     }
+    /**
+     * Displays a confirmation dialog with customizable message, title, and button labels.
+     *
+     * @param message - The message to display in the confirmation dialog.
+     * @param title - The title of the dialog window. Defaults to 'Confirm'.
+     * @param button1 - The label for the confirmation button. Defaults to 'Yes'.
+     * @param button2 - The label for the cancellation button. Defaults to 'No'.
+     * @returns A promise that resolves to a boolean indicating whether the user confirmed (true) or cancelled (false).
+     */
     async showConfirmDialog(message:string, title:string = 'Confirm', button1:string = 'Yes', button2:string = 'No') {
       const result =  await new AlertModal(this.app!, title, message, button1, button2).openAndGetValue();
       return result.proceed;
@@ -302,7 +382,6 @@ export function resolveFile(app: App, file_str: string): TFile {
      * @param {string} ruleId
      * @param {string} [optionId]
      * @return {*} 
-     * @memberof ScriptingTools
      */
     getOptionConfig(ruleId:string|undefined, optionId?:string){
       if (!ruleId || ruleId === undefined || !this.settings ) return undefined;
@@ -320,14 +399,21 @@ export function resolveFile(app: App, file_str: string): TFile {
       }
       return undefined;
     }
-
-    getFilesInVault(matching: string): TFile[] {
-        matching = matching.replace(/^\/|\/$/g, "") + '/'; // Ensure it ends with a '/'
+    /**
+     * Retrieves all markdown files in the vault whose paths include the specified matching string.
+     *
+     * The `matching` parameter is normalized to ensure it ends with a single '/' character,
+     * and is used to filter files whose paths contain this substring.
+     *
+     * @param folderPath - The folder path or substring to match within file paths.
+     * @returns An array of `TFile` objects whose paths include the normalized `matching` string.
+     */
+    getFilesInVault(folderPath: string): TFile[] {
+        folderPath = folderPath.replace(/^\/|\/$/g, "") + '/'; // Ensure it ends with a '/'
         const files = this.app!.vault.getMarkdownFiles(); // Retrieve all markdown files
-        const matchingFiles = files.filter(file => file instanceof TFile && file.path.includes(matching));
+        const matchingFiles = files.filter(file => file instanceof TFile && file.path.includes(folderPath));
         return matchingFiles;
     }
-
     /**
      * Creates a mock `TFile` object from a given file path string.
      *
@@ -356,7 +442,6 @@ export function resolveFile(app: App, file_str: string): TFile {
 
       return oldFile
     }
-
     /**
      * Retrieves a `TFile` object from a given file path.
      *
@@ -373,7 +458,15 @@ export function resolveFile(app: App, file_str: string): TFile {
       );
       return matchingFiles.length > 0 ? matchingFiles[0] : undefined;
     }
-
+    /**
+     * Creates a new file at the specified path using the content from a template file.
+     * If the file already exists, returns the existing file instead of creating a new one.
+     *
+     * @param fileNameWithPath - The full path (including file name) where the new file should be created.
+     * @param templateFileWithPath - The full path to the template file whose content will be used.
+     * @returns A promise that resolves to the newly created file or the existing file if it already exists.
+     * @throws {ErrorManager} If the folder path is invalid, does not exist, or is not a folder.
+     */
     async createFileFromPath(fileNameWithPath:string, templateFileWithPath:string) {
         const fileName = fileNameWithPath.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
         const templateFile = templateFileWithPath.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
@@ -396,7 +489,6 @@ export function resolveFile(app: App, file_str: string): TFile {
         }
         return fileExists; // return the file if it already exists
     }; // create the file if it does not exist
-
     /**
      * * Fetches custom property information from all markdown files in the vault.
      *
@@ -442,17 +534,22 @@ export function resolveFile(app: App, file_str: string): TFile {
       Object.keys(propertyInfos).forEach(key => {
         this.knownProperties[propertyInfos[key].name] = propertyInfos[key];
       });
-      console.log(this.knownProperties);
+      logger.log(DEBUG,this.knownProperties);
       return this.knownProperties;
     }
-    
+    /**
+     * Retrieves the known properties, initializing them if they have not been loaded yet.
+     * If the properties are not already cached, this method fetches them using `fetchCustomPropertyInfos`
+     * and stores them for future access.
+     *
+     * @returns The cached or newly fetched known properties.
+     */
     getKnownProperties() {
         if (!this.knownProperties) {
             this.knownProperties = this.fetchCustomPropertyInfos(this.app!);
         }
         return this.knownProperties;
     }
-    
     /**
      * Extracts the path and title from a given link string.
      *
@@ -474,10 +571,21 @@ export function resolveFile(app: App, file_str: string): TFile {
       // If only one part exists, use it as both path and title
       const path = parts[0].trim();
       const title = parts.length > 1 ? parts[1].trim() : path;
-      //console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
+      //logger.log(DEBUG,`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
       return { path, title };
     }
-    
+    /**
+     * Extracts the path, title, and file name from a given file link string.
+     *
+     * Splits the input string by the "/" character to separate the file name from its path.
+     * The title is derived from the file name by removing all extensions and trimming whitespace.
+     *
+     * @param link - The file link string to extract parts from.
+     * @returns An object containing:
+     *   - `path`: The directory path portion of the link (excluding the file name).
+     *   - `title`: The file name without extensions and trimmed.
+     *   - `fileName`: The full file name (with extensions, if any).
+     */
     extractPathParts(link: string): { path: string; title: string; fileName: string } {
  
       // Split the string by the "/" character
@@ -487,13 +595,26 @@ export function resolveFile(app: App, file_str: string): TFile {
       const fileName = parts.pop() || "";
       const title = this.removeAllExtensions(fileName).trim();
       const path = parts.join("/").trim();
-      //console.log(`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
+      //logger.log(DEBUG,`extractLinkParts(${link}) -> path: ${path}, title: ${title}`);
       return { path, title, fileName };
     }
 
+    /**
+     * Removes one or more leading slashes from the beginning of the given path string.
+     *
+     * @param path - The input string from which to remove leading slashes.
+     * @returns The input string without any leading slashes.
+     */
     removeLeadingSlash(path: string): string {
       return path.replace(/^\/+/, "");
     }
+    /**
+     * Ensures that the given path string starts with a leading slash ('/').
+     * If the path already begins with a slash, it is returned unchanged.
+     *
+     * @param path - The input path string to modify.
+     * @returns The path string guaranteed to start with a leading slash.
+     */
     addLeadingSlash(path: string): string {
       return path.replace(/^(?!\/)/, "/");
     }
@@ -597,7 +718,18 @@ export function resolveFile(app: App, file_str: string): TFile {
           return undefined;
       }
     }
-    
+  
+    /**
+     * Formats a given text string to be safe for use in YAML by replacing special characters.
+     *
+     * Replaces all characters that are not alphanumeric, dash, underscore, slash, or certain accented characters
+     * with a specified replacement string. If no replacement string is provided, it uses the value from settings,
+     * or defaults to `'-'`.
+     *
+     * @param text - The input string to format.
+     * @param replaceBy - Optional. The string to replace special characters with. If not provided, uses the value from settings or `'-'`.
+     * @returns The formatted string safe for YAML usage.
+     */
     formatToYAMLSaveString(text:string, replaceBy:string | undefined = undefined):string {
       let replaceString = '-';
       if (!replaceBy && this.settings) {
@@ -607,7 +739,6 @@ export function resolveFile(app: App, file_str: string): TFile {
       }
       return text.replace(/[^a-zA-Z0-9\-_\/äöüßÄÖÜáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕ]/g, replaceString);
     };
-
     /**
      * Converts a string to a YAML-safe format by adding quotes when necessary.
      * @param input The string, boolean, number or array to make YAML-safe
@@ -650,11 +781,10 @@ export function resolveFile(app: App, file_str: string): TFile {
           // If already quoted, return as-is
           return trimmed;
         default: 
-          console.error(`toYamlSafeString(${input}) if of type '${typeof input}'`);
+          logger.log(ERROR,`toYamlSafeString(${input}) if of type '${typeof input}'`);
           return input;
       }
     }
-
     /**
      * Converts an input string or array of strings into a Markdown Link format.
      * 
@@ -670,7 +800,7 @@ export function resolveFile(app: App, file_str: string): TFile {
      * 
      * If the input is an array, each element is converted to a WikiLink and joined with a comma.
      */
-    toMarkdownLink(input, replaceSpaces?): string | string[] {
+    toMarkdownLink(input: any, replaceSpaces?: string): string | string[] {
       if (Array.isArray(input)) {
         return input.map(item => this.toWikiLink(item)).join(', ');
       }
@@ -682,7 +812,6 @@ export function resolveFile(app: App, file_str: string): TFile {
       }
       return input;
     }
-
     /**
      * Converts an input string or array of strings into a WikiLink format string or array of strings.
      * 
@@ -697,7 +826,7 @@ export function resolveFile(app: App, file_str: string): TFile {
      * 
      * If the input is an array, each element is converted to a WikiLink and joined with a comma.
      */
-    toWikiLink(input, replaceSpaces = ' '): string | string[] {
+    toWikiLink(input: any, replaceSpaces = ' '): string | string[] {
       if (Array.isArray(input)) {
         return input.flatMap(item => this.toWikiLink(item));
         //return input.map(item => this.toWikiLink(item)).join(', ');
@@ -709,7 +838,13 @@ export function resolveFile(app: App, file_str: string): TFile {
       }
       return input;
     }
-
+    /**
+     * Replaces all whitespace characters in the given text with a specified replacement string.
+     *
+     * @param text - The input string in which spaces will be replaced.
+     * @param replaceBy - Optional. The string to replace spaces with. If not provided, uses the value from `this.settings.spaceReplacement` or defaults to '_'.
+     * @returns The modified string with spaces replaced by the specified replacement string.
+     */
     replaceSpaces(text:string, replaceBy:string | undefined = undefined):string {
       let replaceString = '_';
       if (!replaceBy && this.settings) {
@@ -719,7 +854,6 @@ export function resolveFile(app: App, file_str: string): TFile {
       }
       return text.replace(/\s+/g, replaceString);
     }
-
     /**
      * Removes the ALL file extension(s) from a given file name.
      *
@@ -742,17 +876,16 @@ export function resolveFile(app: App, file_str: string): TFile {
         return result.join('.') || fileName;
     }
 
-    formatCamelCase(text:string):string {
-      let textParts = text.split(' ');
-      let convertedTextParts:string[] = [];
-      textParts.forEach((text,index) => {
-        let newTextPart = text.toLowerCase();
-        if (index>0) newTextPart = newTextPart.charAt(0).toUpperCase() + newTextPart.slice(1);
-        convertedTextParts.push(newTextPart);
-      });
-      return convertedTextParts.join('');
-    }
-
+    /**
+     * Converts a given string to camelCase format.
+     *
+     * Splits the input text by spaces, lowercases the first word,
+     * and capitalizes the first letter of each subsequent word,
+     * then joins them together without spaces.
+     *
+     * @param text - The input string to be converted.
+     * @returns The camelCase formatted string.
+     */
     formatUpperCamelCase(text:string):string {
       let textParts = text.split(' ');
       let convertedTextParts:string[] = [];

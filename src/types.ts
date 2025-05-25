@@ -1,9 +1,10 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
+import { WARNING } from './Log';
 
 export const versionString = "0.0.21";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
-export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'delete' | 'modify' | 'preview' | 'all';
+export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all';
 
 export interface FilterFilesAndFolders {
     selectedFolders: string[],
@@ -32,6 +33,8 @@ export interface FrontmatterAutomateSettings {
     exclude: FilterFilesAndFolders;
     include: FilterFilesAndFolders;
     configuredProperties: Array<{ name: string; value: any }>;
+    debugLevel: number;
+    delayCreateEvent: number; // optional delay for create events
 }
 
 export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings = {
@@ -57,7 +60,9 @@ export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings 
         mode: 'include',
         display: 'folders',
     },
-    configuredProperties: []
+    configuredProperties: [],
+    debugLevel: WARNING,
+    delayCreateEvent: 0, // default to no delay
 };
 
 export interface FrontmatterAutomateRuleSettings {

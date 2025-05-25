@@ -6,11 +6,11 @@ import { Modal, App, Setting } from 'obsidian';
 export class AlertModal extends Modal {
     private title: string;
     private description: string;
-    private resolvePromise: (value: {proceed:boolean, data:any}) => void;
+    private resolvePromise!: (value: {proceed:boolean, data:any}) => void;
     private promise: Promise<{proceed:boolean, data:any}>;
     private btn1Text: string;
     private btn2Text: string;
-    private checkboxEl: HTMLInputElement;
+    private checkboxEl!: HTMLInputElement;
     private askAgainLabel: string | undefined;
   
     constructor(app: App, title: string, description: string, btn1: string, btn2:string, askAgainLabel?: string | undefined) {

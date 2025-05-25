@@ -54,13 +54,13 @@ export class RuleBuildInGetProperty extends RulePrototype {
     return result;
   }
 
-  configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+  configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
     // Configuration tab logic can be added here if needed
     // Create a setting for the constant value
     that.setOptionConfigDefaults(rule.id, {
         inputProperty: '',
     })
-    let inputPropertiesDropdown;
+    let inputPropertiesDropdown:any;
     new Setting(optionEL)
         .setName('Input Property')
         .setDesc('Select a property as input')

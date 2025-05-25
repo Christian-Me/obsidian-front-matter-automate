@@ -43,7 +43,7 @@ export class RuleBuildInLinkToFile extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'Create link to file';
         this.description = 'Create a link to the file in the current vault. Can be configured to include the file extension.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  const parts = file.path.split('/');\n  const rule = tools.getRule();\n  if (!rule) return tools.getCurrentContent();\n  const addExtension = tools.getOptionConfig(rule.id,'addExtension') \n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  let fileName = addExtension? file.basename + '.' + file.extension : file.basename; \n  return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  const rule = tools.getRule();\n  if (!rule) return tools.getCurrentContent();\n  const addExtension = tools.getOptionConfig(rule.id,'addExtension') \n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  let fileName = addExtension? file.basename + '.' + file.extension : file.basename; \n  return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
@@ -58,7 +58,7 @@ export class RuleBuildInLinkToFile extends RulePrototype {
         return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;
     };
     
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         that.setOptionConfigDefaults(rule.id, {
             addExtension: true
         })

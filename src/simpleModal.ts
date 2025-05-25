@@ -1,8 +1,8 @@
 
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon,ButtonComponent, TextComponent, Constructor } from 'obsidian'; // Added setIcon
 import { ObsidianPropertyTypes } from './types';
-import { updatePropertyIcon } from './settings-properties';
 import { ScriptingTools } from './tools';
+import { DEBUG, logger } from './Log';
 
 
 // Define the result structure returned by the modal
@@ -18,15 +18,15 @@ export class codeEditorModal extends Modal {
     private readonly okCallback: (result: codeEditorModalResult | null) => void;
     private plugin: any;
     private scriptingTools: ScriptingTools;
-    private expectedType: ObsidianPropertyTypes
+    private expectedType!: ObsidianPropertyTypes
 
     // Current state being modified within the modal
     private activeFile: TFile | TFolder | null
     private frontmatter: any; // Frontmatter data for the active file
 
     // UI Elements
-    private contentRootElement: HTMLElement;
-    private functionTestButton: ButtonComponent;
+    private contentRootElement!: HTMLElement;
+    private functionTestButton!: ButtonComponent;
     private functionResultTextComponent: TextComponent | undefined;
 
     /**
@@ -136,7 +136,7 @@ export class codeEditorModal extends Modal {
         const cancelButton = buttonsEl.createEl('button', { text: 'Cancel' });
         cancelButton.ariaLabel = 'close and discard changes'; // Accessibility
         cancelButton.onclick = () => {
-            console.log("Cancel Clicked - Returning"); // Debug log
+            logger.log(DEBUG,"Cancel Clicked - Returning"); // Debug log
             this.okCallback( null ); // Pass the final selection back
             this.close();
         };
@@ -159,7 +159,7 @@ export class codeEditorModal extends Modal {
         const result: codeEditorModalResult = {
             type: 'text',
         };
-        console.log("OK Clicked - Returning Result:", result); // Debug log
+        logger.log(DEBUG,"OK Clicked - Returning Result:", result); // Debug log
         this.okCallback(result); // Pass the final selection back
         const { contentEl } = this;
         contentEl.empty(); // Clear the modal's content

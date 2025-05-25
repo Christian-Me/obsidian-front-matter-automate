@@ -49,7 +49,7 @@ export class RuleBuildInDateTimeModified extends RulePrototype {
         return result.toISOString().split('Z')[0]; // remove UTC symbol
       }
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

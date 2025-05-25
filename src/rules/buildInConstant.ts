@@ -29,7 +29,7 @@ export class RuleBuildInConstant extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'Constant value';
         this.description = 'Returns a constant value instead of the frontmatter parameter.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};";
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     }

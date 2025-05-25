@@ -3,6 +3,7 @@ import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon,Butt
 import { FrontmatterAutomateRuleSettings, ObsidianPropertyTypes, PropertyInfo } from './types';
 import { ScriptingTools } from './tools';
 import { renderValueInput, updatePropertyIcon } from './uiElements'; // Import the function to render value input
+import { DEBUG, ERROR, logger } from './Log';
 
 
 // Define the result structure returned by the modal
@@ -20,7 +21,7 @@ export class AutocompleteModal extends Modal {
     private promise: Promise<autocompleteModalResult | null>;
 
     // Initial state passed to the modal (stored for reset functionality)
-    private readonly okCallback: (result: autocompleteModalResult | null) => void;
+    private readonly okCallback!: (result: autocompleteModalResult | null) => void;
     private plugin: any;
     private options: any;
     private tools: ScriptingTools;
@@ -33,9 +34,9 @@ export class AutocompleteModal extends Modal {
     private frontmatter: any; // Frontmatter data for the active file
 
     // UI Elements
-    private contentRootElement: HTMLElement;
-    private functionTestButton: ButtonComponent;
-    private functionResultTextComponent: TextComponent | undefined;
+    private contentRootElement!: HTMLElement;
+    private functionTestButton!: ButtonComponent;
+    private functionResultTextComponent!: TextComponent | undefined;
     private result: any = {};
 
     /**
@@ -203,7 +204,7 @@ export class AutocompleteModal extends Modal {
         const cancelButton = buttonsEl.createEl('button', { text: 'Cancel' });
         cancelButton.ariaLabel = 'close and discard changes'; // Accessibility
         cancelButton.onclick = () => {
-            console.log("Cancel Clicked - Returning"); // Debug log
+            logger.log(DEBUG,"Cancel Clicked - Returning"); // Debug log
             this.resolvePromise(null); // Resolve the promise with null
             this.close();
         };
@@ -254,7 +255,7 @@ export async function openAutocompleteModal(
 ): Promise<autocompleteModalResult | null> {
     // Create and open the modal instance
     if (!app) {
-        console.error("App is undefined");
+        logger.log(ERROR,"App is undefined");
         return null;
     }
     const modal = new AutocompleteModal(app, plugin, rule, options, activeFile, frontmatter);

@@ -37,7 +37,7 @@ export class RuleBuildInName extends RulePrototype {
     this.ruleType = 'buildIn';
     this.name = 'File name without extension';
     this.description = 'Returns the file name without all extensions. I.e. example.note.md => example';
-    this.source = "";
+    this.source = "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = tools.removeAllExtensions(file.name);\n  return result;\n}";
     this.type = ['text', 'tags', 'aliases', 'multitext'];
     this.configElements = this.defaultConfigElements({});
   }
@@ -48,7 +48,7 @@ export class RuleBuildInName extends RulePrototype {
     return result;
   }
 
-  configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+  configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
     // Configuration tab logic can be added here if needed
   };
     

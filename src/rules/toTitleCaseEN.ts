@@ -72,13 +72,13 @@ export class RuleToTitleCaseEN extends RulePrototype {
 			var m = split.exec(title);
 
 			parts.push( title.substring(index, m ? m.index : title.length)
-				.replace(/\b([A-Za-z][a-z.'Õ]*)\b/g, function(all){
+				.replace(/\b([A-Za-z][a-z.'Õ]*)\b/g, (all:string) =>{
 					return /[A-Za-z]\.[A-Za-z]/.test(all) ? all : this.upper(all);
-				}.bind(this))
+				})
 				.replace(RegExp("\\b" + this.small + "\\b", "ig"), this.lower)
-				.replace(RegExp("^" + this.punctuation + this.small + "\\b", "ig"), function(all, punct, word){
+				.replace(RegExp("^" + this.punctuation + this.small + "\\b", "ig"), (all:string, punct:string, word:string) =>{
 					return punct + this.upper(word);
-				}.bind(this))
+				})
 				.replace(RegExp("\\b" + this.small + this.punctuation + "$", "ig"), this.upper));
 			
 			index = split.lastIndex;
@@ -94,11 +94,11 @@ export class RuleToTitleCaseEN extends RulePrototype {
 			});
 	};
     
-	lower(word){
+	lower(word:string){
 		return word.toLowerCase();
 	}
     
-	upper(word){
+	upper(word:string){
 	  return word.substr(0,1).toUpperCase() + word.substr(1);
 	}
 }

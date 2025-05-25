@@ -11,7 +11,7 @@ export class RuleBuildInIsRoot extends RulePrototype {
         this.ruleType = 'buildIn';
         this.name = 'File in Root folder';
         this.description = 'Check if the file is in the root folder.';
-        this.source = "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};";
+        this.source = "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};";
         this.type = ['checkbox'];
         this.configElements = this.defaultConfigElements({});
     }
@@ -21,7 +21,7 @@ export class RuleBuildInIsRoot extends RulePrototype {
         return parts.length === 1;
     }
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

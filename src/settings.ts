@@ -8,16 +8,18 @@ import { randomUUID } from 'crypto';
 import { RulesTable } from './settings-properties';
 import { SortableListComponent } from './SortableListComponent';
 import { rulesManager } from './rules/rules';
+import { logger } from './Log';
+import { log } from 'console';
 
 export class FolderTagSettingTab extends PluginSettingTab {
     plugin: any; //FolderTagPlugin;
-    rulesDiv: HTMLDivElement;
-    rulesContainer: HTMLDivElement;
-    rulesControl: HTMLDivElement;
-    knownProperties: PropertyTypeInfo[];
-    knownTypes: any;
-    scriptingTools: ScriptingTools;
-    
+    rulesDiv!: HTMLDivElement;
+    rulesContainer!: HTMLDivElement;
+    rulesControl!: HTMLDivElement;
+    knownProperties!: PropertyTypeInfo[];
+    knownTypes!: any;
+    scriptingTools!: ScriptingTools;
+
     constructor(app: App, plugin: any /*FolderTagPlugin*/) {
         super(app, plugin);
         this.plugin = plugin;
@@ -26,7 +28,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
     hide(): void {
         // update the rules to remove the ones that are not live anymore
         this.plugin.settings.liveRules=[];
-        this.plugin.settings.rules.forEach(rule => {
+        this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings) => {
             let ruleFunction = rulesManager.getRuleById(rule.content);
             if (!ruleFunction) return;
             if (ruleFunction.isLiveRule) {
@@ -114,10 +116,35 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 });
         });    
         
+        new Setting(containerEl)
+            .setName('Debug')
+            .setDesc('Select the debug level to show in the console')
+            .addDropdown((dropdown: DropdownComponent) => {
+                dropdown.addOptions(
+                    Object.fromEntries(logger.getLevelNames().map(level => [level, level]))
+                );
+                dropdown.setValue(logger.getLevelName(this.plugin.settings.debugLevel));
+                dropdown.onChange((value: string) => {
+                    this.plugin.settings.debugLevel = logger.getLevelByName(value);
+                    logger.setLevel(this.plugin.settings.debugLevel);
+                    this.plugin.saveSettings();
+                });
+        })
   
         new Setting(containerEl)
-        .setName('Rules')
-        .setDesc('add rules to update selected parameters');
+            .setName('Delay create event (until better solution is found)') //TODO: remove this setting when a better solution is found
+            .setDesc('Set a delay before triggering the create event to allow for file creation to complete. (in milliseconds)')
+            .addText(text => {
+                text.setValue(this.plugin.settings.delayCreateEvent.toString());
+                text.onChange(async (value) => {
+                    this.plugin.settings.delayCreateEvent = parseInt(value) || 0; // Ensure it's a number
+                    await this.plugin.saveSettings();
+                });
+        });
+
+        new Setting(containerEl)
+            .setName('Rules')
+            .setDesc('add rules to update selected parameters');
 
         this.rulesContainer = containerEl.createDiv('properties-list');
         const rulesTable = new RulesTable(this.app, this.plugin,this.rulesContainer,'rules');

@@ -45,7 +45,7 @@ export class RuleBuildInFolders extends RulePrototype {
       this.ruleType = 'buildIn';
       this.name = 'All folders of the file as a list';
       this.description = 'Returns all folders the file is stored in as a list.';
-      this.source = "";
+      this.source = "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}";
       this.type = ['tags', 'aliases', 'multitext'];
       this.configElements = this.defaultConfigElements({});
     }
@@ -58,7 +58,7 @@ export class RuleBuildInFolders extends RulePrototype {
       return result;
     }
 
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
         // Configuration tab logic can be added here if needed
     };
     

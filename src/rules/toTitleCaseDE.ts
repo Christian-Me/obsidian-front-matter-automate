@@ -2,6 +2,7 @@ import { RulePrototype, rulesManager } from "./rules";
 import { ScriptingTools } from "../tools";
 import { App, Setting, TFile } from "obsidian";
 import { FrontmatterAutomateRuleSettings } from "../types";
+import { DEBUG, logger, TRACE } from "../Log";
 
 /**
  * Represents a rule that converts input values to Title Case with German "small" Words.
@@ -54,17 +55,18 @@ export class RuleToTitleCaseDE extends RulePrototype {
             const doNotCapitalizeSmallWords = tools.getOptionConfig(ruleId, 'doNotCapitalizeSmallWords');
             return this.titleCaps(str, doNotCapitalizeSmallWords ? tools.getOptionConfig(ruleId,'smallWords') : undefined);
         };
-
+        let result: any = input;
         if (typeof input === 'string') {
-            return toTitleCase(input);
+            result = toTitleCase(input);
         } else if (Array.isArray(input)) {
-            return input.map((item) => toTitleCase(String(item)));
+            result = input.map((item) => toTitleCase(String(item)));
         } else if (input instanceof Date) {
-            return toTitleCase(input.toISOString());
+            result = toTitleCase(input.toISOString());
         } else if (typeof input === 'object') {
-            return toTitleCase(JSON.stringify(input));
+            result = toTitleCase(JSON.stringify(input));
         }
-        return input;
+        logger.log(DEBUG, `RuleToTitleCaseDE.fx - input:'${input}' result:'${ result}'`);
+        return result;
     };
 
     configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
@@ -109,41 +111,41 @@ export class RuleToTitleCaseDE extends RulePrototype {
             const m = split.exec(title);
 
             const substring = title.substring(index, m ? m.index : title.length);
-            if (this.verboseLogging) console.log("Processing substring:", substring);
+            logger.log(TRACE,"Processing substring:", substring);
 
             let isFirstWord = true;
             parts.push(
                 substring.replace(/([\p{L}\p{M}]+(?:\.[\p{L}\p{M}]+)*)/gu, (all) => {
-                    if (this.verboseLogging) console.log("Matched word:", all);
+                    logger.log(TRACE,"Matched word:", all);
 
                     // Exclude words with mixed capitalization (e.g., "iPhone", "iMac")
                     if (/[a-z][A-Z]|[A-Z][a-z]/.test(all)) {
-                        if (this.verboseLogging) console.log(`Excluding mixed capitalization word: ${all}`);
+                        logger.log(TRACE,"Excluding mixed capitalization word:", all);
                         isFirstWord = false;
                         return all;
                     }
 
                     // Exclude fully capitalized words (e.g., "IBM", "DELL")
                     if (/^[A-ZÄÖÜß]+$/.test(all)) {
-                        if (this.verboseLogging) console.log(`Excluding fully capitalized word: ${all}`);
+                        logger.log(TRACE,"Excluding fully capitalized word:", all);
                         isFirstWord = false;
                         return all;
                     }
 
                     // Exclude words with punctuation without spaces (e.g., "google.com")
                     if (/[^\s]+\.[^\s]+/.test(all)) {
-                        if (this.verboseLogging) console.log(`Excluding word with punctuation: ${all}`);
+                        logger.log(TRACE,"Excluding word with punctuation:", all);
                         isFirstWord = false;
                         return all;
                     }
 
                     const smallRegex = new RegExp(`^(${smallWords})$`, "iu");
                     if (isFirstWord) {
-                        if (this.verboseLogging) console.log(`Capitalizing first word of sentence: ${all}`);
+                        logger.log(TRACE,"Capitalizing first word of sentence:", all);
                         isFirstWord = false;
                         return this.upperDE(all);
                     } else if (smallRegex.test(all)) {
-                        if (this.verboseLogging) console.log(`Skipping capitalization for small word: ${all}`);
+                        logger.log(TRACE,"Skipping capitalization for small word:", all);
                         return this.lowerDE(all);
                     }
 
@@ -162,12 +164,12 @@ export class RuleToTitleCaseDE extends RulePrototype {
     }
 
     lowerDE(word: string) {
-        if (this.verboseLogging) console.log("Lowering:", word);
+        logger.log(TRACE,"Lowering:", word);
         return word.toLocaleLowerCase("de");
     }
 
     upperDE(word: string) {
-        if (this.verboseLogging) console.log("Uppering:", word);
+        logger.log(TRACE,"Uppering:", word);
         // Capitalize the first character and leave the rest of the word unchanged
         return word.charAt(0).toLocaleUpperCase("de") + word.slice(1).toLocaleLowerCase("de");
     }
