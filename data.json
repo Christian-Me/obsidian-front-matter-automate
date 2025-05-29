@@ -47,7 +47,20 @@
       "formatter": "toLowerCase",
       "inputProperty": "",
       "onlyModify": false,
-      "useCustomCode": true
+      "useCustomCode": true,
+      "optionsConfig": {
+        "214f3745-a2e6-47b0-a51f-95dfc0c637b4": {
+          "inputProperties": [
+            "sidecar-tags",
+            "user-tags",
+            "file-folder-path"
+          ],
+          "onlyWhenAllPropertiesExist": false,
+          "spaceReplacement": "-",
+          "specialCharReplacement": "_",
+          "delimiter": " ,"
+        }
+      }
     },
     {
       "id": "ec9bed27-1680-4592-a5b7-c8faa2adcb6f",
@@ -55,7 +68,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "fullPath",
-      "value": "Tiere/Vögel/Untitled.md",
+      "value": "Tiere/Vögel/Rabe.md",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -103,7 +116,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "path",
-      "value": "[[Tiere/Vögel/Untitled|Wombats 🐻]]",
+      "value": "[[Tiere/Vögel/Rabe|Wombats 🐻]]",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -184,7 +197,7 @@
       "useCustomCode": false,
       "optionsConfig": {
         "3a16d7ed-0f85-47a4-8c46-0192a74f2652": {
-          "constantValue": "Konstante",
+          "constantValue": "Neue Konstante",
           "addTemplate": true,
           "askConfirmation": true,
           "destinationFolder": "/category/locations/location",
@@ -320,6 +333,8 @@
       "useCustomCode": false,
       "optionsConfig": {
         "37660875-87bf-4cf3-9b75-f2f75a791fb2": {
+          "replace": "ö",
+          "replaceBy": "oe",
           "delimiter": " ",
           "inputProperties": [
             ""
@@ -369,9 +384,9 @@
       "useCustomCode": false,
       "optionsConfig": {
         "ebb14d96-b63a-4984-b21f-63b4f9aa4a2f": {
+          "inputProperty": "#?:{}\"'",
           "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
-          "doNotCapitalizeSmallWords": true,
-          "inputProperty": "#?:{}\"'"
+          "doNotCapitalizeSmallWords": true
         }
       }
     },
@@ -381,7 +396,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "rootFolder",
-      "value": "Tiere",
+      "value": "Rabe",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -389,8 +404,8 @@
         "type": "text",
         "source": "registered"
       },
-      "content": "rootFolder",
-      "buildInCode": "function (app: App, file:TFile, tools:ScriptingTools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};",
+      "content": "name",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = tools.removeAllExtensions(file.name);\n  return result;\n}",
       "jsCode": "",
       "showContent": false,
       "exclude": {
@@ -501,7 +516,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "Localtion.type",
-      "value": "[[Tiere/Vögel/Untitled.md|Wombats 🐻]]",
+      "value": "[[Tiere/Vögel/Rabe.md|Wombats 🐻]]",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -553,7 +568,7 @@
       "asLink": false,
       "addContent": "overwrite",
       "property": "location-type",
-      "value": "?wombats_??_ENDE",
+      "value": "#wombats????ENDE",
       "customProperty": "",
       "type": "text",
       "typeProperty": {
@@ -588,27 +603,27 @@
       "useCustomCode": true,
       "optionsConfig": {
         "797182ad-b5d4-4032-89fe-8e569ed875c4": {
-          "prefix": "#",
-          "suffix": "ENDE",
           "delimiter": " ",
           "inputProperties": [
             "constant",
             "ddd"
           ],
           "onlyWhenAllPropertiesExist": false,
-          "spaceReplacement": "_",
           "specialCharReplacement": "?",
+          "spaceReplacement": "_",
+          "prefix": "#",
+          "suffix": "ENDE",
           "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
           "doNotCapitalizeSmallWords": true,
           "constantValue": ""
         }
       },
       "formatters": [
+        "replaceSpecialChars",
         "toLowerCase",
         "addPrefix",
         "addSuffix",
-        "replaceSpaces",
-        "replaceSpecialChars"
+        "replaceSpaces"
       ]
     },
     {
@@ -651,7 +666,12 @@
       "linkFormatter": "toOriginalLink",
       "inputProperty": "",
       "onlyModify": true,
-      "useCustomCode": false
+      "useCustomCode": false,
+      "optionsConfig": {
+        "9f71fdc0-6552-45d5-a05b-f3656c658ba8": {
+          "constantValue": "Eins,Zwei"
+        }
+      }
     },
     {
       "id": "0541dccd-85c9-449a-ae9a-836c07ea883a",
@@ -699,9 +719,104 @@
           "constantValue": "Test"
         }
       }
+    },
+    {
+      "id": "3beeb7ec-bc57-4273-b6bd-eadb53d29062",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "fileName",
+      "value": "Rabe",
+      "customProperty": "",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "name",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = tools.removeAllExtensions(file.name);\n  return result;\n}",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "formatters": [
+        "toOriginal"
+      ],
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false
+    },
+    {
+      "id": "67cce546-f574-44ec-b670-dcfa2f69e006",
+      "active": true,
+      "asLink": false,
+      "addContent": "overwrite",
+      "property": "list",
+      "value": "",
+      "customProperty": "",
+      "type": "multitext",
+      "typeProperty": {
+        "name": "",
+        "type": "text",
+        "source": "registered"
+      },
+      "content": "concatProperties",
+      "buildInCode": "function (app, file, tools) { // do not change this line!\n  const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties');\n  if (!Array.isArray(propertyIds) || propertyIds.length === 0) {\n    return 'No properties selected';\n  }\n  const delimiter = tools.getOptionConfig(tools.getRule()?.id,'delimiter');\n  const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;\n  if (onlyWhenAllPropertiesExist) {\n    // Check if all properties exist\n    const allExist = propertyIds.every(id => { \n      if (id === undefined || id === null || id === '') {\n        return true; // Skip empty or undefined property IDs\n      }\n      const propertyValue = tools.getFrontmatterProperty(id);\n      const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';\n      return result;\n    });\n    if (!allExist) {\n      return '';\n    }\n  }\n  const result = propertyIds.map(id => {\n    let value = tools.getFrontmatterProperty(id);\n    if (value === undefined || value === null || value === '') {\n      return ''; // Skip empty or undefined properties\n    }\n    return value.toString();\n  }).filter(res => res !== undefined).join(delimiter);\n  return result;\n};",
+      "jsCode": "",
+      "showContent": false,
+      "exclude": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "exclude",
+        "display": "folders"
+      },
+      "include": {
+        "selectedFolders": [],
+        "selectedFiles": [],
+        "mode": "include",
+        "display": "folders"
+      },
+      "prefix": "",
+      "spaceReplacement": "",
+      "specialCharReplacement": "",
+      "lowercaseTags": false,
+      "formatter": "toOriginal",
+      "formatters": [
+        "replaceSpaces"
+      ],
+      "linkFormatter": "toOriginalLink",
+      "inputProperty": "",
+      "onlyModify": true,
+      "useCustomCode": false,
+      "optionsConfig": {
+        "67cce546-f574-44ec-b670-dcfa2f69e006": {
+          "spaceReplacement": "",
+          "delimiter": " ",
+          "inputProperties": [
+            "folders",
+            "aliases"
+          ],
+          "onlyWhenAllPropertiesExist": true
+        }
+      }
     }
   ],
-  "liveRules": [],
   "useTextArea": false,
   "exclude": {
     "selectedFolders": [
@@ -720,8 +835,977 @@
       "name": ""
     }
   ],
-  "debugLevel": 5,
+  "debugLevel": 6,
   "delayCreateEvent": 1000,
+  "folderConfig": {
+    "folders": [
+      {
+        "id": "68a79f85-4da9-4b25-b6b4-d667bee98642",
+        "name": "Path & Folders",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "7a24e1bf-4cc2-4e4f-9b45-416e2d04448d",
+        "name": "Dates",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "09369aab-f762-40a4-81de-5fa05f87525f",
+        "name": "Tags & Lists",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "2d08d1f1-64db-4df2-b6e8-e961c759b936",
+        "name": "Aliases",
+        "parentId": "09369aab-f762-40a4-81de-5fa05f87525f",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "6449685f-a24a-4140-83ba-06239db12a55",
+        "name": "Concat Test",
+        "disabled": false,
+        "collapsed": false
+      }
+    ],
+    "rows": [
+      {
+        "id": "ef2de196-28c7-41c2-a829-cbf98a8f0136",
+        "folderId": "6449685f-a24a-4140-83ba-06239db12a55",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "b40e3194-d539-425d-b6cd-8f3587b63621",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "file-folder-path",
+          "value": "Tiere/Vögel",
+          "customProperty": "",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "path",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  return parts.join('/');\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "formatters": [
+            "toOriginal"
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      },
+      {
+        "id": "c0d1fb40-969d-4674-8106-bf8f4b752a1f",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "214f3745-a2e6-47b0-a51f-95dfc0c637b4",
+          "active": true,
+          "asLink": false,
+          "addContent": "start",
+          "property": "tags",
+          "value": [
+            "my-sidecar",
+            "my-wonderful-tag",
+            "my-other-tag",
+            "Tiere/Vögel"
+          ],
+          "customProperty": "",
+          "type": "tags",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "concatArrays",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties');\n  if (!Array.isArray(propertyIds) || propertyIds.length === 0) {\n    return 'No properties selected';\n  }\n  const delimiter = tools.getOptionConfig(tools.getRule()?.id,'delimiter');\n  const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;\n  if (onlyWhenAllPropertiesExist) {\n    // Check if all properties exist\n    const allExist = propertyIds.every(id => { \n      if (id === undefined || id === null || id === '') {\n        return true; // Skip empty or undefined property IDs\n      }\n      const propertyValue = tools.getFrontmatterProperty(id);\n      const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';\n      return result;\n    });\n    if (!allExist) {\n      return '';\n    }\n  }\n  const result = propertyIds.map(id => {\n    let value = tools.getFrontmatterProperty(id);\n    if (value === undefined || value === null || value === '') {\n      return ''; // Skip empty or undefined properties\n    }\n    return value.toString();\n  }).filter(res => res !== undefined).join(delimiter);\n  return result;\n};",
+          "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = '';\n  return result; // return you result.\n}",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "-",
+          "specialCharReplacement": "_",
+          "lowercaseTags": false,
+          "formatter": "toLowerCase",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "formatters": [
+            "replaceSpaces"
+          ]
+        },
+        "folderId": "6449685f-a24a-4140-83ba-06239db12a55"
+      },
+      {
+        "id": "a8c3f06e-24e3-40aa-bf0b-37f544c6250b",
+        "folderId": "7a24e1bf-4cc2-4e4f-9b45-416e2d04448d",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "5b4c0837-815e-4880-a112-68b750bfc265",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "dateTimeCreated",
+          "value": "2025-05-25T12:49:08.356",
+          "customProperty": "",
+          "type": "datetime",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "dateTimeCreated",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset \n const result = new Date(file.stat.ctime-timeOffset); \n return result.toISOString().split('Z')[0]; // remove UTC symbol \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "formatters": [
+            "toOriginal"
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      },
+      {
+        "id": "afdbac01-14cf-4acd-8b5d-199bde1b9d3e",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "ebb14d96-b63a-4984-b21f-63b4f9aa4a2f",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "title",
+          "value": "Property not found",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "getProperty",
+          "buildInCode": "",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toTitleCaseDe",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "ebb14d96-b63a-4984-b21f-63b4f9aa4a2f": {
+              "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
+              "doNotCapitalizeSmallWords": true,
+              "inputProperty": "#?:{}\"'"
+            }
+          }
+        }
+      },
+      {
+        "id": "1aad14a6-216a-4cff-a9d1-c5a88b5b0e7a",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "590159bc-7b9c-4aff-b559-b99db9ba386d",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "rootFolder",
+          "value": "Rabe",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "name",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = tools.removeAllExtensions(file.name);\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toUpperCase",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      },
+      {
+        "id": "8d6435e9-79f6-45f2-aef8-9f1c99fff0c3",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "797182ad-b5d4-4032-89fe-8e569ed875c4",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "location-type",
+          "value": "#wombats????ENDE",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "concatProperties",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties');\n  if (!Array.isArray(propertyIds) || propertyIds.length === 0) {\n    return 'No properties selected';\n  }\n  const delimiter = tools.getOptionConfig(tools.getRule()?.id,'delimiter');\n  const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;\n  if (onlyWhenAllPropertiesExist) {\n    // Check if all properties exist\n    const allExist = propertyIds.every(id => { \n      if (id === undefined || id === null || id === '') {\n        return true; // Skip empty or undefined property IDs\n      }\n      const propertyValue = tools.getFrontmatterProperty(id);\n      const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';\n      return result;\n    });\n    if (!allExist) {\n      return '';\n    }\n  }\n  const result = propertyIds.map(id => {\n    let value = tools.getFrontmatterProperty(id);\n    if (value === undefined || value === null || value === '') {\n      return ''; // Skip empty or undefined properties\n    }\n    return value.toString();\n  }).filter(res => res !== undefined).join(delimiter);\n  return result;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": true,
+          "optionsConfig": {
+            "797182ad-b5d4-4032-89fe-8e569ed875c4": {
+              "delimiter": " ",
+              "inputProperties": [
+                "constant",
+                "ddd"
+              ],
+              "onlyWhenAllPropertiesExist": false,
+              "specialCharReplacement": "?",
+              "spaceReplacement": "_",
+              "prefix": "#",
+              "suffix": "ENDE",
+              "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
+              "doNotCapitalizeSmallWords": true,
+              "constantValue": ""
+            }
+          },
+          "formatters": [
+            "replaceSpecialChars",
+            "toLowerCase",
+            "addPrefix",
+            "addSuffix",
+            "replaceSpaces"
+          ]
+        }
+      },
+      {
+        "id": "65f5e754-7b85-43be-86dd-356be4ab3863",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "38379907-3458-4e66-9cbf-53fd7d1991de",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "isroot",
+          "value": false,
+          "customProperty": "",
+          "type": "checkbox",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "isRoot",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      },
+      {
+        "id": "61af4489-eef0-4dc8-aed6-566a58fca197",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "9d4e4181-3025-44ea-ba31-aef6f18efb1c",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "autocompleteTest.Text",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "script",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const input = \"test\";\n  return input; // Return the input unaltered\n};",
+          "jsCode": "function (app, file, tools) { // do not change this line!\n  let result = 'Test';\n  return result; // return you result.\n}",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": true,
+          "value": "test"
+        }
+      },
+      {
+        "id": "df9be949-7894-4c04-8308-a24f783ba3f8",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "0f337f99-ad3c-471e-8c9c-f670ba21abc7",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "Localtion.type",
+          "value": "[[Tiere/Vögel/Rabe.md|Wombats 🐻]]",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "concatProperties",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties'); \n if (!Array.isArray(propertyIds) || propertyIds.length === 0) { \n return 'No properties selected'; \n } \n const results = propertyIds.map(id => tools.getFrontmatterProperty(id)); \n return results.filter(res => res !== undefined).join(' '); \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toTitleCaseDe",
+          "linkFormatter": "toSimpleLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "0f337f99-ad3c-471e-8c9c-f670ba21abc7": {
+              "delimiter": "|",
+              "inputProperties": [
+                "fullPath",
+                "constant"
+              ],
+              "onlyWhenAllPropertiesExist": true,
+              "smallWords": "der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen",
+              "doNotCapitalizeSmallWords": true
+            }
+          }
+        }
+      },
+      {
+        "id": "762a4854-eae1-46ba-a140-b40a265115dc",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "3beeb7ec-bc57-4273-b6bd-eadb53d29062",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "fileName",
+          "value": "Rabe",
+          "customProperty": "",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "name",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = tools.removeAllExtensions(file.name);\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "formatters": [
+            "toOriginal"
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      },
+      {
+        "id": "d0040e74-5c95-49d5-a770-d7f304df86bf",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "ec9bed27-1680-4592-a5b7-c8faa2adcb6f",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "folder",
+          "value": "Tiere/Vögel/Rabe.md",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fullPathExtFolderNotes",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return parts.join('/');\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [
+              "/Tiere/Vögel"
+            ],
+            "selectedFiles": [],
+            "mode": "include"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "linkFormatter": "toOriginalLink",
+          "optionsConfig": {
+            "ec9bed27-1680-4592-a5b7-c8faa2adcb6f": {
+              "delimiter": " ",
+              "inputProperties": [
+                ""
+              ],
+              "onlyWhenAllPropertiesExist": true
+            }
+          }
+        },
+        "folderId": "68a79f85-4da9-4b25-b6b4-d667bee98642"
+      },
+      {
+        "id": "5d7a30e6-4d84-4e1f-b971-48b8d2007e57",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "365b81ab-48a1-4dea-8d92-af5fd0b5275e",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "path",
+          "value": "[[Tiere/Vögel/Rabe|Wombats 🐻]]",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fullPathFolderNotes",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return `[[${parts.join('/')}|${tools.getFrontmatterProperty('constant')}]]`;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": true,
+          "linkFormatter": "toOriginalLink",
+          "optionsConfig": {
+            "365b81ab-48a1-4dea-8d92-af5fd0b5275e": {
+              "constantValue": ""
+            }
+          }
+        },
+        "folderId": "68a79f85-4da9-4b25-b6b4-d667bee98642"
+      },
+      {
+        "id": "005f7b5b-f7d3-4602-a526-b6901b146a80",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "37660875-87bf-4cf3-9b75-f2f75a791fb2",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "folders",
+          "value": [
+            "Tiere",
+            "Voegel"
+          ],
+          "customProperty": "",
+          "type": "multitext",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "folders",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toLowerCase",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "37660875-87bf-4cf3-9b75-f2f75a791fb2": {
+              "delimiter": " ",
+              "inputProperties": [
+                ""
+              ],
+              "onlyWhenAllPropertiesExist": true
+            }
+          },
+          "formatters": [
+            "replaceChars"
+          ]
+        }
+      },
+      {
+        "id": "0a89208b-93e4-4424-aa53-760c0932265e",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "3a16d7ed-0f85-47a4-8c46-0192a74f2652",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "location",
+          "value": [
+            "Neue Konstante"
+          ],
+          "customProperty": "",
+          "type": "multitext",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "constant",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const parts = path.split('/');\n  let result = '';\n  if (parts.length > 1) {\n    parts.pop(); // remove file name\n    result = result + parts.join('/');\n  }\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "3a16d7ed-0f85-47a4-8c46-0192a74f2652": {
+              "constantValue": "Konstante",
+              "addTemplate": true,
+              "askConfirmation": true,
+              "destinationFolder": "/category/locations/location",
+              "templateFile": "global/template/t_location.md"
+            }
+          },
+          "linkFormatter": "toOriginalLink"
+        },
+        "folderId": "09369aab-f762-40a4-81de-5fa05f87525f"
+      },
+      {
+        "id": "a9d41d8d-d8e3-43af-b4a8-99b455dbc815",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "7cc4ba02-f23e-49c0-9ad5-59dcafd68a62",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "link",
+          "value": [
+            "[[Tiere]]",
+            "[[Vögel]]"
+          ],
+          "customProperty": "",
+          "type": "multitext",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "folders",
+          "buildInCode": "",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toSimpleLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        },
+        "folderId": "09369aab-f762-40a4-81de-5fa05f87525f"
+      },
+      {
+        "id": "f242e913-162c-453c-b297-629b6a8662a7",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "0541dccd-85c9-449a-ae9a-836c07ea883a",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "aliases",
+          "value": [
+            "Test"
+          ],
+          "customProperty": "",
+          "type": "aliases",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "constant",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "0541dccd-85c9-449a-ae9a-836c07ea883a": {
+              "constantValue": "Test"
+            }
+          }
+        },
+        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936"
+      },
+      {
+        "id": "868e31fd-0321-4c13-b7b7-3ccc95797838",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "9f71fdc0-6552-45d5-a05b-f3656c658ba8",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "aliases",
+          "value": [
+            "Eins,Zwei"
+          ],
+          "customProperty": "",
+          "type": "aliases",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "constant",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        },
+        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936"
+      },
+      {
+        "id": "0eeb4ab0-bfb0-427e-94aa-b9e190968a0a",
+        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "c5302deb-e7ee-41eb-ae22-0526e78c93af",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "aliases",
+          "value": [
+            "Tiere",
+            "Vögel"
+          ],
+          "customProperty": "",
+          "type": "aliases",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "folders",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "formatters": [
+            "toOriginal"
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      }
+    ]
+  },
+  "liveRules": [],
   "selectedFolders": [
     "/Tiere/Säugetiere",
     "/Tiere/Vögel"

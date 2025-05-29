@@ -1,14 +1,14 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [uiElements](../README.md) / updatePropertyIcon
+[Documentation](../../README.md) / [uiElements](../README.md) / updatePropertyIcon
 
 # Function: updatePropertyIcon()
 
 > **updatePropertyIcon**(`iconEl`, `type`): `void`
 
-Defined in: [src/uiElements.ts:116](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/uiElements.ts#L116)
+Defined in: [src/uiElements.ts:116](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/uiElements.ts#L116)
 
 ## Parameters
 

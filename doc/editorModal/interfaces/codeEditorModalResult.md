@@ -1,12 +1,12 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [editorModal](../README.md) / codeEditorModalResult
+[Documentation](../../README.md) / [editorModal](../README.md) / codeEditorModalResult
 
 # Interface: codeEditorModalResult
 
-Defined in: [src/editorModal.ts:14](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/editorModal.ts#L14)
+Defined in: [src/editorModal.ts:14](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/editorModal.ts#L14)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/editorModal.ts:14](https://github.com/Christian-Me/folder-to-ta
 
 > **checked**: `boolean`
 
-Defined in: [src/editorModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/editorModal.ts#L17)
+Defined in: [src/editorModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/editorModal.ts#L17)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/editorModal.ts:17](https://github.com/Christian-Me/folder-to-ta
 
 > **code**: `string`
 
-Defined in: [src/editorModal.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/editorModal.ts#L15)
+Defined in: [src/editorModal.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/editorModal.ts#L15)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/editorModal.ts:15](https://github.com/Christian-Me/folder-to-ta
 
 > **type**: [`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
-Defined in: [src/editorModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/editorModal.ts#L16)
+Defined in: [src/editorModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/editorModal.ts#L16)

@@ -1,12 +1,12 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [frontmatter-tools](../README.md) / SelectProperty
+[Documentation](../../README.md) / [frontmatter-tools](../README.md) / SelectProperty
 
 # Class: SelectProperty
 
-Defined in: [src/frontmatter-tools.ts:245](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L245)
+Defined in: [src/frontmatter-tools.ts:245](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L245)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/frontmatter-tools.ts:245](https://github.com/Christian-Me/folde
 
 > **new SelectProperty**(`app`, `knownProperties`, `property`, `onSubmit`): `SelectProperty`
 
-Defined in: [src/frontmatter-tools.ts:252](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L252)
+Defined in: [src/frontmatter-tools.ts:252](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L252)
 
 #### Parameters
 
@@ -112,7 +112,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:4017
 
 > **knownProperties**: [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
 
-Defined in: [src/frontmatter-tools.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L248)
+Defined in: [src/frontmatter-tools.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L248)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2880
 
 > **newTextFlag**: `Boolean`
 
-Defined in: [src/frontmatter-tools.ts:250](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L250)
+Defined in: [src/frontmatter-tools.ts:250](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L250)
 
 ***
 
@@ -152,7 +152,7 @@ Defined in: [src/frontmatter-tools.ts:250](https://github.com/Christian-Me/folde
 
 > **property**: `undefined` \| [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)
 
-Defined in: [src/frontmatter-tools.ts:247](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L247)
+Defined in: [src/frontmatter-tools.ts:247](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L247)
 
 ***
 
@@ -208,7 +208,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2885
 
 > **typedText**: `string`
 
-Defined in: [src/frontmatter-tools.ts:249](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L249)
+Defined in: [src/frontmatter-tools.ts:249](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L249)
 
 ## Methods
 
@@ -234,7 +234,7 @@ Hide the modal.
 
 > **getSuggestions**(`query`): [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
 
-Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L261)
+Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L261)
 
 #### Parameters
 
@@ -256,7 +256,7 @@ Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folde
 
 > **onChooseSuggestion**(`property`, `evt`): `void`
 
-Defined in: [src/frontmatter-tools.ts:289](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L289)
+Defined in: [src/frontmatter-tools.ts:289](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L289)
 
 #### Parameters
 
@@ -282,7 +282,7 @@ Defined in: [src/frontmatter-tools.ts:289](https://github.com/Christian-Me/folde
 
 > **onClose**(): `void`
 
-Defined in: [src/frontmatter-tools.ts:280](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L280)
+Defined in: [src/frontmatter-tools.ts:280](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L280)
 
 #### Returns
 
@@ -314,7 +314,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:4040
 
 > **onOpen**(): `void`
 
-Defined in: [src/frontmatter-tools.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L267)
+Defined in: [src/frontmatter-tools.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L267)
 
 #### Returns
 
@@ -348,7 +348,7 @@ Show the modal on the the active window. On mobile, the modal will animate on sc
 
 > **renderSuggestion**(`property`, `el`): `void`
 
-Defined in: [src/frontmatter-tools.ts:276](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/frontmatter-tools.ts#L276)
+Defined in: [src/frontmatter-tools.ts:276](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L276)
 
 #### Parameters
 

@@ -1,8 +1,8 @@
-[**front-matter-automate**](../README.md)
+[**Documentation**](../README.md)
 
 ***
 
-[front-matter-automate](../modules.md) / settings-properties
+[Documentation](../README.md) / settings-properties
 
 # settings-properties
 

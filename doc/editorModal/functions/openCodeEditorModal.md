@@ -1,14 +1,14 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [editorModal](../README.md) / openCodeEditorModal
+[Documentation](../../README.md) / [editorModal](../README.md) / openCodeEditorModal
 
 # Function: openCodeEditorModal()
 
 > **openCodeEditorModal**(`app`, `plugin`, `initialCode`, `expectedType`, `activeFile`, `frontmatter`, `okCallback`): `void`
 
-Defined in: [src/editorModal.ts:359](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/editorModal.ts#L359)
+Defined in: [src/editorModal.ts:359](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/editorModal.ts#L359)
 
 Helper function to easily open the Directory Selection Modal.
 

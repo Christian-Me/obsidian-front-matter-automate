@@ -1,12 +1,12 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [directorySelectionModal](../README.md) / DirectorySelectionResult
+[Documentation](../../README.md) / [directorySelectionModal](../README.md) / DirectorySelectionResult
 
 # Interface: DirectorySelectionResult
 
-Defined in: [src/directorySelectionModal.ts:26](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L26)
+Defined in: [src/directorySelectionModal.ts:26](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L26)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/directorySelectionModal.ts:26](https://github.com/Christian-Me/
 
 > **display**: [`DirectoryDisplayMode`](../type-aliases/DirectoryDisplayMode.md)
 
-Defined in: [src/directorySelectionModal.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L30)
+Defined in: [src/directorySelectionModal.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L30)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/directorySelectionModal.ts:30](https://github.com/Christian-Me/
 
 > **files**: `string`[]
 
-Defined in: [src/directorySelectionModal.ts:28](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L28)
+Defined in: [src/directorySelectionModal.ts:28](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L28)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/directorySelectionModal.ts:28](https://github.com/Christian-Me/
 
 > **folders**: `string`[]
 
-Defined in: [src/directorySelectionModal.ts:27](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L27)
+Defined in: [src/directorySelectionModal.ts:27](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L27)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/directorySelectionModal.ts:27](https://github.com/Christian-Me/
 
 > **mode**: [`DirectorySelectionMode`](../type-aliases/DirectorySelectionMode.md)
 
-Defined in: [src/directorySelectionModal.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L29)
+Defined in: [src/directorySelectionModal.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L29)

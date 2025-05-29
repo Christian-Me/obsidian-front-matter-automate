@@ -1,14 +1,14 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [autocompleteModal](../README.md) / openAutocompleteModal
+[Documentation](../../README.md) / [autocompleteModal](../README.md) / openAutocompleteModal
 
 # Function: openAutocompleteModal()
 
 > **openAutocompleteModal**(`app`, `plugin`, `rule`, `options`, `activeFile`, `frontmatter`): `Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
-Defined in: [src/autocompleteModal.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/autocompleteModal.ts#L248)
+Defined in: [src/autocompleteModal.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/autocompleteModal.ts#L248)
 
 Opens an autocomplete modal for selecting or entering values based on the provided parameters.
 

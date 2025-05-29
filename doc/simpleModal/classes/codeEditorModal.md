@@ -1,12 +1,12 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [simpleModal](../README.md) / codeEditorModal
+[Documentation](../../README.md) / [simpleModal](../README.md) / codeEditorModal
 
 # Class: codeEditorModal
 
-Defined in: [src/simpleModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/simpleModal.ts#L16)
+Defined in: [src/simpleModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/simpleModal.ts#L16)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new codeEditorModal**(`app`, `plugin`, `expectedType`, `activeFile`, `frontmatter`, `okCallback`): `codeEditorModal`
 
-Defined in: [src/simpleModal.ts:41](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/simpleModal.ts#L41)
+Defined in: [src/simpleModal.ts:41](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/simpleModal.ts#L41)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -178,7 +178,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/simpleModal.ts:157](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/simpleModal.ts#L157)
+Defined in: [src/simpleModal.ts:157](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/simpleModal.ts#L157)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -196,7 +196,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/simpleModal.ts:77](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/simpleModal.ts#L77)
+Defined in: [src/simpleModal.ts:77](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/simpleModal.ts#L77)
 
 Called when the modal is opened. Builds the UI.
 

@@ -1,14 +1,14 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [rules](../README.md) / checkIfFileAllowed
+[Documentation](../../README.md) / [rules](../README.md) / checkIfFileAllowed
 
 # Function: checkIfFileAllowed()
 
 > **checkIfFileAllowed**(`file`, `settings?`, `rule?`): `boolean`
 
-Defined in: [src/rules.ts:341](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/rules.ts#L341)
+Defined in: [src/rules.ts:343](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules.ts#L343)
 
 ## Parameters
 

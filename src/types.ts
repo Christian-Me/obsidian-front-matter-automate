@@ -1,7 +1,8 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
+import { TreeHierarchyData } from './uiTreeHierarchySortableSettings';
 import { WARNING } from './Log';
 
-export const versionString = "0.0.23";
+export const versionString = "0.0.24";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all';
@@ -28,13 +29,13 @@ export interface FrontmatterAutomateSettings {
     lowercaseTags: boolean;
     knownProperties: PropertyTypeInfo[];
     rules: FrontmatterAutomateRuleSettings[];
-    liveRules: FrontmatterAutomateRuleSettings[];
     useTextArea: boolean;
     exclude: FilterFilesAndFolders;
     include: FilterFilesAndFolders;
     configuredProperties: Array<{ name: string; value: any }>;
     debugLevel: number;
     delayCreateEvent: number; // optional delay for create events
+    folderConfig: TreeHierarchyData;
 }
 
 export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings = {
@@ -46,7 +47,6 @@ export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings 
     lowercaseTags: false,
     knownProperties: [],
     rules: [],
-    liveRules: [],
     useTextArea: false,
     exclude: {
         selectedFolders: [],
@@ -63,6 +63,7 @@ export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings 
     configuredProperties: [],
     debugLevel: WARNING,
     delayCreateEvent: 0, // default to no delay
+    folderConfig: {folders: [], rows: []},
 };
 
 export interface FrontmatterAutomateRuleSettings {

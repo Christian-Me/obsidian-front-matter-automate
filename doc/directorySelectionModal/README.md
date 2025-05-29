@@ -1,8 +1,8 @@
-[**front-matter-automate**](../README.md)
+[**Documentation**](../README.md)
 
 ***
 
-[front-matter-automate](../modules.md) / directorySelectionModal
+[Documentation](../README.md) / directorySelectionModal
 
 # directorySelectionModal
 

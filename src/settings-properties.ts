@@ -9,23 +9,25 @@ import { copyFileSync } from 'fs';
 import { ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
 import { rulesManager } from './rules/rules';
-import { DEBUG, logger } from './Log';
+import { DEBUG, logger, WARNING } from './Log';
 import { MultiPropertySetting } from './uiMultiPropertySetting';
+import { TreeHierarchyData, TreeHierarchySortableSettings, ROOT_FOLDER, TreeHierarchyRow } from './uiTreeHierarchySortableSettings';
+import { fetchMarkdownFromGitHub, MarkdownHelpModal } from './uiMarkdownHelpModal';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
     knownProperties: Record<string, PropertyInfo> = {}; 
     container: HTMLDivElement;
     propertiesListEl!: HTMLDivElement;
-    settingsParameter: string;
+    settings: TreeHierarchyData;
     tools: ScriptingTools;
     activeFile: TFile | null = null;
 
-    constructor(app: App, plugin: any, container: HTMLDivElement, settingsParameter: string) {
+    constructor(app: App, plugin: any, container: HTMLDivElement, settings: TreeHierarchyData) {
         super(app, plugin);
         this.plugin = plugin;
         this.container = container;
-        this.settingsParameter = settingsParameter;
+        this.settings = settings;
         this.tools = new ScriptingTools(app, plugin);
         this.activeFile = this.app.workspace.getActiveFile();
 
@@ -33,13 +35,16 @@ export class RulesTable extends PluginSettingTab {
 
     // Helper to render one rule
 
-    renderPropertyRow(containerEl: HTMLElement, rule: FrontmatterAutomateRuleSettings, index: number) {
+    renderPropertyRow(containerEl: HTMLElement, rule: FrontmatterAutomateRuleSettings ) {
         
         //const activeFile = this.app.workspace.getActiveFile();
 
         const rowEl = containerEl.createDiv({ cls: 'property-setting-row setting-item' });
+        rowEl.style.width = '100%'; // make sure the row takes full width
         rowEl.id = rule.id;
         const controlEl = rowEl.createDiv({ cls: 'setting-item-control' }); 
+        controlEl.style.width = '100%';
+        controlEl.style.display = 'flex';
         controlEl.style.gap = '0px';
         const leftContainer = controlEl.createDiv({ cls: 'property-left-container' });
         const iconEl = leftContainer.createSpan({ cls: 'property-icon setting-item-icon' }); 
@@ -52,15 +57,15 @@ export class RulesTable extends PluginSettingTab {
             .setPlaceholder('Select property...')
             .setValue(rule.property || '')
             .onChange(async (value) => {
-                this.renderSearchResults(searchContainer, value, index);
+                this.renderSearchResults(searchContainer, value, rule);
             })
 
         nameInput.inputEl.style.border = 'none'; // make it invisible
         nameInput.inputEl.addEventListener('focus', () => {
-            this.renderSearchResults(searchContainer, nameInput.getValue(), index);
+            this.renderSearchResults(searchContainer, nameInput.getValue(), rule);
         });
         nameInput.inputEl.addEventListener('input', () => {
-            this.renderSearchResults(searchContainer, nameInput.getValue(), index);
+            this.renderSearchResults(searchContainer, nameInput.getValue(), rule);
         });
         nameInput.inputEl.addEventListener('blur', (event) => {
             setTimeout(() => {
@@ -80,17 +85,18 @@ export class RulesTable extends PluginSettingTab {
         }
 
         const middleContainer = controlEl.createDiv({ cls: 'property-middle-container' });
-        const valueContainer = middleContainer.createDiv({ cls: 'property-value-container' });
+        const valueContainer = middleContainer.createDiv({ cls: 'FMA-property-value-container' });
         if (this.activeFile) {
             this.app.fileManager.processFrontMatter(this.activeFile, async (frontmatter) => {
                 rule.value = await executeRuleObject('preview',this.app, this, this.plugin.settings, this.activeFile, '', rule, frontmatter); //TODO: implement using only updatePerview
             },{'mtime':this.activeFile.stat.mtime}); // do not change the modify time.
         }
-        const previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, index);
+        const previewComponent = this.renderValueInput(valueContainer, currentPropertyInfo, rule.value, rule);
         this.updatePreview(rule, previewComponent);
 
         const propertyDevDropdown =  new DropdownComponent(middleContainer);
-        propertyDevDropdown.selectEl.setAttribute('style','width:35%');
+        propertyDevDropdown.selectEl.style.minWidth = '35%'
+        propertyDevDropdown.selectEl.style.maxWidth = '50%';
         propertyDevDropdown.addOption("", "Select a content");
 
         // add rule functions to dropdown
@@ -145,8 +151,8 @@ export class RulesTable extends PluginSettingTab {
                 this.renderPropertyOptions(optionEL, rule, previewComponent);
             }
         });
-
-        new ButtonComponent(middleContainer)
+        const leftContainerEl = controlEl.createDiv({ cls: 'FMA-property-right-container' });
+        new ButtonComponent(leftContainerEl)
         .setIcon('gear')
         .setTooltip('open settings')
         .setClass('property-icon-button')
@@ -158,7 +164,7 @@ export class RulesTable extends PluginSettingTab {
             this.renderPropertyOptions(optionEL, rule, previewComponent);
             optionEL.style.display = optionEL.style.display === 'block' ? 'none' : 'block';
         });
-
+        /*
         // --- right part: erase rule ---
         const deleteButtonContainer = controlEl.createDiv({ cls: 'property-delete-button-container' });
         new ButtonComponent(deleteButtonContainer)
@@ -170,7 +176,8 @@ export class RulesTable extends PluginSettingTab {
                 await this.plugin.saveSettings();
                 this.display(); // Re-render the settings tab
             });
-
+        deleteButtonContainer.style.marginLeft = 'auto'; 
+        */
         controlEl.style.display = 'flex';
         controlEl.style.alignItems = 'center';
         controlEl.style.justifyContent = 'space-between';
@@ -178,19 +185,26 @@ export class RulesTable extends PluginSettingTab {
 
         leftContainer.style.display = 'flex';
         leftContainer.style.alignItems = 'center';
-        leftContainer.style.minWidth = '150px'; 
+        leftContainer.style.minWidth = '100px'; 
         iconEl.style.marginRight = '8px';
 
         searchContainer.style.position = 'relative'; 
-        searchContainer.style.flexGrow = '1';
+        //searchContainer.style.flexGrow = '1';
 
-        valueContainer.style.flexGrow = '2'; 
+        //valueContainer.style.flexGrow = '4'; 
 
-        deleteButtonContainer.style.marginLeft = 'auto'; 
 
-        const optionEL = containerEl.createDiv({ cls: 'property-options-container' }); // options container
-        optionEL.id = rule.id;
-        optionEL.style.display = 'none';
+        let optionEL: HTMLDivElement;
+        if (containerEl.parentElement) {
+            optionEL = containerEl.parentElement.createDiv({ cls: 'property-options-container' });
+            optionEL.id = rule.id;
+            optionEL.style.display = 'none';
+        } else {
+            // fallback: create in containerEl if parentElement is null
+            optionEL = containerEl.createDiv({ cls: 'property-options-container' });
+            optionEL.id = rule.id;
+            optionEL.style.display = 'none';
+        }
     }
 
     renderPropertyOptions(optionEL: HTMLDivElement, rule: FrontmatterAutomateRuleSettings, previewComponent: HTMLDivElement | TextComponent | undefined) {
@@ -242,49 +256,6 @@ export class RulesTable extends PluginSettingTab {
                 }));
         }
         if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
-            /*
-            if (ruleFn.useRuleOption('addPrefix')) {
-                if (rule.type === 'tags' || rule.type === 'aliases') {
-                    new Setting(optionEL)
-                    .setName('Prefix')
-                    .setDesc('Optional prefix to add before the content (i.e. "prefix/")')
-                    .addText(text => text
-                        .setPlaceholder('no prefix')
-                        .setValue(rule.prefix)
-                        .onChange(async (value) => {
-                            rule.prefix = value;
-                            await this.plugin.saveSettings();
-                            this.updatePreview(rule, previewComponent);
-                        }));
-                }
-            }
-            if (ruleFn.useRuleOption('spaceReplacement')) {
-                new Setting(optionEL)
-                    .setName('Space replacement')
-                    .setDesc('Character to replace spaces in folder names (suggested: "_")')
-                    .addText(text => text
-                        .setPlaceholder('no replacement')
-                        .setValue(rule.spaceReplacement)
-                        .onChange(async (value) => {
-                            rule.spaceReplacement = value;
-                            await this.plugin.saveSettings();
-                            this.updatePreview(rule, previewComponent);
-                        }));
-            }
-            if (ruleFn.useRuleOption('specialCharacterReplacement')) {
-                new Setting(optionEL)
-                    .setName('Special character replacement')
-                    .setDesc('Character to replace special characters (suggested: "-") - preserves letters with diacritics')
-                    .addText(text => text
-                        .setPlaceholder('no replacement')
-                        .setValue(rule.specialCharReplacement)
-                        .onChange(async (value) => {
-                            rule.specialCharReplacement = value;
-                            await this.plugin.saveSettings();
-                            this.updatePreview(rule, previewComponent);
-                        }));
-            }
-            */
             let formatRule = rulesManager.getRuleById(rule.formatter);
             const formatterRules = rulesManager.getRulesByType('formatter') || [];
             let formatOptionsButton: any;
@@ -313,37 +284,6 @@ export class RulesTable extends PluginSettingTab {
                             multiProp.styleDisabled(btn, !rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal")?.hasOwnConfigTab() || false);
                         });
                     });
-                /*
-                new Setting(optionEL)
-                    .setName('Format output')
-                    .setDesc('Format output using selected option')
-                    .addDropdown(dropdown => {
-                        rulesManager.getRulesByType('formatter').forEach(rule => {
-                            dropdown.addOption(rule.id, rule.name);
-                        });
-                        dropdown.setValue(rule.formatter || 'toOriginal')
-                        dropdown.onChange(async (value) => {
-                            rule.formatter = value;
-                            formatRule = rulesManager.getRuleById(rule.formatter);
-                            formatOptionsButton.extraSettingsEl.style.display = !formatRule?.hasOwnConfigTab() ? 'none' : 'block';
-                            formatRule?.configTab(converterOptionDiv, rule, this, previewComponent);
-                            await this.plugin.saveSettings();
-                            this.updatePreview(rule, previewComponent);
-                        });
-                    })
-                    .addExtraButton(button => {
-                        formatOptionsButton = button;
-                        formatOptionsButton
-                            .setIcon('gear')
-                            .setTooltip('format options')
-                            .onClick(async () => {
-                                converterOptionDiv.style.display = converterOptionDiv.style.display === 'block' ? 'none' : 'block';
-                                
-                            });
-                        formatOptionsButton.extraSettingsEl.style.display = !formatRule?.hasOwnConfigTab() ? 'none' : 'block';
-                        
-                    })
-                    */
             }
             let converterOptionDiv = optionEL.createDiv({ cls: 'property-converter-option' });
             converterOptionDiv.style.display = 'none';
@@ -566,7 +506,7 @@ export class RulesTable extends PluginSettingTab {
         return rule.optionsConfig[ruleId];
     }
 
-    renderSearchResults(searchContainerEl: HTMLElement, searchTerm: string, rowIndex: number) {
+    renderSearchResults(searchContainerEl: HTMLElement, searchTerm: string, payload: any) {
         
         this.clearSearchResults(searchContainerEl);
 
@@ -607,9 +547,12 @@ export class RulesTable extends PluginSettingTab {
         const selectActiveItem = async () => {
             if (activeIndex >= 0 && activeIndex < filteredProperties.length) {
                 const [name, info] = filteredProperties[activeIndex];
-                this.plugin.settings[this.settingsParameter][rowIndex].property = name;
-                this.plugin.settings[this.settingsParameter][rowIndex].type = info.type;
-                this.plugin.settings[this.settingsParameter][rowIndex].value = undefined;
+                payload.property = name;
+                payload.type = info.type;
+                payload.value = undefined; // Reset value
+                //this.plugin.settings[this.settingsParameter][rowIndex].property = name;
+                //this.plugin.settings[this.settingsParameter][rowIndex].type = info.type;
+                //this.plugin.settings[this.settingsParameter][rowIndex].value = undefined;
                 await this.plugin.saveSettings();
                 this.clearSearchResults(searchContainerEl);
                 this.display(); // Re-render
@@ -651,7 +594,7 @@ export class RulesTable extends PluginSettingTab {
         }
     }
 
-    renderValueInput(containerEl: HTMLElement, propertyInfo: PropertyInfo | undefined, currentValue: any, index: number) {
+    renderValueInput(containerEl: HTMLElement, propertyInfo: PropertyInfo | undefined, currentValue: any, payload: any) {
         let returnComponent: any;
 
         if (!propertyInfo) {
@@ -669,13 +612,14 @@ export class RulesTable extends PluginSettingTab {
                     .setValue(currentValue !== undefined && currentValue !== null ? String(currentValue) : '')
                     .onChange(async (value) => {
                         const numValue = value === '' ? undefined : parseFloat(value);
-                        this.plugin.settings[this.settingsParameter][index].value = isNaN(numValue as number) ? undefined : numValue;
+                        payload.value = isNaN(numValue as number) ? undefined : numValue;
+                        //this.plugin.settings[this.settingsParameter][index].value = isNaN(numValue as number) ? undefined : numValue;
                         await this.plugin.saveSettings();
                     })
                     returnComponent.inputEl.type = 'number';
                 break;
             case 'checkbox':
-                returnComponent = containerEl.createDiv({ cls: 'tri-state-checkbox clickable-icon' });
+                returnComponent = containerEl.createDiv({ cls: 'FMA-tri-state-checkbox' });
                 returnComponent.setAttribute('aria-label', 'Checkbox change state');
                 returnComponent.setAttribute('role', 'checkbox');
 
@@ -710,20 +654,20 @@ export class RulesTable extends PluginSettingTab {
                     } else { 
                         nextState = false; 
                     }
-
-                    this.plugin.settings[this.settingsParameter][index].value = nextState;
+                    payload.value = nextState;
+                    //this.plugin.settings[this.settingsParameter][index].value = nextState;
                     await this.plugin.saveSettings();
 
                     updateCheckboxVisual(nextState);
                 });
-
                 break;
             case 'date':
                 returnComponent = new TextComponent(containerEl)
                     .setPlaceholder('YYYY-MM-DD')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
-                        this.plugin.settings[this.settingsParameter][index].value = value || undefined;
+                        payload.value = value || undefined;
+                        //this.plugin.settings[this.settingsParameter][index].value = value || undefined;
                         await this.plugin.saveSettings();
                     })
                     returnComponent.inputEl.type = 'date';
@@ -733,7 +677,8 @@ export class RulesTable extends PluginSettingTab {
                     .setPlaceholder('YYYY-MM-DDTHH:mm')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
-                        this.plugin.settings[this.settingsParameter][index].value = value || undefined;
+                        payload.value = value || undefined;
+                        //this.plugin.settings[this.settingsParameter][index].value = value || undefined;
                         await this.plugin.saveSettings();
                     })
                     returnComponent.inputEl.type = 'datetime-local';
@@ -746,7 +691,8 @@ export class RulesTable extends PluginSettingTab {
                     .setValue(Array.isArray(currentValue) ? currentValue.join(', ') : (currentValue || ''))
                     .onChange(async (value) => {
                         const arrayValue = value.split(',').map(s => s.trim()).filter(s => s);
-                        this.plugin.settings[this.settingsParameter][index].value = arrayValue.length > 0 ? arrayValue : undefined;
+                        payload.value = arrayValue.length > 0 ? arrayValue : undefined;
+                        //this.plugin.settings[this.settingsParameter][index].value = arrayValue.length > 0 ? arrayValue : undefined;
                         await this.plugin.saveSettings();
                     });
                 break;
@@ -756,17 +702,19 @@ export class RulesTable extends PluginSettingTab {
                     .setPlaceholder('value')
                     .setValue(currentValue || '')
                     .onChange(async (value) => {
-                        this.plugin.settings[this.settingsParameter][index].value = value || undefined;
+                        payload.value = value || undefined;
+                        //this.plugin.settings[this.settingsParameter][index].value = value || undefined;
                         await this.plugin.saveSettings();
                     });
                 break;
             }
-        if (type !== 'checkbox') {
-            returnComponent.inputEl.style.backgroundColor = 'transparent'; // make it invisible
-            returnComponent.inputEl.style.width = '100%';
-            returnComponent.inputEl.style.border = 'none';
-        }
-        return returnComponent;
+            if (type !== 'checkbox') {
+                returnComponent.inputEl.addClass('FMA-property-value-input');
+            } else {
+                returnComponent.addClass('FMA-property-value-input');
+            }
+            return returnComponent;
+   
     }
 
     async updatePreview(rule: FrontmatterAutomateRuleSettings, previewComponent: any) {
@@ -797,15 +745,77 @@ export class RulesTable extends PluginSettingTab {
 
         this.knownProperties = await this.tools.fetchKnownProperties(this.app);
         
-        this.propertiesListEl = containerEl.createDiv('properties-list');
+        this.propertiesListEl = containerEl; //.createDiv('properties-list');
 
+        //this.plugin.settings.folderConfig.rows = [];
+        const folderList = new TreeHierarchySortableSettings(
+            containerEl,
+            this.plugin.settings.folderConfig,
+            (row, rowEl) => {
+                // Render row content here
+                this.renderPropertyRow(rowEl, row.payload);
+            }
+            )
+            .setTitle('Rules')
+            .setDescription('add rules to selected frontmatter properties')
+            .onChange((data) => {
+                this.plugin.settings.folderConfig = data;
+                this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
+                this.plugin.saveSettings();
+            })
+            .onRendered(() => {
+                this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
+            })
+            .onRowCreated(async (row) => {
+                const defaultName = ''; //Object.keys(this.knownProperties)[0] || '';
+                row.payload = Object.assign({}, DEFAULT_RULE_DEFINITION, {
+                    id: randomUUID().toString(),
+                });
+                await this.plugin.saveSettings();
+            })
+            .onDeleteBt(async () => {
+                const shouldProceed = await new AlertModal(
+                    this.app,
+                    'Erase all Rules?',
+                    'Do you really like to erase ALL rules?',
+                    'Yes', 'No'
+                ).openAndGetValue();
+                            
+                if (shouldProceed.proceed) {
+                    this.plugin.folderConfig.rows = [];
+                    this.plugin.saveSettings();
+                }
+            })
+            .addExtraButtonToHeader((el) => {
+                el.addExtraButton(btn => btn
+                    .setIcon("circle-help")
+                    .onClick(async () => {
+                        let markdown = "Could not load help from GitHub.";
+                        try {
+                            markdown = await fetchMarkdownFromGitHub(
+                                "https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/modules.md"
+                            );
+                        } catch (e) {}
+                        new MarkdownHelpModal(this.app, markdown, "modules.md").open();
+                    })
+                );
+            });
+        if (this.plugin.settings.folderConfig.rows.length === 0 && this.plugin.settings.rules.length > 0) {
+            // If there are rules but no folder config, create default rows
+            this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings) => {
+                const keywords : string[] = [];
+                keywords.push(rule.content);
+                folderList.addRow(ROOT_FOLDER, [], rule);
+            });
+        }
+        /*
         this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings, index: number) => {
             this.renderPropertyRow(this.propertiesListEl, rule, index);
         });
-
+        */
         let activeFile = this.app.workspace.getActiveFile();
         this.updateFilterIndicator(activeFile, this.propertiesListEl);
-
+        /*
         const addBtnContainer = containerEl.createDiv({ cls: 'setting-item-control' });
         addBtnContainer.style.justifyContent = 'right';
         new ButtonComponent(addBtnContainer)
@@ -822,12 +832,18 @@ export class RulesTable extends PluginSettingTab {
                 this.display();
             })
             .buttonEl.className='property-plus-button';
+        */
     }
 
     private updateFilterIndicator(activeFile:TFile | null, propertiesListEl: HTMLDivElement) {
-        if (activeFile) {
-            this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings, index: number) => {
-                const propertyRowEl = propertiesListEl.getElementsByClassName('property-setting-row')[index];
+        if (activeFile) { //TODO: fix for new sortable Table
+            this.plugin.settings.folderConfig.rows.forEach((row: TreeHierarchyRow, index: number) => {
+                const rule = row.payload as FrontmatterAutomateRuleSettings;
+                const propertyRowElements = propertiesListEl.getElementsByClassName('property-setting-row');
+                const propertyRowEl = Array.from(propertyRowElements).filter(el => el.id === rule.id)[0] as HTMLDivElement;
+                if (!propertyRowEl) {
+                    return; // Skip if no row found for this rule
+                }
                 const propertyLeftDiv = propertyRowEl.querySelector('.property-left-container');
                 if (checkIfFileAllowed(activeFile, this.plugin.settings, rule)) {
                     propertyLeftDiv?.addClass('property-left-container-allowed');

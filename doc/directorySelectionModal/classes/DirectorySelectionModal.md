@@ -1,12 +1,12 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [directorySelectionModal](../README.md) / DirectorySelectionModal
+[Documentation](../../README.md) / [directorySelectionModal](../README.md) / DirectorySelectionModal
 
 # Class: DirectorySelectionModal
 
-Defined in: [src/directorySelectionModal.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L36)
+Defined in: [src/directorySelectionModal.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L36)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new DirectorySelectionModal**(`app`, `initialFolders`, `initialFiles`, `initialOptions`, `okCallback`): `DirectorySelectionModal`
 
-Defined in: [src/directorySelectionModal.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L66)
+Defined in: [src/directorySelectionModal.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L66)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -170,7 +170,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/directorySelectionModal.ts:658](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L658)
+Defined in: [src/directorySelectionModal.ts:658](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L658)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -188,7 +188,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `void`
 
-Defined in: [src/directorySelectionModal.ts:110](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/directorySelectionModal.ts#L110)
+Defined in: [src/directorySelectionModal.ts:110](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L110)
 
 Called when the modal is opened. Builds the UI.
 

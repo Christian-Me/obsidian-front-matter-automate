@@ -1,12 +1,12 @@
-[**front-matter-automate**](../../README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[front-matter-automate](../../modules.md) / [Error](../README.md) / ErrorManager
+[Documentation](../../README.md) / [Error](../README.md) / ErrorManager
 
 # Class: ErrorManager
 
-Defined in: [src/Error.ts:3](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/Error.ts#L3)
+Defined in: [src/Error.ts:3](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Error.ts#L3)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/Error.ts:3](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **new ErrorManager**(`msg`, `console_msg?`): `ErrorManager`
 
-Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/Error.ts#L4)
+Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Error.ts#L4)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plug
 
 > `optional` **console\_msg**: `string`
 
-Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/c4f3804089f2bfe27979efdfa349dd5a9da04cc5/src/Error.ts#L4)
+Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Error.ts#L4)
 
 ***
 

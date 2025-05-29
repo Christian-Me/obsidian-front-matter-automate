@@ -8,6 +8,7 @@ import "./src/rules/index";
 import { rulesManager } from './src/rules/rules';
 import { DEBUG, INFO, logger } from './src/Log';
 import { log } from 'console';
+import { TreeHierarchyData } from './src/uiTreeHierarchySortableSettings';
 export default class FolderTagPlugin extends Plugin {
     settings!: FrontmatterAutomateSettings;
     private tools!: ScriptingTools;
@@ -33,7 +34,7 @@ export default class FolderTagPlugin extends Plugin {
                     this.fileInProgress = file; // Set the file in progress
                     setTimeout(() => {
                         logger.log(DEBUG,`Event creating file started: `, file.path);
-                        this.updateFrontmatterParameters('create', file, this.settings.rules);
+                        this.updateFrontmatterParameters('create', file, this.settings.folderConfig);
                         this.fileInProgress = null; // Clear the file in progress after processing
                     }
                     , this.settings.delayCreateEvent);
@@ -47,7 +48,7 @@ export default class FolderTagPlugin extends Plugin {
                 if (this.fileInProgress) return; // Ignore if file is in progress
                 if (file instanceof TFile && file.extension === 'md') {
                     logger.log(DEBUG,`Event renaming file: `, file.path);
-                    this.updateFrontmatterParameters('rename', file, this.settings.rules, oldPath);
+                    this.updateFrontmatterParameters('rename', file, this.settings.folderConfig, oldPath);
                 }
             })
         );
@@ -77,7 +78,7 @@ export default class FolderTagPlugin extends Plugin {
                     return;
                 }
                 logger.groupCollapsed(DEBUG,`Event metadata changed: ${file.path} `);
-                if (file) this.updateFrontmatterParameters('metadata-changed', file, this.settings.rules);
+                if (file) this.updateFrontmatterParameters('metadata-changed', file, this.settings.folderConfig);
                 logger.groupEnd();
                 /*
                 if (cache.frontmatter && Array.isArray(this.settings.liveRules) && this.settings.liveRules.length > 0) {
@@ -102,19 +103,6 @@ export default class FolderTagPlugin extends Plugin {
             
         noticeMessage = noticeMessage + '\n initial processing ...';
         loadingNotice.setMessage(noticeMessage);
-        this.settings.liveRules = [];
-        this.settings.rules.forEach(rule => {
-            let ruleFunction = rulesManager.getRuleById(rule.content);
-            if (!ruleFunction) return;
-            switch (ruleFunction.ruleType) {
-                case 'autocomplete.modal':
-                case 'buildIn.inputProperty':
-                case 'automation':
-                    this.settings.liveRules.push(rule);
-                    break
-            }
-            
-        })
         noticeMessage = noticeMessage + '\ndone!';
         loadingNotice.setMessage(noticeMessage);
         setTimeout(()=>{
@@ -174,13 +162,18 @@ export default class FolderTagPlugin extends Plugin {
         }
     }
 
-    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed', file: TFile, rules: FrontmatterAutomateRuleSettings[], oldPath?: string) {
+    updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed', file: TFile, ruleSettings: TreeHierarchyData, oldPath?: string) {
         if (!checkIfFileAllowed(file, this.settings)) {
             logger.log(DEBUG,`file ${file.path} globally rejected!`)
             return;
         }
         const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFolderFromPath(oldPath))
+        const rules = ruleSettings?.rows.map((row) => row.payload as FrontmatterAutomateRuleSettings)
+        if (!rules || rules.length === 0) {
+            logger.log(DEBUG,`Event ${eventName}: No rules found for file ${file.path}`);
+            return; // No rules to apply
+        }
 
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
             // apply all rules to frontmatter

@@ -1,4 +1,4 @@
-import { App, ButtonComponent, DropdownComponent, PluginSettingTab, Setting, TextComponent } from 'obsidian';
+import { App, ButtonComponent, DropdownComponent, Notice, PluginSettingTab, Setting, TextComponent, TFile } from 'obsidian';
 import * as fmTools from './frontmatter-tools';
 import { parseJSCode, ScriptingTools } from './tools';
 import { versionString, FrontmatterAutomateRuleSettings, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes} from './types';
@@ -10,6 +10,7 @@ import { SortableListComponent } from './SortableListComponent';
 import { rulesManager } from './rules/rules';
 import { logger } from './Log';
 import { log } from 'console';
+import { fetchMarkdownFromGitHub, MarkdownHelpModal, readPluginDocFile } from './uiMarkdownHelpModal';
 
 export class FolderTagSettingTab extends PluginSettingTab {
     plugin: any; //FolderTagPlugin;
@@ -39,7 +40,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
         // update active file if it is open
         const activeFile = this.app.workspace.getActiveFile();
         if (activeFile && activeFile.extension === 'md') {
-            this.plugin.updateFrontmatterParameters('active-leaf-change', activeFile, this.plugin.settings.rules);
+            this.plugin.updateFrontmatterParameters('active-leaf-change', activeFile, this.plugin.settings.folderConfig);
         }
     }
     display(): void {
@@ -48,10 +49,24 @@ export class FolderTagSettingTab extends PluginSettingTab {
         const { containerEl } = this;
 
         containerEl.empty();
-        containerEl.createEl('h2', { text: `Front matter automate V${versionString}` });
 
-        //new SortableListComponent(containerEl).display();
-        
+        new Setting(containerEl)
+            .setName(`Front matter automate V${versionString}`)
+            .setDesc(`This plugin automates the management of front matter in your Obsidian notes. It allows you to set rules for automatically adding, modifying, or removing front matter properties based on various events like file creation, renaming, or active leaf changes.`)
+            .addButton(button => button
+                .setIcon("circle-help")
+                .setTooltip("Online Help")
+                .onClick(async () => {
+                    let markdown = "Could not load help from GitHub.";
+                    try {
+                        markdown = await fetchMarkdownFromGitHub(
+                            "https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/readme.md"
+                        );
+                    } catch (e) {}
+                    new MarkdownHelpModal(this.app, markdown, "readme.md").open();
+                })
+            );
+
         new Setting(containerEl)
         .setName('Exclude Files and Folders globally')
         .setDesc(`Currently ${this.plugin.settings.exclude.selectedFolders.length} folders and ${this.plugin.settings.exclude.selectedFiles.length} files will be ${this.plugin.settings.exclude.mode}d.`)
@@ -142,12 +157,56 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 });
         });
 
-        new Setting(containerEl)
-            .setName('Rules')
-            .setDesc('add rules to update selected parameters');
-
         this.rulesContainer = containerEl.createDiv('properties-list');
-        const rulesTable = new RulesTable(this.app, this.plugin,this.rulesContainer,'rules');
+        const rulesTable = new RulesTable(this.app, this.plugin,this.rulesContainer,this.plugin.settings.folderConfig);
         rulesTable.display();
+
+        // --- Backup and Restore Buttons ---
+        new Setting(containerEl)
+            .setName("Backup & Restore Configuration")
+            .setDesc("Export your current config as a JSON file or restore from a backup.")
+            .addButton(btn => {
+                btn.setButtonText("Backup")
+                    .setIcon("download")
+                    .onClick(() => {
+                        const dataStr = JSON.stringify(this.plugin.settings, null, 2);
+                        const blob = new Blob([dataStr], { type: "application/json" });
+                        const url = URL.createObjectURL(blob);
+
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "frontmatter-automate-backup.json";
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    });
+            })
+            .addButton(btn => {
+                btn.setButtonText("Restore")
+                    .setIcon("upload")
+                    .onClick(() => {
+                        const input = document.createElement("input");
+                        input.type = "file";
+                        input.accept = ".json,application/json";
+                        input.onchange = async () => {
+                            if (!input.files || input.files.length === 0) return;
+                            const file = input.files[0];
+                            const text = await file.text();
+                            try {
+                                const data = JSON.parse(text);
+                                // Optionally validate data here
+                                this.plugin.settings = data;
+                                await this.plugin.saveSettings();
+                                this.display();
+                                new Notice("Frontmatter Automate\nConfiguration restored from backup.");
+                            } catch (e) {
+                                new Notice("Frontmatter Automate\nFailed to restore: Invalid JSON file.",2000);
+                            }
+                        };
+                        input.click();
+                    });
+            });
+
     }
 }

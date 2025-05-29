@@ -1,52 +1,73 @@
-**front-matter-automate**
+**Documentation**
 
 ***
 
-# Front Matter Automate
-*Titelei Automat*
+# Documentation
 
-**This Plugin is an Alpha Version! Best to test on a copy of your vault!**
-
-## What does it do
-
-Applying a set of rules every time a document is opened, closed, moved or renamed
-
-## Features
-
-### Path tags
-A core feature is to create a tag to represent the current location (path) of the file. And update it when a file changes location.
-
-### Rules
-A set of rule can be defined to create and update front matter properties.
-There are a number of pre-build functions available
-
-* Full path and filename
-* Full path
-* Folder
-* Root Folder
-* Filename
-* Filename with Extension
-* add an Alias form full path
-* Date (and Time) created
-* Date (and Time) modified
-* File Size in Bytes
-* File Size as Text
-
-## Events
-
-The following events will trigger autogenerate of the path tag and the execution of the rules
-
-- `create` then a file is created
-- `rename` a file is renamed or moved
-- `active leaf change` when you create or open another file. Folder tags will not be updated!
-
-## JavaScript
-
-You can add your own JavaScript function to be executed each time the event is triggered
-
-***WARNING*** by using scripts you have access to the complete app object = obsidian 
-
-## Changelog
-
-* 0.0.7 Fix double / multiple and empty folder tags, Date and Time functions to use local time instead GMT
-* 0.0.2 Fix double / multiple and empty folder tags
+## Modules
+[[.obsidian/plugins/folder-to-tags-plugin/doc/alertBox/README.md|AlertBox]]
+- [alertBox](./alertBox/README.md)
+- [autocompleteModal](autocompleteModal/README.md)
+- [directorySelectionModal](directorySelectionModal/README.md)
+- [editorModal](editorModal/README.md)
+- [Error](Error/README.md)
+- [frontmatter-tools](frontmatter-tools/README.md)
+- [Log](Log/README.md)
+- [rules](rules/README.md)
+- [rules](rules/README-1.md)
+- [rules/addPrefix](rules/addPrefix/README.md)
+- [rules/addSuffix](rules/addSuffix/README.md)
+- [rules/automationAutoLink](rules/automationAutoLink/README.md)
+- [rules/buildInAutoCompleteModal](rules/buildInAutoCompleteModal/README.md)
+- [rules/buildInConcatArrays](rules/buildInConcatArrays/README.md)
+- [rules/buildInConcatProperties](rules/buildInConcatProperties/README.md)
+- [rules/buildInConstant](rules/buildInConstant/README.md)
+- [rules/buildInDateTimeCreated](rules/buildInDateTimeCreated/README.md)
+- [rules/buildInDateTimeModified](rules/buildInDateTimeModified/README.md)
+- [rules/buildInDefault](rules/buildInDefault/README.md)
+- [rules/buildInFileSizeBytes](rules/buildInFileSizeBytes/README.md)
+- [rules/buildInFileSizeString](rules/buildInFileSizeString/README.md)
+- [rules/buildInFolder](rules/buildInFolder/README.md)
+- [rules/buildInFolderFolderNotes](rules/buildInFolderFolderNotes/README.md)
+- [rules/buildInFolders](rules/buildInFolders/README.md)
+- [rules/buildInFullPath](rules/buildInFullPath/README.md)
+- [rules/buildInFullPathExt](rules/buildInFullPathExt/README.md)
+- [rules/buildInFullPathExtFolderNotes](rules/buildInFullPathExtFolderNotes/README.md)
+- [rules/buildInFullPathFolderNotes](rules/buildInFullPathFolderNotes/README.md)
+- [rules/buildInGetProperty](rules/buildInGetProperty/README.md)
+- [rules/buildInIsRoot](rules/buildInIsRoot/README.md)
+- [rules/buildInLinkToFile](rules/buildInLinkToFile/README.md)
+- [rules/buildInName](rules/buildInName/README.md)
+- [rules/buildInNameExt](rules/buildInNameExt/README.md)
+- [rules/buildInPath](rules/buildInPath/README.md)
+- [rules/buildInPathFolderNotes](rules/buildInPathFolderNotes/README.md)
+- [rules/buildInRootFolder](rules/buildInRootFolder/README.md)
+- [rules/buildInScript](rules/buildInScript/README.md)
+- [rules/replaceSpaces](rules/replaceSpaces/README.md)
+- [rules/replaceSpecialChars](rules/replaceSpecialChars/README.md)
+- [rules/rules](rules/rules/README.md)
+- [rules/toCamelCase](rules/toCamelCase/README.md)
+- [rules/toLinkMarkdown](rules/toLinkMarkdown/README.md)
+- [rules/toLinkOriginal](rules/toLinkOriginal/README.md)
+- [rules/toLinkSimple](rules/toLinkSimple/README.md)
+- [rules/toLinkWiki](rules/toLinkWiki/README.md)
+- [rules/toLowerCase](rules/toLowerCase/README.md)
+- [rules/toOriginal](rules/toOriginal/README.md)
+- [rules/toPascalCase](rules/toPascalCase/README.md)
+- [rules/toTitleCase](rules/toTitleCase/README.md)
+- [rules/toTitleCaseDE](rules/toTitleCaseDE/README.md)
+- [rules/toTitleCaseEN](rules/toTitleCaseEN/README.md)
+- [rules/toUpperCase](rules/toUpperCase/README.md)
+- [settings](settings/README.md)
+- [settings-properties](settings-properties/README.md)
+- [simpleModal](simpleModal/README.md)
+- [SortableListComponent](SortableListComponent/README.md)
+- [suggesters/FileSuggester](suggesters/FileSuggester/README.md)
+- [suggesters/FolderSuggester](suggesters/FolderSuggester/README.md)
+- [suggesters/suggest](suggesters/suggest/README.md)
+- [tools](tools/README.md)
+- [types](types/README.md)
+- [uiElements](uiElements/README.md)
+- [uiMarkdownHelpModal](uiMarkdownHelpModal/README.md)
+- [uiMultiPropertySetting](uiMultiPropertySetting/README.md)
+- [uiTreeHierarchySortableSettings](uiTreeHierarchySortableSettings/README.md)

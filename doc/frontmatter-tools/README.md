@@ -1,8 +1,8 @@
-[**front-matter-automate**](../README.md)
+[**Documentation**](../README.md)
 
 ***
 
-[front-matter-automate](../modules.md) / frontmatter-tools
+[Documentation](../README.md) / frontmatter-tools
 
 # frontmatter-tools
 

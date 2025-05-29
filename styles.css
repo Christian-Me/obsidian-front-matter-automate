@@ -3,6 +3,137 @@
     pointer-events: none !important;
     cursor: not-allowed !important;
 }
+.FMA-mod-FolderList-disabled {
+    opacity: 0.5 !important;
+}
+/* Make only your folder-list toggles smaller */
+.FMA-folder-list-folder-setting .setting-item-control .checkbox-container {
+    transform: scale(0.8);
+    margin-right: 0.5em;
+}
+/* Folders: 2px border, rounded, form field background */
+.FMA-folder-list-folder-setting {
+    border: 2px solid var(--background-modifier-border);
+    border-radius: 6px;
+    background: var(--background-modifier-form-field);
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 0.2em 0.2em 0.2em 0.2em;
+    box-sizing: border-box;
+}
+.FMA-folder-list-folder-setting.setting-item:first-child {
+    padding: 0.2em 0.2em 0.2em 0.2em;
+    border-top: 2px solid var(--background-modifier-border) !important;
+}
+/* Rows: thin border, no background */
+.FMA-folder-list-row-setting {
+    /*border: 1px solid var(--background-modifier-border);*/
+    border: 0px solid var(--background-modifier-border);
+    display:flex;
+    flex-direction: column;
+    border-radius: 6px;
+    background: none;
+    margin-top: 0em;
+    margin-bottom: 0em;
+    padding: 0em;
+    box-sizing: border-box;
+}
+
+/* Make the folder name and toggle share the row, with name taking all available space */
+.FMA-folder-list-folder-setting .setting-item-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex: 1 1 auto;
+}
+
+/* Make the text input grow to fill available space */
+.FMA-folder-list-folder-setting .setting-item-name input[type="text"] {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+}
+/* Rows: thin border, no background */
+.FMA-folder-list-drop-zone {
+    border: none;
+    border-radius: 6px;
+    background: none;
+    box-sizing: border-box;
+}
+
+/* Optional: Drag handle style for clarity */
+.FMA-folder-list-drag-handle {
+    cursor: grab;
+    user-select: none;
+    font-size: 1.2em;
+    color: var(--text-muted);
+    margin-right: 0.5em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.FMA-folder-list-folder-setting.FMA-drop-target {
+    border-color: var(--interactive-accent) !important;
+    box-shadow: 0 0 0 2px var(--interactive-accent);
+}
+.FMA-folder-list-row-setting.FMA-drop-target {
+    border-color: var(--interactive-accent) !important;
+    box-shadow: 0 0 0 1px var(--interactive-accent);
+}
+.FMA-bin-drop-target {
+    background: var(--interactive-accent);
+    color: var(--background-primary);
+}
+.FMA-dropzone-target {
+    background: var(--interactive-accent);
+    color: var(--background-primary);
+}
+.FMA-property-value-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 0;
+}
+.FMA-property-value-input {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: transparent !important;
+    border: none !important;
+}
+.FMA-tri-state-checkbox.FMA-property-value-input {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    /* Optional: add a min-height for visual consistency */
+    min-height: 32px;
+}
+.FMA-tri-state-checkbox.FMA-property-value-input svg {
+    margin-left: 0;
+    margin-right: auto;
+}
+.FMA-rule-area {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-height: 50px;
+    max-height: 300px;
+}
+.FMA-rule-line {
+    padding-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+}
 /* styles for SortableList */
 /* Style for the complete list (container) */
 .sortableList-container {
@@ -128,7 +259,8 @@
   border: unset;
   padding: 2px 0;
   gap: 0px;
-  height: 40px
+  height: 40px;
+  width: 100%;
 }
 
 .property-setting-row:last-child {
@@ -153,6 +285,8 @@
   display: flex;
   padding-top: 1px;
   padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top: 2px solid var(--background-modifier-border);
   border-bottom: 2px solid var(--background-modifier-border);
   width: 100%;
@@ -255,7 +389,7 @@
   color: var(--text-muted);
 }
 
-.property-delete-button-container{
+.FMA-property-right-container{
   padding-bottom: 2px;
   border: 2px solid var(--background-modifier-border);
   border-top-right-radius: 10px;
@@ -265,14 +399,14 @@
   display: flex;
 }
 
-.property-delete-button-container .mod-subtle {
+.FMA-property-right-container .mod-subtle {
   padding: 10px;
   background-color: transparent;
   border: none;
   box-shadow: none;
   color: var(--text-muted);
 }
-.property-delete-button-container .mod-subtle:hover {
+.FMA-property-right-container .mod-subtle:hover {
   /*color: var(--text-error);*/
   background-color: var(--background-modifier-error-hover);
 }
