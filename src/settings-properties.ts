@@ -12,7 +12,7 @@ import { rulesManager } from './rules/rules';
 import { DEBUG, logger, WARNING } from './Log';
 import { MultiPropertySetting } from './uiMultiPropertySetting';
 import { TreeHierarchyData, TreeHierarchySortableSettings, ROOT_FOLDER, TreeHierarchyRow } from './uiTreeHierarchySortableSettings';
-import { fetchMarkdownFromGitHub, MarkdownHelpModal } from './uiMarkdownHelpModal';
+import { MarkdownHelpModal } from './uiMarkdownHelpModal';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
@@ -791,12 +791,9 @@ export class RulesTable extends PluginSettingTab {
                     .setIcon("circle-help")
                     .onClick(async () => {
                         let markdown = "Could not load help from GitHub.";
-                        try {
-                            markdown = await fetchMarkdownFromGitHub(
-                                "https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md"
-                            );
-                        } catch (e) {}
-                        new MarkdownHelpModal(this.app, markdown, "modules.md").open();
+                        //markdown = await fetchMarkdownFromGitHub("https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md");
+                            //markdown = await readPluginDocFile("README.md");
+                        new MarkdownHelpModal(this.app, this.plugin, markdown, "README.md").open();
                     })
                 );
             });

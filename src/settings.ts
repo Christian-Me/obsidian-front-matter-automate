@@ -10,7 +10,7 @@ import { SortableListComponent } from './SortableListComponent';
 import { rulesManager } from './rules/rules';
 import { logger } from './Log';
 import { log } from 'console';
-import { fetchMarkdownFromGitHub, MarkdownHelpModal, readPluginDocFile } from './uiMarkdownHelpModal';
+import { MarkdownHelpModal } from './uiMarkdownHelpModal';
 
 export class FolderTagSettingTab extends PluginSettingTab {
     plugin: any; //FolderTagPlugin;
@@ -58,12 +58,7 @@ export class FolderTagSettingTab extends PluginSettingTab {
                 .setTooltip("Online Help")
                 .onClick(async () => {
                     let markdown = "Could not load help from GitHub.";
-                    try {
-                        markdown = await fetchMarkdownFromGitHub(
-                            "https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/readme.md"
-                        );
-                    } catch (e) {}
-                    new MarkdownHelpModal(this.app, markdown, "readme.md").open();
+                    new MarkdownHelpModal(this.app, this.plugin, markdown, "readme.md").open();
                 })
             );
 

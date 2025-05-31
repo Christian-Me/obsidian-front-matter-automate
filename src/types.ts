@@ -2,7 +2,7 @@ import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelecti
 import { TreeHierarchyData } from './uiTreeHierarchySortableSettings';
 import { WARNING } from './Log';
 
-export const versionString = "0.0.25";
+export const versionString = "0.0.26";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
 export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all';
