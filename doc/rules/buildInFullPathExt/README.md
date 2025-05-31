@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/buildInFullPathExt
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/buildInFullPathExt
 
 # rules/buildInFullPathExt
 
 ## Classes
 
-- [RuleBuildInFullPathExt](classes/RuleBuildInFullPathExt.md)
+- [RuleBuildInFullPathExt](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFullPathExt/classes/RuleBuildInFullPathExt.md)

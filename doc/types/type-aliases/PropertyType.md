@@ -1,14 +1,14 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [types](../README.md) / PropertyType
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [types](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/README.md) / PropertyType
 
 # Type Alias: PropertyType
 
 > **PropertyType** = `object`
 
-Defined in: [src/types.ts:151](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/types.ts#L151)
+Defined in: [src/types.ts:151](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/types.ts#L151)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:151](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **icon**: `string`
 
-Defined in: [src/types.ts:153](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/types.ts#L153)
+Defined in: [src/types.ts:153](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/types.ts#L153)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:153](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **jsType**: `string`
 
-Defined in: [src/types.ts:154](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/types.ts#L154)
+Defined in: [src/types.ts:154](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/types.ts#L154)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [src/types.ts:154](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **type**: `string`
 
-Defined in: [src/types.ts:152](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/types.ts#L152)
+Defined in: [src/types.ts:152](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/types.ts#L152)

@@ -1,19 +1,19 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / simpleModal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / simpleModal
 
 # simpleModal
 
 ## Classes
 
-- [codeEditorModal](classes/codeEditorModal.md)
+- [codeEditorModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/simpleModal/classes/codeEditorModal.md)
 
 ## Interfaces
 
-- [codeEditorModalResult](interfaces/codeEditorModalResult.md)
+- [codeEditorModalResult](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/simpleModal/interfaces/codeEditorModalResult.md)
 
 ## Functions
 
-- [openCodeEditorModal](functions/openCodeEditorModal.md)
+- [openCodeEditorModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/simpleModal/functions/openCodeEditorModal.md)

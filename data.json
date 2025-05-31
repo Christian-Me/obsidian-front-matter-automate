@@ -716,7 +716,8 @@
       "useCustomCode": false,
       "optionsConfig": {
         "0541dccd-85c9-449a-ae9a-836c07ea883a": {
-          "constantValue": "Test"
+          "constantValue": "Test",
+          "prefix": "#"
         }
       }
     },
@@ -835,20 +836,20 @@
       "name": ""
     }
   ],
-  "debugLevel": 6,
+  "debugLevel": 5,
   "delayCreateEvent": 1000,
   "folderConfig": {
     "folders": [
       {
         "id": "68a79f85-4da9-4b25-b6b4-d667bee98642",
         "name": "Path & Folders",
-        "disabled": false,
-        "collapsed": false
+        "disabled": true,
+        "collapsed": true
       },
       {
         "id": "7a24e1bf-4cc2-4e4f-9b45-416e2d04448d",
         "name": "Dates",
-        "disabled": false,
+        "disabled": true,
         "collapsed": false
       },
       {
@@ -858,15 +859,27 @@
         "collapsed": false
       },
       {
-        "id": "2d08d1f1-64db-4df2-b6e8-e961c759b936",
-        "name": "Aliases",
-        "parentId": "09369aab-f762-40a4-81de-5fa05f87525f",
+        "id": "6449685f-a24a-4140-83ba-06239db12a55",
+        "name": "Concat Test",
         "disabled": false,
         "collapsed": false
       },
       {
-        "id": "6449685f-a24a-4140-83ba-06239db12a55",
-        "name": "Concat Test",
+        "id": "04ebc13b-8178-4dcc-be04-67df6216c348",
+        "name": "Testing",
+        "disabled": true,
+        "collapsed": false
+      },
+      {
+        "id": "9f663f08-6694-4918-84da-8407b4ecb0f1",
+        "name": "Contstant",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "2d08d1f1-64db-4df2-b6e8-e961c759b936",
+        "name": "Aliases",
+        "parentId": "09369aab-f762-40a4-81de-5fa05f87525f",
         "disabled": false,
         "collapsed": false
       }
@@ -934,6 +947,7 @@
             "my-sidecar",
             "my-wonderful-tag",
             "my-other-tag",
+            "another-tag",
             "Tiere/Vögel"
           ],
           "customProperty": "",
@@ -977,7 +991,7 @@
         "id": "a8c3f06e-24e3-40aa-bf0b-37f544c6250b",
         "folderId": "7a24e1bf-4cc2-4e4f-9b45-416e2d04448d",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "5b4c0837-815e-4880-a112-68b750bfc265",
           "active": true,
@@ -1022,9 +1036,270 @@
         }
       },
       {
-        "id": "afdbac01-14cf-4acd-8b5d-199bde1b9d3e",
+        "id": "d0040e74-5c95-49d5-a770-d7f304df86bf",
+        "keywords": [],
+        "disabled": true,
+        "payload": {
+          "id": "ec9bed27-1680-4592-a5b7-c8faa2adcb6f",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "folder",
+          "value": "Tiere/Säugetiere/Affen/Rabe.md",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fullPathExtFolderNotes",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return parts.join('/');\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [
+              "/Tiere/Vögel"
+            ],
+            "selectedFiles": [],
+            "mode": "include"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "linkFormatter": "toOriginalLink",
+          "optionsConfig": {
+            "ec9bed27-1680-4592-a5b7-c8faa2adcb6f": {
+              "delimiter": " ",
+              "inputProperties": [
+                ""
+              ],
+              "onlyWhenAllPropertiesExist": true
+            }
+          }
+        },
+        "folderId": "68a79f85-4da9-4b25-b6b4-d667bee98642"
+      },
+      {
+        "id": "5d7a30e6-4d84-4e1f-b971-48b8d2007e57",
+        "keywords": [],
+        "disabled": true,
+        "payload": {
+          "id": "365b81ab-48a1-4dea-8d92-af5fd0b5275e",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "path",
+          "value": "[[Tiere/Säugetiere/Affen/Rabe|Wombats 🐻]]",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fullPathFolderNotes",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return `[[${parts.join('/')}|${tools.getFrontmatterProperty('constant')}]]`;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": true,
+          "linkFormatter": "toOriginalLink",
+          "optionsConfig": {
+            "365b81ab-48a1-4dea-8d92-af5fd0b5275e": {
+              "constantValue": ""
+            }
+          }
+        },
+        "folderId": "68a79f85-4da9-4b25-b6b4-d667bee98642"
+      },
+      {
+        "id": "f242e913-162c-453c-b297-629b6a8662a7",
         "keywords": [],
         "disabled": false,
+        "payload": {
+          "id": "0541dccd-85c9-449a-ae9a-836c07ea883a",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "aliases",
+          "value": [
+            "#Test"
+          ],
+          "customProperty": "",
+          "type": "aliases",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "constant",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "0541dccd-85c9-449a-ae9a-836c07ea883a": {
+              "constantValue": "Test"
+            }
+          },
+          "formatters": [
+            "addPrefix"
+          ]
+        },
+        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936"
+      },
+      {
+        "id": "0eeb4ab0-bfb0-427e-94aa-b9e190968a0a",
+        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "c5302deb-e7ee-41eb-ae22-0526e78c93af",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "aliases",
+          "value": [
+            "Tiere",
+            "Vögel"
+          ],
+          "customProperty": "",
+          "type": "aliases",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "folders",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "formatters": [
+            "toOriginal"
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        }
+      },
+      {
+        "id": "868e31fd-0321-4c13-b7b7-3ccc95797838",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "9f71fdc0-6552-45d5-a05b-f3656c658ba8",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "aliases",
+          "value": [
+            "Eins,Zwei"
+          ],
+          "customProperty": "",
+          "type": "aliases",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "constant",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false
+        },
+        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936"
+      },
+      {
+        "id": "afdbac01-14cf-4acd-8b5d-199bde1b9d3e",
+        "keywords": [],
+        "disabled": true,
         "payload": {
           "id": "ebb14d96-b63a-4984-b21f-63b4f9aa4a2f",
           "active": true,
@@ -1071,12 +1346,13 @@
               "inputProperty": "#?:{}\"'"
             }
           }
-        }
+        },
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "1aad14a6-216a-4cff-a9d1-c5a88b5b0e7a",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "590159bc-7b9c-4aff-b559-b99db9ba386d",
           "active": true,
@@ -1114,12 +1390,13 @@
           "inputProperty": "",
           "onlyModify": true,
           "useCustomCode": false
-        }
+        },
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "8d6435e9-79f6-45f2-aef8-9f1c99fff0c3",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "797182ad-b5d4-4032-89fe-8e569ed875c4",
           "active": true,
@@ -1183,57 +1460,13 @@
             "addSuffix",
             "replaceSpaces"
           ]
-        }
-      },
-      {
-        "id": "65f5e754-7b85-43be-86dd-356be4ab3863",
-        "keywords": [],
-        "disabled": false,
-        "payload": {
-          "id": "38379907-3458-4e66-9cbf-53fd7d1991de",
-          "active": true,
-          "asLink": false,
-          "addContent": "overwrite",
-          "property": "isroot",
-          "value": false,
-          "customProperty": "",
-          "type": "checkbox",
-          "typeProperty": {
-            "name": "",
-            "type": "text",
-            "source": "registered"
-          },
-          "content": "isRoot",
-          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};",
-          "jsCode": "",
-          "showContent": false,
-          "exclude": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "exclude",
-            "display": "folders"
-          },
-          "include": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "include",
-            "display": "folders"
-          },
-          "prefix": "",
-          "spaceReplacement": "",
-          "specialCharReplacement": "",
-          "lowercaseTags": false,
-          "formatter": "toOriginal",
-          "linkFormatter": "toOriginalLink",
-          "inputProperty": "",
-          "onlyModify": true,
-          "useCustomCode": false
-        }
+        },
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "61af4489-eef0-4dc8-aed6-566a58fca197",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "9d4e4181-3025-44ea-ba31-aef6f18efb1c",
           "active": true,
@@ -1273,12 +1506,13 @@
           "onlyModify": true,
           "useCustomCode": true,
           "value": "test"
-        }
+        },
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "df9be949-7894-4c04-8308-a24f783ba3f8",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "0f337f99-ad3c-471e-8c9c-f670ba21abc7",
           "active": true,
@@ -1330,12 +1564,13 @@
               "doNotCapitalizeSmallWords": true
             }
           }
-        }
+        },
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "762a4854-eae1-46ba-a140-b40a265115dc",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "3beeb7ec-bc57-4273-b6bd-eadb53d29062",
           "active": true,
@@ -1377,118 +1612,13 @@
           "inputProperty": "",
           "onlyModify": true,
           "useCustomCode": false
-        }
-      },
-      {
-        "id": "d0040e74-5c95-49d5-a770-d7f304df86bf",
-        "keywords": [],
-        "disabled": false,
-        "payload": {
-          "id": "ec9bed27-1680-4592-a5b7-c8faa2adcb6f",
-          "active": true,
-          "asLink": false,
-          "addContent": "overwrite",
-          "property": "folder",
-          "value": "Tiere/Vögel/Rabe.md",
-          "customProperty": "",
-          "type": "text",
-          "typeProperty": {
-            "name": "",
-            "type": "text",
-            "source": "registered"
-          },
-          "content": "fullPathExtFolderNotes",
-          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return parts.join('/');\n};",
-          "jsCode": "",
-          "showContent": false,
-          "exclude": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "exclude"
-          },
-          "include": {
-            "selectedFolders": [
-              "/Tiere/Vögel"
-            ],
-            "selectedFiles": [],
-            "mode": "include"
-          },
-          "prefix": "",
-          "spaceReplacement": "",
-          "specialCharReplacement": "",
-          "lowercaseTags": false,
-          "formatter": "toOriginal",
-          "inputProperty": "",
-          "onlyModify": false,
-          "useCustomCode": false,
-          "linkFormatter": "toOriginalLink",
-          "optionsConfig": {
-            "ec9bed27-1680-4592-a5b7-c8faa2adcb6f": {
-              "delimiter": " ",
-              "inputProperties": [
-                ""
-              ],
-              "onlyWhenAllPropertiesExist": true
-            }
-          }
         },
-        "folderId": "68a79f85-4da9-4b25-b6b4-d667bee98642"
-      },
-      {
-        "id": "5d7a30e6-4d84-4e1f-b971-48b8d2007e57",
-        "keywords": [],
-        "disabled": false,
-        "payload": {
-          "id": "365b81ab-48a1-4dea-8d92-af5fd0b5275e",
-          "active": true,
-          "asLink": false,
-          "addContent": "overwrite",
-          "property": "path",
-          "value": "[[Tiere/Vögel/Rabe|Wombats 🐻]]",
-          "customProperty": "",
-          "type": "text",
-          "typeProperty": {
-            "name": "",
-            "type": "text",
-            "source": "registered"
-          },
-          "content": "fullPathFolderNotes",
-          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  parts.push(file.basename);\n  return `[[${parts.join('/')}|${tools.getFrontmatterProperty('constant')}]]`;\n};",
-          "jsCode": "",
-          "showContent": false,
-          "exclude": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "exclude",
-            "display": "folders"
-          },
-          "include": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "include",
-            "display": "folders"
-          },
-          "prefix": "",
-          "spaceReplacement": "",
-          "specialCharReplacement": "",
-          "lowercaseTags": false,
-          "formatter": "toOriginal",
-          "inputProperty": "",
-          "onlyModify": true,
-          "useCustomCode": true,
-          "linkFormatter": "toOriginalLink",
-          "optionsConfig": {
-            "365b81ab-48a1-4dea-8d92-af5fd0b5275e": {
-              "constantValue": ""
-            }
-          }
-        },
-        "folderId": "68a79f85-4da9-4b25-b6b4-d667bee98642"
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "005f7b5b-f7d3-4602-a526-b6901b146a80",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "37660875-87bf-4cf3-9b75-f2f75a791fb2",
           "active": true,
@@ -1543,7 +1673,8 @@
           "formatters": [
             "replaceChars"
           ]
-        }
+        },
+        "folderId": "04ebc13b-8178-4dcc-be04-67df6216c348"
       },
       {
         "id": "0a89208b-93e4-4424-aa53-760c0932265e",
@@ -1600,7 +1731,7 @@
           },
           "linkFormatter": "toOriginalLink"
         },
-        "folderId": "09369aab-f762-40a4-81de-5fa05f87525f"
+        "folderId": "9f663f08-6694-4918-84da-8407b4ecb0f1"
       },
       {
         "id": "a9d41d8d-d8e3-43af-b4a8-99b455dbc815",
@@ -1649,82 +1780,28 @@
           "onlyModify": true,
           "useCustomCode": false
         },
-        "folderId": "09369aab-f762-40a4-81de-5fa05f87525f"
+        "folderId": "9f663f08-6694-4918-84da-8407b4ecb0f1"
       },
       {
-        "id": "f242e913-162c-453c-b297-629b6a8662a7",
+        "id": "65f5e754-7b85-43be-86dd-356be4ab3863",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
-          "id": "0541dccd-85c9-449a-ae9a-836c07ea883a",
+          "id": "38379907-3458-4e66-9cbf-53fd7d1991de",
           "active": true,
           "asLink": false,
-          "addContent": "end",
-          "property": "aliases",
-          "value": [
-            "Test"
-          ],
+          "addContent": "overwrite",
+          "property": "isroot",
+          "value": false,
           "customProperty": "",
-          "type": "aliases",
+          "type": "checkbox",
           "typeProperty": {
             "name": "",
             "type": "text",
             "source": "registered"
           },
-          "content": "constant",
-          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
-          "jsCode": "",
-          "showContent": false,
-          "exclude": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "exclude"
-          },
-          "include": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "include",
-            "display": "folders"
-          },
-          "prefix": "",
-          "spaceReplacement": "",
-          "specialCharReplacement": "",
-          "lowercaseTags": false,
-          "formatter": "toOriginal",
-          "linkFormatter": "toOriginalLink",
-          "inputProperty": "",
-          "onlyModify": true,
-          "useCustomCode": false,
-          "optionsConfig": {
-            "0541dccd-85c9-449a-ae9a-836c07ea883a": {
-              "constantValue": "Test"
-            }
-          }
-        },
-        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936"
-      },
-      {
-        "id": "868e31fd-0321-4c13-b7b7-3ccc95797838",
-        "keywords": [],
-        "disabled": false,
-        "payload": {
-          "id": "9f71fdc0-6552-45d5-a05b-f3656c658ba8",
-          "active": true,
-          "asLink": false,
-          "addContent": "end",
-          "property": "aliases",
-          "value": [
-            "Eins,Zwei"
-          ],
-          "customProperty": "",
-          "type": "aliases",
-          "typeProperty": {
-            "name": "",
-            "type": "text",
-            "source": "registered"
-          },
-          "content": "constant",
-          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
+          "content": "isRoot",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};",
           "jsCode": "",
           "showContent": false,
           "exclude": {
@@ -1744,59 +1821,6 @@
           "specialCharReplacement": "",
           "lowercaseTags": false,
           "formatter": "toOriginal",
-          "linkFormatter": "toOriginalLink",
-          "inputProperty": "",
-          "onlyModify": true,
-          "useCustomCode": false
-        },
-        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936"
-      },
-      {
-        "id": "0eeb4ab0-bfb0-427e-94aa-b9e190968a0a",
-        "folderId": "2d08d1f1-64db-4df2-b6e8-e961c759b936",
-        "keywords": [],
-        "disabled": false,
-        "payload": {
-          "id": "c5302deb-e7ee-41eb-ae22-0526e78c93af",
-          "active": true,
-          "asLink": false,
-          "addContent": "end",
-          "property": "aliases",
-          "value": [
-            "Tiere",
-            "Vögel"
-          ],
-          "customProperty": "",
-          "type": "aliases",
-          "typeProperty": {
-            "name": "",
-            "type": "text",
-            "source": "registered"
-          },
-          "content": "folders",
-          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
-          "jsCode": "",
-          "showContent": false,
-          "exclude": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "exclude",
-            "display": "folders"
-          },
-          "include": {
-            "selectedFolders": [],
-            "selectedFiles": [],
-            "mode": "include",
-            "display": "folders"
-          },
-          "prefix": "",
-          "spaceReplacement": "",
-          "specialCharReplacement": "",
-          "lowercaseTags": false,
-          "formatter": "toOriginal",
-          "formatters": [
-            "toOriginal"
-          ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
           "onlyModify": true,

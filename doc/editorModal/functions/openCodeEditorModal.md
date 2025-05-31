@@ -1,14 +1,14 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [editorModal](../README.md) / openCodeEditorModal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [editorModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/editorModal/README.md) / openCodeEditorModal
 
 # Function: openCodeEditorModal()
 
 > **openCodeEditorModal**(`app`, `plugin`, `initialCode`, `expectedType`, `activeFile`, `frontmatter`, `okCallback`): `void`
 
-Defined in: [src/editorModal.ts:359](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/editorModal.ts#L359)
+Defined in: [src/editorModal.ts:359](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L359)
 
 Helper function to easily open the Directory Selection Modal.
 
@@ -32,7 +32,7 @@ String with the initial code.
 
 ### expectedType
 
-[`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
+[`ObsidianPropertyTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/ObsidianPropertyTypes.md)
 
 Expected return type.
 

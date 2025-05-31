@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/toCamelCase
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/toCamelCase
 
 # rules/toCamelCase
 
 ## Classes
 
-- [RuleToCamelCase](classes/RuleToCamelCase.md)
+- [RuleToCamelCase](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toCamelCase/classes/RuleToCamelCase.md)

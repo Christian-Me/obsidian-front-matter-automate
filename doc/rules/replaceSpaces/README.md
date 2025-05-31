@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/replaceSpaces
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/replaceSpaces
 
 # rules/replaceSpaces
 
 ## Classes
 
-- [RuleReplaceSpaces](classes/RuleReplaceSpaces.md)
+- [RuleReplaceSpaces](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/replaceSpaces/classes/RuleReplaceSpaces.md)

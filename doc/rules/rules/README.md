@@ -1,24 +1,24 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/rules
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/rules
 
 # rules/rules
 
 ## Classes
 
-- [RulePrototype](classes/RulePrototype.md)
-- [Rules](classes/Rules.md)
+- [RulePrototype](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md)
+- [Rules](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/Rules.md)
 
 ## Interfaces
 
-- [RuleConfigElements](interfaces/RuleConfigElements.md)
+- [RuleConfigElements](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md)
 
 ## Type Aliases
 
-- [FrontmatterAutomateRuleTypes](type-aliases/FrontmatterAutomateRuleTypes.md)
+- [FrontmatterAutomateRuleTypes](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/type-aliases/FrontmatterAutomateRuleTypes.md)
 
 ## Variables
 
-- [rulesManager](variables/rulesManager.md)
+- [rulesManager](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/variables/rulesManager.md)

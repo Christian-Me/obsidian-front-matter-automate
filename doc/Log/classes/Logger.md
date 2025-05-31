@@ -1,12 +1,12 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [Log](../README.md) / Logger
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [Log](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/README.md) / Logger
 
 # Class: Logger
 
-Defined in: [src/Log.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L35)
+Defined in: [src/Log.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L35)
 
 ## Constructors
 
@@ -22,21 +22,21 @@ Defined in: [src/Log.ts:35](https://github.com/Christian-Me/folder-to-tags-plugi
 
 ### getLevel()
 
-> **getLevel**(): [`LogLevel`](../type-aliases/LogLevel.md)
+> **getLevel**(): [`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
-Defined in: [src/Log.ts:53](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L53)
+Defined in: [src/Log.ts:53](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L53)
 
 #### Returns
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 ***
 
 ### getLevelByIndex()
 
-> **getLevelByIndex**(`levelIndex`): [`LogLevel`](../type-aliases/LogLevel.md)
+> **getLevelByIndex**(`levelIndex`): [`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
-Defined in: [src/Log.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L66)
+Defined in: [src/Log.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L66)
 
 #### Parameters
 
@@ -46,15 +46,15 @@ Defined in: [src/Log.ts:66](https://github.com/Christian-Me/folder-to-tags-plugi
 
 #### Returns
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 ***
 
 ### getLevelByName()
 
-> **getLevelByName**(`levelName`): [`LogLevel`](../type-aliases/LogLevel.md)
+> **getLevelByName**(`levelName`): [`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
-Defined in: [src/Log.ts:57](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L57)
+Defined in: [src/Log.ts:57](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L57)
 
 #### Parameters
 
@@ -64,15 +64,15 @@ Defined in: [src/Log.ts:57](https://github.com/Christian-Me/folder-to-tags-plugi
 
 #### Returns
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 ***
 
 ### getLevelByValue()
 
-> **getLevelByValue**(`levelValue`): [`LogLevel`](../type-aliases/LogLevel.md)
+> **getLevelByValue**(`levelValue`): [`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
-Defined in: [src/Log.ts:75](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L75)
+Defined in: [src/Log.ts:75](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L75)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: [src/Log.ts:75](https://github.com/Christian-Me/folder-to-tags-plugi
 
 #### Returns
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 ***
 
@@ -90,13 +90,13 @@ Defined in: [src/Log.ts:75](https://github.com/Christian-Me/folder-to-tags-plugi
 
 > **getLevelName**(`level`): `string`
 
-Defined in: [src/Log.ts:89](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L89)
+Defined in: [src/Log.ts:89](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L89)
 
 #### Parameters
 
 ##### level
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 #### Returns
 
@@ -108,7 +108,7 @@ Defined in: [src/Log.ts:89](https://github.com/Christian-Me/folder-to-tags-plugi
 
 > **getLevelNames**(): `string`[]
 
-Defined in: [src/Log.ts:101](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L101)
+Defined in: [src/Log.ts:101](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L101)
 
 #### Returns
 
@@ -120,13 +120,13 @@ Defined in: [src/Log.ts:101](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **groupCollapsed**(`level`, ...`msg`): `void`
 
-Defined in: [src/Log.ts:160](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L160)
+Defined in: [src/Log.ts:160](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L160)
 
 #### Parameters
 
 ##### level
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 ##### msg
 
@@ -142,7 +142,7 @@ Defined in: [src/Log.ts:160](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **groupEnd**(): `void`
 
-Defined in: [src/Log.ts:177](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L177)
+Defined in: [src/Log.ts:177](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L177)
 
 #### Returns
 
@@ -154,13 +154,13 @@ Defined in: [src/Log.ts:177](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **log**(`level`, ...`msg`): `void`
 
-Defined in: [src/Log.ts:105](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L105)
+Defined in: [src/Log.ts:105](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L105)
 
 #### Parameters
 
 ##### level
 
-[`LogLevel`](../type-aliases/LogLevel.md)
+[`LogLevel`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Log/type-aliases/LogLevel.md)
 
 ##### msg
 
@@ -176,13 +176,13 @@ Defined in: [src/Log.ts:105](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **logError**(`e`): `void`
 
-Defined in: [src/Log.ts:185](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L185)
+Defined in: [src/Log.ts:185](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L185)
 
 #### Parameters
 
 ##### e
 
-[`ErrorManager`](../../Error/classes/ErrorManager.md) | `Error`
+[`ErrorManager`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Error/classes/ErrorManager.md) | `Error`
 
 #### Returns
 
@@ -194,7 +194,7 @@ Defined in: [src/Log.ts:185](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **logUpdate**(`msg`): `void`
 
-Defined in: [src/Log.ts:181](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L181)
+Defined in: [src/Log.ts:181](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L181)
 
 #### Parameters
 
@@ -212,7 +212,7 @@ Defined in: [src/Log.ts:181](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **setLevel**(`level`): `void`
 
-Defined in: [src/Log.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/Log.ts#L38)
+Defined in: [src/Log.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/Log.ts#L38)
 
 #### Parameters
 

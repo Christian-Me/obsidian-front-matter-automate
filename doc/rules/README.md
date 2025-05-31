@@ -1,24 +1,24 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / rules
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules
 
 # rules
 
 ## Interfaces
 
-- [ConfigElements](interfaces/ConfigElements.md)
-- [RuleFunction](interfaces/RuleFunction.md)
+- [ConfigElements](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/interfaces/ConfigElements.md)
+- [RuleFunction](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/interfaces/RuleFunction.md)
 
 ## Type Aliases
 
-- [FrontmatterAutomateRuleTypes](type-aliases/FrontmatterAutomateRuleTypes.md)
+- [FrontmatterAutomateRuleTypes](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/type-aliases/FrontmatterAutomateRuleTypes.md)
 
 ## Functions
 
-- [checkIfFileAllowed](functions/checkIfFileAllowed.md)
-- [executeRuleObject](functions/executeRuleObject.md)
-- [filterFile](functions/filterFile.md)
-- [removeRuleObject](functions/removeRuleObject.md)
-- [useRuleOption](functions/useRuleOption.md)
+- [checkIfFileAllowed](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/functions/checkIfFileAllowed.md)
+- [executeRuleObject](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/functions/executeRuleObject.md)
+- [filterFile](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/functions/filterFile.md)
+- [removeRuleObject](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/functions/removeRuleObject.md)
+- [useRuleOption](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/functions/useRuleOption.md)

@@ -1,11 +1,11 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / uiMultiPropertySetting
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / uiMultiPropertySetting
 
 # uiMultiPropertySetting
 
 ## Classes
 
-- [MultiPropertySetting](classes/MultiPropertySetting.md)
+- [MultiPropertySetting](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiMultiPropertySetting/classes/MultiPropertySetting.md)

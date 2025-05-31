@@ -1,14 +1,14 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [uiElements](../README.md) / renderValueInput
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [uiElements](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiElements/README.md) / renderValueInput
 
 # Function: renderValueInput()
 
 > **renderValueInput**(`containerEl`, `propertyInfo`, `currentValue`, `changeCallback`): `any`
 
-Defined in: [src/uiElements.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/uiElements.ts#L4)
+Defined in: [src/uiElements.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiElements.ts#L4)
 
 ## Parameters
 
@@ -18,7 +18,7 @@ Defined in: [src/uiElements.ts:4](https://github.com/Christian-Me/folder-to-tags
 
 ### propertyInfo
 
-`undefined` | [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)
+`undefined` | [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)
 
 ### currentValue
 

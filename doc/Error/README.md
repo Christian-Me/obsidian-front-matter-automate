@@ -1,16 +1,16 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / Error
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / Error
 
 # Error
 
 ## Classes
 
-- [ErrorManager](classes/ErrorManager.md)
+- [ErrorManager](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Error/classes/ErrorManager.md)
 
 ## Functions
 
-- [errorWrapper](functions/errorWrapper.md)
-- [errorWrapperSync](functions/errorWrapperSync.md)
+- [errorWrapper](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Error/functions/errorWrapper.md)
+- [errorWrapperSync](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/Error/functions/errorWrapperSync.md)

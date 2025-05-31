@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/buildInFileSizeBytes
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/buildInFileSizeBytes
 
 # rules/buildInFileSizeBytes
 
 ## Classes
 
-- [RuleBuildInFileSizeBytes](classes/RuleBuildInFileSizeBytes.md)
+- [RuleBuildInFileSizeBytes](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFileSizeBytes/classes/RuleBuildInFileSizeBytes.md)

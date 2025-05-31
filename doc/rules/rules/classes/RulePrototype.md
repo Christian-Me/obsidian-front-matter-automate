@@ -1,57 +1,58 @@
-[**Documentation**](../../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../../README.md) / [rules/rules](../README.md) / RulePrototype
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [rules/rules](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/README.md) / RulePrototype
 
 # Class: RulePrototype
 
-Defined in: [src/rules/rules.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L30)
+Defined in: [src/rules/rules.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L30)
 
 ## Extended by
 
-- [`RuleAddPrefix`](../../addPrefix/classes/RuleAddPrefix.md)
-- [`RuleAddSuffix`](../../addSuffix/classes/RuleAddSuffix.md)
-- [`RuleAutomationAutoLink`](../../automationAutoLink/classes/RuleAutomationAutoLink.md)
-- [`RuleBuildInAutoCompleteModal`](../../buildInAutoCompleteModal/classes/RuleBuildInAutoCompleteModal.md)
-- [`RuleBuildInConcatArrays`](../../buildInConcatArrays/classes/RuleBuildInConcatArrays.md)
-- [`RuleBuildInConcatProperties`](../../buildInConcatProperties/classes/RuleBuildInConcatProperties.md)
-- [`RuleBuildInConstant`](../../buildInConstant/classes/RuleBuildInConstant.md)
-- [`RuleBuildInDateTimeCreated`](../../buildInDateTimeCreated/classes/RuleBuildInDateTimeCreated.md)
-- [`RuleBuildInDateTimeModified`](../../buildInDateTimeModified/classes/RuleBuildInDateTimeModified.md)
-- [`RuleBuildInDefault`](../../buildInDefault/classes/RuleBuildInDefault.md)
-- [`RuleBuildInFileSizeBytes`](../../buildInFileSizeBytes/classes/RuleBuildInFileSizeBytes.md)
-- [`RuleBuildInFileSizeString`](../../buildInFileSizeString/classes/RuleBuildInFileSizeString.md)
-- [`RuleBuildInFolder`](../../buildInFolder/classes/RuleBuildInFolder.md)
-- [`RuleBuildInFolderFolderNotes`](../../buildInFolderFolderNotes/classes/RuleBuildInFolderFolderNotes.md)
-- [`RuleBuildInFolders`](../../buildInFolders/classes/RuleBuildInFolders.md)
-- [`RuleBuildInFullPath`](../../buildInFullPath/classes/RuleBuildInFullPath.md)
-- [`RuleBuildInFullPathExt`](../../buildInFullPathExt/classes/RuleBuildInFullPathExt.md)
-- [`RuleBuildInFullPathExtFolderNotes`](../../buildInFullPathExtFolderNotes/classes/RuleBuildInFullPathExtFolderNotes.md)
-- [`RuleBuildInFullPathFolderNotes`](../../buildInFullPathFolderNotes/classes/RuleBuildInFullPathFolderNotes.md)
-- [`RuleBuildInGetProperty`](../../buildInGetProperty/classes/RuleBuildInGetProperty.md)
-- [`RuleBuildInIsRoot`](../../buildInIsRoot/classes/RuleBuildInIsRoot.md)
-- [`RuleBuildInLinkToFile`](../../buildInLinkToFile/classes/RuleBuildInLinkToFile.md)
-- [`RuleBuildInName`](../../buildInName/classes/RuleBuildInName.md)
-- [`RuleBuildInNameExt`](../../buildInNameExt/classes/RuleBuildInNameExt.md)
-- [`RuleBuildInPath`](../../buildInPath/classes/RuleBuildInPath.md)
-- [`RuleBuildInPathFolderNotes`](../../buildInPathFolderNotes/classes/RuleBuildInPathFolderNotes.md)
-- [`RuleBuildInRootFolder`](../../buildInRootFolder/classes/RuleBuildInRootFolder.md)
-- [`RuleBuildInScript`](../../buildInScript/classes/RuleBuildInScript.md)
-- [`RuleReplaceSpaces`](../../replaceSpaces/classes/RuleReplaceSpaces.md)
-- [`RuleReplaceSpecialChars`](../../replaceSpecialChars/classes/RuleReplaceSpecialChars.md)
-- [`RuleToCamelCase`](../../toCamelCase/classes/RuleToCamelCase.md)
-- [`RuleToLinkMarkdown`](../../toLinkMarkdown/classes/RuleToLinkMarkdown.md)
-- [`RuleToLinkOriginal`](../../toLinkOriginal/classes/RuleToLinkOriginal.md)
-- [`RuleToLinkSimple`](../../toLinkSimple/classes/RuleToLinkSimple.md)
-- [`RuleToLinkWiki`](../../toLinkWiki/classes/RuleToLinkWiki.md)
-- [`RuleToLowerCase`](../../toLowerCase/classes/RuleToLowerCase.md)
-- [`RuleToOriginal`](../../toOriginal/classes/RuleToOriginal.md)
-- [`RuleToPascalCase`](../../toPascalCase/classes/RuleToPascalCase.md)
-- [`RuleToTitleCase`](../../toTitleCase/classes/RuleToTitleCase.md)
-- [`RuleToTitleCaseDE`](../../toTitleCaseDE/classes/RuleToTitleCaseDE.md)
-- [`RuleToTitleCaseEN`](../../toTitleCaseEN/classes/RuleToTitleCaseEN.md)
-- [`RuleToUpperCase`](../../toUpperCase/classes/RuleToUpperCase.md)
+- [`RuleAddPrefix`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/addPrefix/classes/RuleAddPrefix.md)
+- [`RuleAddSuffix`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/addSuffix/classes/RuleAddSuffix.md)
+- [`RuleAutomationAutoLink`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/automationAutoLink/classes/RuleAutomationAutoLink.md)
+- [`RuleBuildInAutoCompleteModal`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInAutoCompleteModal/classes/RuleBuildInAutoCompleteModal.md)
+- [`RuleBuildInConcatArrays`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInConcatArrays/classes/RuleBuildInConcatArrays.md)
+- [`RuleBuildInConcatProperties`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInConcatProperties/classes/RuleBuildInConcatProperties.md)
+- [`RuleBuildInConstant`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInConstant/classes/RuleBuildInConstant.md)
+- [`RuleBuildInDateTimeCreated`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInDateTimeCreated/classes/RuleBuildInDateTimeCreated.md)
+- [`RuleBuildInDateTimeModified`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInDateTimeModified/classes/RuleBuildInDateTimeModified.md)
+- [`RuleBuildInDefault`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInDefault/classes/RuleBuildInDefault.md)
+- [`RuleBuildInFileSizeBytes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFileSizeBytes/classes/RuleBuildInFileSizeBytes.md)
+- [`RuleBuildInFileSizeString`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFileSizeString/classes/RuleBuildInFileSizeString.md)
+- [`RuleBuildInFolder`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFolder/classes/RuleBuildInFolder.md)
+- [`RuleBuildInFolderFolderNotes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFolderFolderNotes/classes/RuleBuildInFolderFolderNotes.md)
+- [`RuleBuildInFolders`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFolders/classes/RuleBuildInFolders.md)
+- [`RuleBuildInFullPath`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFullPath/classes/RuleBuildInFullPath.md)
+- [`RuleBuildInFullPathExt`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFullPathExt/classes/RuleBuildInFullPathExt.md)
+- [`RuleBuildInFullPathExtFolderNotes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFullPathExtFolderNotes/classes/RuleBuildInFullPathExtFolderNotes.md)
+- [`RuleBuildInFullPathFolderNotes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInFullPathFolderNotes/classes/RuleBuildInFullPathFolderNotes.md)
+- [`RuleBuildInGetProperty`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInGetProperty/classes/RuleBuildInGetProperty.md)
+- [`RuleBuildInIsRoot`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInIsRoot/classes/RuleBuildInIsRoot.md)
+- [`RuleBuildInLinkToFile`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInLinkToFile/classes/RuleBuildInLinkToFile.md)
+- [`RuleBuildInName`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInName/classes/RuleBuildInName.md)
+- [`RuleBuildInNameExt`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInNameExt/classes/RuleBuildInNameExt.md)
+- [`RuleBuildInPath`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInPath/classes/RuleBuildInPath.md)
+- [`RuleBuildInPathFolderNotes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInPathFolderNotes/classes/RuleBuildInPathFolderNotes.md)
+- [`RuleBuildInRootFolder`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInRootFolder/classes/RuleBuildInRootFolder.md)
+- [`RuleBuildInScript`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInScript/classes/RuleBuildInScript.md)
+- [`RuleReplaceChars`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/replaceChars/classes/RuleReplaceChars.md)
+- [`RuleReplaceSpaces`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/replaceSpaces/classes/RuleReplaceSpaces.md)
+- [`RuleReplaceSpecialChars`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/replaceSpecialChars/classes/RuleReplaceSpecialChars.md)
+- [`RuleToCamelCase`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toCamelCase/classes/RuleToCamelCase.md)
+- [`RuleToLinkMarkdown`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLinkMarkdown/classes/RuleToLinkMarkdown.md)
+- [`RuleToLinkOriginal`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLinkOriginal/classes/RuleToLinkOriginal.md)
+- [`RuleToLinkSimple`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLinkSimple/classes/RuleToLinkSimple.md)
+- [`RuleToLinkWiki`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLinkWiki/classes/RuleToLinkWiki.md)
+- [`RuleToLowerCase`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLowerCase/classes/RuleToLowerCase.md)
+- [`RuleToOriginal`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toOriginal/classes/RuleToOriginal.md)
+- [`RuleToPascalCase`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toPascalCase/classes/RuleToPascalCase.md)
+- [`RuleToTitleCase`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toTitleCase/classes/RuleToTitleCase.md)
+- [`RuleToTitleCaseDE`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toTitleCaseDE/classes/RuleToTitleCaseDE.md)
+- [`RuleToTitleCaseEN`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toTitleCaseEN/classes/RuleToTitleCaseEN.md)
+- [`RuleToUpperCase`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toUpperCase/classes/RuleToUpperCase.md)
 
 ## Constructors
 
@@ -59,7 +60,7 @@ Defined in: [src/rules/rules.ts:30](https://github.com/Christian-Me/folder-to-ta
 
 > **new RulePrototype**(`app?`, `plugin?`): `RulePrototype`
 
-Defined in: [src/rules/rules.ts:42](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L42)
+Defined in: [src/rules/rules.ts:42](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L42)
 
 #### Parameters
 
@@ -79,9 +80,9 @@ Defined in: [src/rules/rules.ts:42](https://github.com/Christian-Me/folder-to-ta
 
 ### configElements
 
-> **configElements**: `object` \| [`RuleConfigElements`](../interfaces/RuleConfigElements.md) = `{}`
+> **configElements**: `object` \| [`RuleConfigElements`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md) = `{}`
 
-Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L39)
+Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L39)
 
 ***
 
@@ -89,7 +90,7 @@ Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-ta
 
 > **description**: `string`
 
-Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L35)
+Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L35)
 
 ***
 
@@ -97,7 +98,7 @@ Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-ta
 
 > **id**: `string`
 
-Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L33)
+Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L33)
 
 ***
 
@@ -105,7 +106,7 @@ Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-ta
 
 > **isLiveRule**: `boolean` = `false`
 
-Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L37)
+Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L37)
 
 ***
 
@@ -113,7 +114,7 @@ Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-ta
 
 > **name**: `string`
 
-Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L34)
+Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L34)
 
 ***
 
@@ -121,23 +122,23 @@ Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-ta
 
 > **rulesConfigDiv**: `undefined` \| `HTMLDivElement` = `undefined`
 
-Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L31)
+Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L31)
 
 ***
 
 ### ruleType
 
-> **ruleType**: [`FrontmatterAutomateRuleTypes`](../type-aliases/FrontmatterAutomateRuleTypes.md) = `'buildIn'`
+> **ruleType**: [`FrontmatterAutomateRuleTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/type-aliases/FrontmatterAutomateRuleTypes.md) = `'buildIn'`
 
-Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L36)
+Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L36)
 
 ***
 
 ### scriptingTools
 
-> **scriptingTools**: [`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
+> **scriptingTools**: [`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
 
-Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L32)
+Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L32)
 
 ***
 
@@ -145,7 +146,7 @@ Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-ta
 
 > **source**: `string` = `'function (app, file, tools) { // do not change this line!\n  let result = \'\'\n  return result;\n}'`
 
-Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L40)
+Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L40)
 
 ***
 
@@ -153,7 +154,7 @@ Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-ta
 
 > **type**: `string`[]
 
-Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L38)
+Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L38)
 
 ## Methods
 
@@ -161,7 +162,7 @@ Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-ta
 
 > **configTab**(`optionEL`, `rule`, `that`, `previewComponent`): `void`
 
-Defined in: [src/rules/rules.ts:63](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L63)
+Defined in: [src/rules/rules.ts:63](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L63)
 
 Configures the settings tab for a specific rule in the plugin.
 
@@ -175,7 +176,7 @@ The HTML element where the configuration options will be rendered.
 
 ##### rule
 
-[`FrontmatterAutomateRuleSettings`](../../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 The settings object for the frontmatter automation rule.
 
@@ -199,9 +200,9 @@ The component used to render a preview of the rule's effect.
 
 ### defaultConfigElements()
 
-> **defaultConfigElements**(`modifiers`): [`RuleConfigElements`](../interfaces/RuleConfigElements.md)
+> **defaultConfigElements**(`modifiers`): [`RuleConfigElements`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md)
 
-Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L67)
+Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L67)
 
 #### Parameters
 
@@ -211,7 +212,7 @@ Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-ta
 
 #### Returns
 
-[`RuleConfigElements`](../interfaces/RuleConfigElements.md)
+[`RuleConfigElements`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md)
 
 ***
 
@@ -219,7 +220,7 @@ Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-ta
 
 > **execute**(`app`, `file`, `tools`, `input?`): `string`
 
-Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L115)
+Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L115)
 
 Executes the `fx` function based on the `ruleType`.
 Handles different function signatures dynamically.
@@ -240,7 +241,7 @@ The file to pass to the rule's `fx` function.
 
 ##### tools
 
-[`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
+[`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
 
 The scripting tools to pass to the rule's `fx` function.
 
@@ -262,7 +263,7 @@ Optional input for rules that require it (e.g., `buildIn.inputProperty`).
 
 > **fx**(`app`, `file`, `tools`, `input?`): `any`
 
-Defined in: [src/rules/rules.ts:50](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L50)
+Defined in: [src/rules/rules.ts:50](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L50)
 
 #### Parameters
 
@@ -276,7 +277,7 @@ Defined in: [src/rules/rules.ts:50](https://github.com/Christian-Me/folder-to-ta
 
 ##### tools
 
-[`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
+[`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
 
 ##### input?
 
@@ -292,7 +293,7 @@ Defined in: [src/rules/rules.ts:50](https://github.com/Christian-Me/folder-to-ta
 
 > **getSource**(): `string`
 
-Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L46)
+Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L46)
 
 #### Returns
 
@@ -304,7 +305,7 @@ Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-ta
 
 > **hasOwnConfigTab**(): `boolean`
 
-Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L102)
+Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L102)
 
 Checks if the rule has any configuration options.
 
@@ -320,7 +321,7 @@ Checks if the rule has any configuration options.
 
 > **useRuleOption**(`option`): `boolean`
 
-Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules/rules.ts#L91)
+Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L91)
 
 Checks if a specific rule option is enabled.
 

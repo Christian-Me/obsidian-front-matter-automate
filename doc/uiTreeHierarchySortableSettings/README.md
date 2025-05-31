@@ -1,21 +1,21 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / uiTreeHierarchySortableSettings
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / uiTreeHierarchySortableSettings
 
 # uiTreeHierarchySortableSettings
 
 ## Classes
 
-- [TreeHierarchySortableSettings](classes/TreeHierarchySortableSettings.md)
+- [TreeHierarchySortableSettings](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiTreeHierarchySortableSettings/classes/TreeHierarchySortableSettings.md)
 
 ## Type Aliases
 
-- [TreeHierarchyData](type-aliases/TreeHierarchyData.md)
-- [TreeHierarchyFolder](type-aliases/TreeHierarchyFolder.md)
-- [TreeHierarchyRow](type-aliases/TreeHierarchyRow.md)
+- [TreeHierarchyData](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiTreeHierarchySortableSettings/type-aliases/TreeHierarchyData.md)
+- [TreeHierarchyFolder](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiTreeHierarchySortableSettings/type-aliases/TreeHierarchyFolder.md)
+- [TreeHierarchyRow](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiTreeHierarchySortableSettings/type-aliases/TreeHierarchyRow.md)
 
 ## Variables
 
-- [ROOT\_FOLDER](variables/ROOT_FOLDER.md)
+- [ROOT\_FOLDER](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiTreeHierarchySortableSettings/variables/ROOT_FOLDER.md)

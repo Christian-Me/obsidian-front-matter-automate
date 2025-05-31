@@ -93,6 +93,7 @@ export class MultiPropertySetting {
                 setting.settingEl.style.borderTop = 'none'; // Remove border for all but the first item
                 setting.settingEl.style.padding = '0 0 0.75em'; // Remove margin for all but the first item
             } else {
+                setting.settingEl.style.borderTop = '1px solid var(--background-modifier-border)'; // Add border for the first item
                 setting.settingEl.style.padding = '0.75em 0'; // Remove margin for all but the first item
             }
             const settingControl= setting.controlEl;

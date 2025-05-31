@@ -1,20 +1,20 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [rules](../README.md) / executeRuleObject
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [rules](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/README.md) / executeRuleObject
 
 # Function: executeRuleObject()
 
-> **executeRuleObject**(`event`, `app`, `plugin`, `settings`, `currentFile`, `currentContent`, `rule`, `frontMatter`, `oldPath?`): `any`
+> **executeRuleObject**(`event`, `app`, `plugin`, `settings`, `currentFile`, `currentContent`, `rule`, `frontMatter`, `oldLocationResults?`): `any`
 
-Defined in: [src/rules.ts:106](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/rules.ts#L106)
+Defined in: [src/rules.ts:106](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules.ts#L106)
 
 ## Parameters
 
 ### event
 
-[`FrontmatterAutomateEvents`](../../types/type-aliases/FrontmatterAutomateEvents.md)
+[`FrontmatterAutomateEvents`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/FrontmatterAutomateEvents.md)
 
 ### app
 
@@ -26,11 +26,11 @@ Defined in: [src/rules.ts:106](https://github.com/Christian-Me/folder-to-tags-pl
 
 ### settings
 
-[`FrontmatterAutomateSettings`](../../types/interfaces/FrontmatterAutomateSettings.md)
+[`FrontmatterAutomateSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateSettings.md)
 
 ### currentFile
 
-`null` | `TFile`
+`undefined` | `null` | `TFile`
 
 ### currentContent
 
@@ -38,15 +38,15 @@ Defined in: [src/rules.ts:106](https://github.com/Christian-Me/folder-to-tags-pl
 
 ### rule
 
-[`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 ### frontMatter
 
 `any`
 
-### oldPath?
+### oldLocationResults?
 
-`string`
+`object`[]
 
 ## Returns
 

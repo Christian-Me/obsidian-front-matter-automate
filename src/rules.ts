@@ -8,7 +8,7 @@ import { FileSuggest } from "./suggesters/FileSuggester";
 import { DirectorySelectionResult, openDirectorySelectionModal } from './directorySelectionModal';
 import { AlertModal } from './alertBox';
 import { rulesManager } from './rules/rules';
-import { ERROR, logger } from './Log';
+import { DEBUG, ERROR, logger, TRACE } from './Log';
 
 export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' | 'autocomplete.modal' | 'automation' | 'script';
 
@@ -108,11 +108,11 @@ export function executeRuleObject (
   app: App,
   plugin: any,
   settings: FrontmatterAutomateSettings, 
-  currentFile: TFile | null, 
+  currentFile: TFile | undefined | null, 
   currentContent: any, 
   rule:FrontmatterAutomateRuleSettings, 
   frontMatter: any, 
-  oldPath?:string):any {
+  oldLocationResults?:{ruleId: string, result: any}[]):any {
 
   if (!rule) return currentContent;
   if (!rule.active) return currentContent;
@@ -121,7 +121,6 @@ export function executeRuleObject (
   const tools = new ScriptingTools(app, plugin, settings, rule, frontMatter);
   let result = currentContent;
   let oldResult:any = undefined;
-  let oldFile = tools.getMockFileFromPath(oldPath);
   tools.setCurrentContent(frontMatter[rule.property])
   tools.setRule(rule);
   tools.setFrontmatter(frontMatter);
@@ -131,9 +130,14 @@ export function executeRuleObject (
 
   result = rulesManager.executeRule(rule, ruleObject, app, currentFile, tools, frontMatter); // execute the formatter rule
   result = rulesManager.applyFormatOptions(result, rule, currentFile, tools); // apply format options
-  if (oldFile && rule.addContent !== 'overwrite') {
-    oldResult = rulesManager.executeRule(rule, ruleObject, app, oldFile, tools, frontMatter);
-    oldResult = rulesManager.applyFormatOptions(oldResult, rule, oldFile, tools); // apply format options on the old file location
+  if (oldLocationResults && oldLocationResults.length > 0 && rule.addContent !== 'overwrite') {
+    oldResult = oldLocationResults.find(res => res.ruleId === rule.id)?.result;
+    if (!oldResult) {
+      logger.log(ERROR,`executeRuleObject: Old result for rule ${rule.property}|${rule.content} not found!`, oldLocationResults);
+      return result; // return the current result if no old result is found
+    }
+    oldResult = rulesManager.applyFormatOptions(oldResult, rule, currentFile, tools); // apply format options on the old file location
+    logger.log(DEBUG,`executeRuleObject: Merging result for rule ${rule.property}|${rule.content} with old result`, oldResult, result);
     result = rulesManager.mergeResult(result, oldResult, currentContent, rule); // merge the result with the current content. Remove old result if necessary
   } else {
     result = rulesManager.mergeResult(result, result, currentContent, rule); // merge the result with the current content. Remove old result if necessary

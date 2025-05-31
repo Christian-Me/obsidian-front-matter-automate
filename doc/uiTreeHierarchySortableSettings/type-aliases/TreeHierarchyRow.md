@@ -1,14 +1,14 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [uiTreeHierarchySortableSettings](../README.md) / TreeHierarchyRow
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [uiTreeHierarchySortableSettings](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiTreeHierarchySortableSettings/README.md) / TreeHierarchyRow
 
 # Type Alias: TreeHierarchyRow
 
 > **TreeHierarchyRow** = `object`
 
-Defined in: src/uiTreeHierarchySortableSettings.ts:11
+Defined in: [src/uiTreeHierarchySortableSettings.ts:11](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiTreeHierarchySortableSettings.ts#L11)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: src/uiTreeHierarchySortableSettings.ts:11
 
 > **disabled**: `boolean`
 
-Defined in: src/uiTreeHierarchySortableSettings.ts:15
+Defined in: [src/uiTreeHierarchySortableSettings.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiTreeHierarchySortableSettings.ts#L15)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: src/uiTreeHierarchySortableSettings.ts:15
 
 > `optional` **folderId**: `string`
 
-Defined in: src/uiTreeHierarchySortableSettings.ts:13
+Defined in: [src/uiTreeHierarchySortableSettings.ts:13](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiTreeHierarchySortableSettings.ts#L13)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: src/uiTreeHierarchySortableSettings.ts:13
 
 > **id**: `string`
 
-Defined in: src/uiTreeHierarchySortableSettings.ts:12
+Defined in: [src/uiTreeHierarchySortableSettings.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiTreeHierarchySortableSettings.ts#L12)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: src/uiTreeHierarchySortableSettings.ts:12
 
 > **keywords**: `string`[]
 
-Defined in: src/uiTreeHierarchySortableSettings.ts:14
+Defined in: [src/uiTreeHierarchySortableSettings.ts:14](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiTreeHierarchySortableSettings.ts#L14)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: src/uiTreeHierarchySortableSettings.ts:14
 
 > `optional` **payload**: `any`
 
-Defined in: src/uiTreeHierarchySortableSettings.ts:16
+Defined in: [src/uiTreeHierarchySortableSettings.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiTreeHierarchySortableSettings.ts#L16)

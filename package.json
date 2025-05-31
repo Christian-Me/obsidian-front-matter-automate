@@ -8,7 +8,8 @@
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"test": "jest",
-		"buildindex": "node build-rules-index.js"
+		"buildindex": "node build-rules-index.js",
+		"docs": "npx typedoc --plugin typedoc-plugin-markdown --out doc src/**/*.ts > API.md && node ./fixLinks.js"
 	},
 	"keywords": [],
 	"author": "",

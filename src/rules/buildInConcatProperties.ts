@@ -107,7 +107,7 @@ export class RuleBuildInConcatProperties extends RulePrototype {
         .setName('Only when all properties exist')
         .setDesc('If enabled, the rule will only return a value if all selected properties exist and not empty.')
         .addToggle(toggle => toggle
-            .setValue(that.getOptionConfig(rule.id, 'onlyWhenAllPropertiesExist') || true)
+            .setValue(that.getOptionConfig(rule.id, 'onlyWhenAllPropertiesExist'))
             .onChange(async (value) => {
                 that.setOptionConfig(rule.id, 'onlyWhenAllPropertiesExist', value);
                 that.updatePreview(rule, previewComponent);

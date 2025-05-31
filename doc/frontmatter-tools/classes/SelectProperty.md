@@ -1,16 +1,16 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [frontmatter-tools](../README.md) / SelectProperty
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [frontmatter-tools](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/frontmatter-tools/README.md) / SelectProperty
 
 # Class: SelectProperty
 
-Defined in: [src/frontmatter-tools.ts:245](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L245)
+Defined in: [src/frontmatter-tools.ts:245](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L245)
 
 ## Extends
 
-- `SuggestModal`\<[`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)\>
+- `SuggestModal`\<[`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)\>
 
 ## Constructors
 
@@ -18,7 +18,7 @@ Defined in: [src/frontmatter-tools.ts:245](https://github.com/Christian-Me/folde
 
 > **new SelectProperty**(`app`, `knownProperties`, `property`, `onSubmit`): `SelectProperty`
 
-Defined in: [src/frontmatter-tools.ts:252](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L252)
+Defined in: [src/frontmatter-tools.ts:252](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L252)
 
 #### Parameters
 
@@ -28,11 +28,11 @@ Defined in: [src/frontmatter-tools.ts:252](https://github.com/Christian-Me/folde
 
 ##### knownProperties
 
-[`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
+[`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)[]
 
 ##### property
 
-`undefined` | [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)
+`undefined` | [`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)
 
 ##### onSubmit
 
@@ -110,9 +110,9 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:4017
 
 ### knownProperties
 
-> **knownProperties**: [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
+> **knownProperties**: [`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)[]
 
-Defined in: [src/frontmatter-tools.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L248)
+Defined in: [src/frontmatter-tools.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L248)
 
 ***
 
@@ -144,15 +144,15 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2880
 
 > **newTextFlag**: `Boolean`
 
-Defined in: [src/frontmatter-tools.ts:250](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L250)
+Defined in: [src/frontmatter-tools.ts:250](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L250)
 
 ***
 
 ### property
 
-> **property**: `undefined` \| [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)
+> **property**: `undefined` \| [`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)
 
-Defined in: [src/frontmatter-tools.ts:247](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L247)
+Defined in: [src/frontmatter-tools.ts:247](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L247)
 
 ***
 
@@ -208,7 +208,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2885
 
 > **typedText**: `string`
 
-Defined in: [src/frontmatter-tools.ts:249](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L249)
+Defined in: [src/frontmatter-tools.ts:249](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L249)
 
 ## Methods
 
@@ -232,9 +232,9 @@ Hide the modal.
 
 ### getSuggestions()
 
-> **getSuggestions**(`query`): [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
+> **getSuggestions**(`query`): [`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)[]
 
-Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L261)
+Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L261)
 
 #### Parameters
 
@@ -244,7 +244,7 @@ Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folde
 
 #### Returns
 
-[`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
+[`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)[]
 
 #### Overrides
 
@@ -256,13 +256,13 @@ Defined in: [src/frontmatter-tools.ts:261](https://github.com/Christian-Me/folde
 
 > **onChooseSuggestion**(`property`, `evt`): `void`
 
-Defined in: [src/frontmatter-tools.ts:289](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L289)
+Defined in: [src/frontmatter-tools.ts:289](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L289)
 
 #### Parameters
 
 ##### property
 
-[`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)
+[`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)
 
 ##### evt
 
@@ -282,7 +282,7 @@ Defined in: [src/frontmatter-tools.ts:289](https://github.com/Christian-Me/folde
 
 > **onClose**(): `void`
 
-Defined in: [src/frontmatter-tools.ts:280](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L280)
+Defined in: [src/frontmatter-tools.ts:280](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L280)
 
 #### Returns
 
@@ -314,7 +314,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:4040
 
 > **onOpen**(): `void`
 
-Defined in: [src/frontmatter-tools.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L267)
+Defined in: [src/frontmatter-tools.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L267)
 
 #### Returns
 
@@ -348,13 +348,13 @@ Show the modal on the the active window. On mobile, the modal will animate on sc
 
 > **renderSuggestion**(`property`, `el`): `void`
 
-Defined in: [src/frontmatter-tools.ts:276](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/frontmatter-tools.ts#L276)
+Defined in: [src/frontmatter-tools.ts:276](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/frontmatter-tools.ts#L276)
 
 #### Parameters
 
 ##### property
 
-[`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)
+[`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)
 
 ##### el
 
@@ -402,7 +402,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:4044
 
 ##### value
 
-[`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)
+[`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)
 
 ##### evt
 

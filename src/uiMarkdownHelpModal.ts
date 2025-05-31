@@ -11,6 +11,7 @@ export class MarkdownHelpModal extends Modal {
     async onOpen() {
         const { contentEl } = this;
         contentEl.empty();
+        // @ts-ignore
         await MarkdownRenderer.render(this.app, this.markdown, contentEl, this.sourcePath, this);
     }
 }

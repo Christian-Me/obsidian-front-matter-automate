@@ -1,12 +1,12 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / uiElements
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / uiElements
 
 # uiElements
 
 ## Functions
 
-- [renderValueInput](functions/renderValueInput.md)
-- [updatePropertyIcon](functions/updatePropertyIcon.md)
+- [renderValueInput](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiElements/functions/renderValueInput.md)
+- [updatePropertyIcon](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiElements/functions/updatePropertyIcon.md)

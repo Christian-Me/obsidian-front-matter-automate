@@ -1,19 +1,19 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / autocompleteModal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / autocompleteModal
 
 # autocompleteModal
 
 ## Classes
 
-- [AutocompleteModal](classes/AutocompleteModal.md)
+- [AutocompleteModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/classes/AutocompleteModal.md)
 
 ## Interfaces
 
-- [autocompleteModalResult](interfaces/autocompleteModalResult.md)
+- [autocompleteModalResult](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/interfaces/autocompleteModalResult.md)
 
 ## Functions
 
-- [openAutocompleteModal](functions/openAutocompleteModal.md)
+- [openAutocompleteModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/functions/openAutocompleteModal.md)

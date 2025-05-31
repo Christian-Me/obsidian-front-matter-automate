@@ -1,14 +1,14 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [directorySelectionModal](../README.md) / openDirectorySelectionModal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [directorySelectionModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/README.md) / openDirectorySelectionModal
 
 # Function: openDirectorySelectionModal()
 
 > **openDirectorySelectionModal**(`app`, `initialFolders`, `initialFiles`, `options`, `okCallback`): `void`
 
-Defined in: [src/directorySelectionModal.ts:684](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/directorySelectionModal.ts#L684)
+Defined in: [src/directorySelectionModal.ts:684](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/directorySelectionModal.ts#L684)
 
 Helper function to easily open the Directory Selection Modal.
 
@@ -34,7 +34,7 @@ Array of initially selected file paths.
 
 ### options
 
-[`DirectorySelectionOptions`](../interfaces/DirectorySelectionOptions.md)
+[`DirectorySelectionOptions`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/interfaces/DirectorySelectionOptions.md)
 
 ### okCallback
 

@@ -4,7 +4,7 @@ import { ErrorManager } from "./Error";
 import { AlertModal } from './alertBox';
 import { delimiter } from 'path';
 import { rulesManager } from './rules/rules';
-import { DEBUG, ERROR, logger, WARNING } from './Log';
+import { DEBUG, ERROR, logger, TRACE, WARNING } from './Log';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -391,6 +391,7 @@ export function resolveFile(app: App, file_str: string): TFile {
           const optionConfig = rule.optionsConfig[ruleId]
           if (optionConfig) {
             if (optionId) {
+              logger.log(TRACE,`getOptionConfig: ${ruleId} option '${optionId}'`, rule, optionConfig[optionId]);
               return optionConfig[optionId];
             } else {
               return optionConfig;

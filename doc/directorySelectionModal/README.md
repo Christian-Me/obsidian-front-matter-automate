@@ -1,25 +1,25 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / directorySelectionModal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / directorySelectionModal
 
 # directorySelectionModal
 
 ## Classes
 
-- [DirectorySelectionModal](classes/DirectorySelectionModal.md)
+- [DirectorySelectionModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/classes/DirectorySelectionModal.md)
 
 ## Interfaces
 
-- [DirectorySelectionOptions](interfaces/DirectorySelectionOptions.md)
-- [DirectorySelectionResult](interfaces/DirectorySelectionResult.md)
+- [DirectorySelectionOptions](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/interfaces/DirectorySelectionOptions.md)
+- [DirectorySelectionResult](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/interfaces/DirectorySelectionResult.md)
 
 ## Type Aliases
 
-- [DirectoryDisplayMode](type-aliases/DirectoryDisplayMode.md)
-- [DirectorySelectionMode](type-aliases/DirectorySelectionMode.md)
+- [DirectoryDisplayMode](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/type-aliases/DirectoryDisplayMode.md)
+- [DirectorySelectionMode](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/type-aliases/DirectorySelectionMode.md)
 
 ## Functions
 
-- [openDirectorySelectionModal](functions/openDirectorySelectionModal.md)
+- [openDirectorySelectionModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/functions/openDirectorySelectionModal.md)

@@ -1,11 +1,11 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / SortableListComponent
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / SortableListComponent
 
 # SortableListComponent
 
 ## Classes
 
-- [SortableListComponent](classes/SortableListComponent.md)
+- [SortableListComponent](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/SortableListComponent/classes/SortableListComponent.md)

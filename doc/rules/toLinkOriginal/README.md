@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/toLinkOriginal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/toLinkOriginal
 
 # rules/toLinkOriginal
 
 ## Classes
 
-- [RuleToLinkOriginal](classes/RuleToLinkOriginal.md)
+- [RuleToLinkOriginal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLinkOriginal/classes/RuleToLinkOriginal.md)

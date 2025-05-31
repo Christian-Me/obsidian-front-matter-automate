@@ -1,11 +1,11 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / alertBox
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / alertBox
 
 # alertBox
 
 ## Classes
 
-- [AlertModal](classes/AlertModal.md)
+- [AlertModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/alertBox/classes/AlertModal.md)

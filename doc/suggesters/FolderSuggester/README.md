@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / suggesters/FolderSuggester
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / suggesters/FolderSuggester
 
 # suggesters/FolderSuggester
 
 ## Classes
 
-- [FolderSuggest](classes/FolderSuggest.md)
+- [FolderSuggest](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/FolderSuggester/classes/FolderSuggest.md)

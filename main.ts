@@ -6,7 +6,7 @@ import { parseJSCode, ScriptingTools } from './src/tools';
 import { versionString, FrontmatterAutomateSettings, DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS, FrontmatterAutomateRuleSettings, PropertyTypeInfo} from './src/types'
 import "./src/rules/index";
 import { rulesManager } from './src/rules/rules';
-import { DEBUG, INFO, logger } from './src/Log';
+import { DEBUG, ERROR, INFO, logger } from './src/Log';
 import { log } from 'console';
 import { TreeHierarchyData } from './src/uiTreeHierarchySortableSettings';
 export default class FolderTagPlugin extends Plugin {
@@ -47,7 +47,6 @@ export default class FolderTagPlugin extends Plugin {
             this.app.vault.on('rename', (file, oldPath) => {
                 if (this.fileInProgress) return; // Ignore if file is in progress
                 if (file instanceof TFile && file.extension === 'md') {
-                    logger.log(DEBUG,`Event renaming file: `, file.path);
                     this.updateFrontmatterParameters('rename', file, this.settings.folderConfig, oldPath);
                 }
             })
@@ -77,27 +76,7 @@ export default class FolderTagPlugin extends Plugin {
                     logger.log(DEBUG,`Event metadata changed: ${file.path} not a markdown file!`);
                     return;
                 }
-                logger.groupCollapsed(DEBUG,`Event metadata changed: ${file.path} `);
                 if (file) this.updateFrontmatterParameters('metadata-changed', file, this.settings.folderConfig);
-                logger.groupEnd();
-                /*
-                if (cache.frontmatter && Array.isArray(this.settings.liveRules) && this.settings.liveRules.length > 0) {
-                    logger.log(DEBUG,`Event metadata changed: ${file.path} ${this.settings.liveRules.length} rules live`);
-                    // apply all live rules to frontmatter
-                    this.app.fileManager.processFrontMatter(file, async (frontmatter) => {
-                        for (const rule of this.settings.liveRules)  {
-                            if (checkIfFileAllowed(file, this.settings, rule)){
-                                if (rule.onlyModify && !frontmatter.hasOwnProperty(rule.property)) continue; // only modify if property exists
-                                let result = executeRuleObject('modify',this.app, this.settings, file, frontmatter[rule.property], rule, frontmatter);
-                                if (result) frontmatter[rule.property] = result;
-                                logger.log(DEBUG,` Done: rule '${rule.property}'(${rule.content}) File ${file.path} result: `, result, frontmatter[rule.property], frontmatter);
-                            } else {
-                                logger.log(DEBUG,`file ${file.path} rejected by rule ${rule.content}!`)
-                            }
-                        }
-                    },{'mtime':file.stat.mtime}); // do not change the modify time.
-                };
-                */
             })
         );
             
@@ -169,7 +148,18 @@ export default class FolderTagPlugin extends Plugin {
         }
         const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFolderFromPath(oldPath))
-        const rules = ruleSettings?.rows.map((row) => row.payload as FrontmatterAutomateRuleSettings)
+        const rules = ruleSettings?.rows.flatMap((row) => {
+            if (row.folderId) {
+                const folder = ruleSettings.folders.find((folder) => folder.id === row.folderId);
+                if (!folder) {
+                    row.folderId = undefined;
+                    logger.log(ERROR,`Event ${eventName}: Folder with id ${row.folderId} not found for rule ${row.payload.content}!`);
+                    return [row.payload as FrontmatterAutomateRuleSettings];
+                }
+                return !folder.disabled ? [row.payload as FrontmatterAutomateRuleSettings] : [];
+            }
+            return [row.payload as FrontmatterAutomateRuleSettings];
+        }) ?? [];
         if (!rules || rules.length === 0) {
             logger.log(DEBUG,`Event ${eventName}: No rules found for file ${file.path}`);
             return; // No rules to apply
@@ -177,8 +167,21 @@ export default class FolderTagPlugin extends Plugin {
 
         this.app.fileManager.processFrontMatter(file, (frontmatter) => {
             // apply all rules to frontmatter
-            logger.groupCollapsed(DEBUG,`Event ${eventName}: ${file.path} ${rules.length} rules`,frontmatter);
+            logger.groupCollapsed(DEBUG,`Event ${eventName}: "${file.path}" ${rules.length}/${ruleSettings?.rows.length} active rules. Old file: "${oldPath}"`,frontmatter);
+            let oldLocationResults: {ruleId: string, result: any}[] = [];
+
+            if (oldPath && oldPath !== file.path) {
+                logger.groupCollapsed(DEBUG,`Event ${eventName}: Collecting results for old file path: "${oldPath}"`);
+                for (let rule of rules) {
+                    if (!rule) continue;
+                    let result = executeRuleObject(eventName, this.app, this, this.settings, this.tools.getMockFileFromPath(oldPath), frontmatter[rule.property], rule, frontmatter);
+                    oldLocationResults.push({ ruleId: rule.id, result });
+                }
+                logger.log(DEBUG,`Old file path results:`, oldLocationResults);
+                logger.groupEnd();
+            }
             for (let rule of rules) {
+                if (!rule) continue;
                 let result = frontmatter[rule.property];
                 logger.groupCollapsed(DEBUG,`Execute Rule: ${rule.property}(${rule.content})`,result, rule);
                 if (!checkIfFileAllowed(file, this.settings, rule)) {
@@ -194,7 +197,7 @@ export default class FolderTagPlugin extends Plugin {
                 switch (rulesManager.getRuleById(rule.content)?.ruleType) {
                     case 'buildIn':
                     case 'script':
-                        result = executeRuleObject(eventName, this.app, this, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldPath);
+                        result = executeRuleObject(eventName, this.app, this, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldLocationResults);
                         break;
                     default:
                 }

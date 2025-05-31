@@ -1,11 +1,11 @@
-[**Documentation**](../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../README.md) / settings-properties
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / settings-properties
 
 # settings-properties
 
 ## Classes
 
-- [RulesTable](classes/RulesTable.md)
+- [RulesTable](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/settings-properties/classes/RulesTable.md)

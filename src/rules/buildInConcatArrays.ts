@@ -75,7 +75,7 @@ export class RuleBuildInConcatArrays extends RulePrototype {
   configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
     that.setOptionConfigDefaults(rule.id, {
         inputProperties: [],
-        onlyWhenAllPropertiesExist: true, // Default to false
+        onlyWhenAllPropertiesExist: false, // Default to false
     });
     
     const multiProp = new MultiPropertySetting(optionEL)
@@ -98,7 +98,7 @@ export class RuleBuildInConcatArrays extends RulePrototype {
         .setName('Only when all properties exist')
         .setDesc('If enabled, the rule will only return a value if all selected properties exist and not empty.')
         .addToggle(toggle => toggle
-            .setValue(that.getOptionConfig(rule.id, 'onlyWhenAllPropertiesExist') || true)
+            .setValue(that.getOptionConfig(rule.id, 'onlyWhenAllPropertiesExist'))
             .onChange(async (value) => {
                 that.setOptionConfig(rule.id, 'onlyWhenAllPropertiesExist', value);
                 that.updatePreview(rule, previewComponent);

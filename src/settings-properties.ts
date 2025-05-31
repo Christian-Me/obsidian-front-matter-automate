@@ -793,7 +793,7 @@ export class RulesTable extends PluginSettingTab {
                         let markdown = "Could not load help from GitHub.";
                         try {
                             markdown = await fetchMarkdownFromGitHub(
-                                "https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/modules.md"
+                                "https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md"
                             );
                         } catch (e) {}
                         new MarkdownHelpModal(this.app, markdown, "modules.md").open();

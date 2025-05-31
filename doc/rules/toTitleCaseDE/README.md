@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/toTitleCaseDE
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/toTitleCaseDE
 
 # rules/toTitleCaseDE
 
 ## Classes
 
-- [RuleToTitleCaseDE](classes/RuleToTitleCaseDE.md)
+- [RuleToTitleCaseDE](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toTitleCaseDE/classes/RuleToTitleCaseDE.md)

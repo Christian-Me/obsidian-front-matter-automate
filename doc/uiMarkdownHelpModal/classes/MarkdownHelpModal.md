@@ -1,12 +1,12 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [uiMarkdownHelpModal](../README.md) / MarkdownHelpModal
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [uiMarkdownHelpModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiMarkdownHelpModal/README.md) / MarkdownHelpModal
 
 # Class: MarkdownHelpModal
 
-Defined in: src/uiMarkdownHelpModal.ts:3
+Defined in: [src/uiMarkdownHelpModal.ts:3](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiMarkdownHelpModal.ts#L3)
 
 ## Extends
 
@@ -16,9 +16,9 @@ Defined in: src/uiMarkdownHelpModal.ts:3
 
 ### Constructor
 
-> **new MarkdownHelpModal**(`app`, `markdown`): `MarkdownHelpModal`
+> **new MarkdownHelpModal**(`app`, `markdown`, `sourcePath`): `MarkdownHelpModal`
 
-Defined in: src/uiMarkdownHelpModal.ts:5
+Defined in: [src/uiMarkdownHelpModal.ts:6](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiMarkdownHelpModal.ts#L6)
 
 #### Parameters
 
@@ -29,6 +29,10 @@ Defined in: src/uiMarkdownHelpModal.ts:5
 ##### markdown
 
 `string`
+
+##### sourcePath
+
+`string` = `""`
 
 #### Returns
 
@@ -80,7 +84,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2889
 
 > **markdown**: `string`
 
-Defined in: src/uiMarkdownHelpModal.ts:4
+Defined in: [src/uiMarkdownHelpModal.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiMarkdownHelpModal.ts#L4)
 
 ***
 
@@ -117,6 +121,14 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2894
 #### Inherited from
 
 `Modal.shouldRestoreSelection`
+
+***
+
+### sourcePath
+
+> **sourcePath**: `string`
+
+Defined in: [src/uiMarkdownHelpModal.ts:5](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiMarkdownHelpModal.ts#L5)
 
 ***
 
@@ -168,15 +180,9 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2918
 
 ### onOpen()
 
-> **onOpen**(`sourcePath`): `Promise`\<`void`\>
+> **onOpen**(): `Promise`\<`void`\>
 
-Defined in: src/uiMarkdownHelpModal.ts:9
-
-#### Parameters
-
-##### sourcePath
-
-`string` = `""`
+Defined in: [src/uiMarkdownHelpModal.ts:11](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiMarkdownHelpModal.ts#L11)
 
 #### Returns
 

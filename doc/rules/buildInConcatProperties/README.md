@@ -1,11 +1,11 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / rules/buildInConcatProperties
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/buildInConcatProperties
 
 # rules/buildInConcatProperties
 
 ## Classes
 
-- [RuleBuildInConcatProperties](classes/RuleBuildInConcatProperties.md)
+- [RuleBuildInConcatProperties](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInConcatProperties/classes/RuleBuildInConcatProperties.md)

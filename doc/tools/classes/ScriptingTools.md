@@ -1,12 +1,12 @@
-[**Documentation**](../../README.md)
+[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
 
 ***
 
-[Documentation](../../README.md) / [tools](../README.md) / ScriptingTools
+[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [tools](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/README.md) / ScriptingTools
 
 # Class: ScriptingTools
 
-Defined in: [src/tools.ts:227](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L227)
+Defined in: [src/tools.ts:227](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L227)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [src/tools.ts:227](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **new ScriptingTools**(`app?`, `plugin?`, `settings?`, `rule?`, `frontmatter?`, `activeFile?`): `ScriptingTools`
 
-Defined in: [src/tools.ts:237](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L237)
+Defined in: [src/tools.ts:237](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L237)
 
 #### Parameters
 
@@ -28,11 +28,11 @@ Defined in: [src/tools.ts:237](https://github.com/Christian-Me/folder-to-tags-pl
 
 ##### settings?
 
-[`FrontmatterAutomateSettings`](../../types/interfaces/FrontmatterAutomateSettings.md)
+[`FrontmatterAutomateSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateSettings.md)
 
 ##### rule?
 
-[`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 ##### frontmatter?
 
@@ -52,7 +52,7 @@ Defined in: [src/tools.ts:237](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **activeFile**: `undefined` \| `TFile`
 
-Defined in: [src/tools.ts:234](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L234)
+Defined in: [src/tools.ts:234](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L234)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [src/tools.ts:234](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **app**: `undefined` \| `App`
 
-Defined in: [src/tools.ts:228](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L228)
+Defined in: [src/tools.ts:228](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L228)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [src/tools.ts:228](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **currentContent**: `any`
 
-Defined in: [src/tools.ts:233](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L233)
+Defined in: [src/tools.ts:233](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L233)
 
 ***
 
@@ -76,15 +76,15 @@ Defined in: [src/tools.ts:233](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **frontmatter**: `any`
 
-Defined in: [src/tools.ts:232](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L232)
+Defined in: [src/tools.ts:232](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L232)
 
 ***
 
 ### knownProperties
 
-> **knownProperties**: `Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\> = `{}`
+> **knownProperties**: `Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\> = `{}`
 
-Defined in: [src/tools.ts:235](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L235)
+Defined in: [src/tools.ts:235](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L235)
 
 ***
 
@@ -92,23 +92,23 @@ Defined in: [src/tools.ts:235](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **plugin**: `any`
 
-Defined in: [src/tools.ts:229](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L229)
+Defined in: [src/tools.ts:229](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L229)
 
 ***
 
 ### rule
 
-> **rule**: `undefined` \| [`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+> **rule**: `undefined` \| [`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
-Defined in: [src/tools.ts:231](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L231)
+Defined in: [src/tools.ts:231](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L231)
 
 ***
 
 ### settings
 
-> **settings**: `undefined` \| [`FrontmatterAutomateSettings`](../../types/interfaces/FrontmatterAutomateSettings.md)
+> **settings**: `undefined` \| [`FrontmatterAutomateSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateSettings.md)
 
-Defined in: [src/tools.ts:230](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L230)
+Defined in: [src/tools.ts:230](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L230)
 
 ## Methods
 
@@ -116,7 +116,7 @@ Defined in: [src/tools.ts:230](https://github.com/Christian-Me/folder-to-tags-pl
 
 > **addLeadingSlash**(`path`): `string`
 
-Defined in: [src/tools.ts:618](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L618)
+Defined in: [src/tools.ts:619](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L619)
 
 Ensures that the given path string starts with a leading slash ('/').
 If the path already begins with a slash, it is returned unchanged.
@@ -141,7 +141,7 @@ The path string guaranteed to start with a leading slash.
 
 > **createFileFromPath**(`fileNameWithPath`, `templateFileWithPath`): `Promise`\<`TFile`\>
 
-Defined in: [src/tools.ts:470](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L470)
+Defined in: [src/tools.ts:471](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L471)
 
 Creates a new file at the specified path using the content from a template file.
 If the file already exists, returns the existing file instead of creating a new one.
@@ -176,7 +176,7 @@ If the folder path is invalid, does not exist, or is not a folder.
 
 > **extractLinkParts**(`link`): `object`
 
-Defined in: [src/tools.ts:564](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L564)
+Defined in: [src/tools.ts:565](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L565)
 
 Extracts the path and title from a given link string.
 
@@ -213,7 +213,7 @@ An object containing the `path` and `title` extracted from the link.
 
 > **extractPathParts**(`link`): `object`
 
-Defined in: [src/tools.ts:589](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L589)
+Defined in: [src/tools.ts:590](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L590)
 
 Extracts the path, title, and file name from a given file link string.
 
@@ -253,9 +253,9 @@ An object containing:
 
 ### fetchCustomPropertyInfos()
 
-> **fetchCustomPropertyInfos**(`app`): `Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\>
+> **fetchCustomPropertyInfos**(`app`): `Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\>
 
-Defined in: [src/tools.ts:497](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L497)
+Defined in: [src/tools.ts:498](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L498)
 
 * Fetches custom property information from all markdown files in the vault.
 
@@ -267,15 +267,15 @@ Defined in: [src/tools.ts:497](https://github.com/Christian-Me/folder-to-tags-pl
 
 #### Returns
 
-`Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\>
+`Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\>
 
 ***
 
 ### fetchKnownProperties()
 
-> **fetchKnownProperties**(`app`): `Promise`\<`Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\>\>
+> **fetchKnownProperties**(`app`): `Promise`\<`Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\>\>
 
-Defined in: [src/tools.ts:519](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L519)
+Defined in: [src/tools.ts:520](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L520)
 
 Fetches known properties from the metadata cache.
 If the method getAllPropertyInfos is not available, it falls back to fetchCustomPropertyInfos.
@@ -290,7 +290,7 @@ The Obsidian app instance.
 
 #### Returns
 
-`Promise`\<`Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\>\>
+`Promise`\<`Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\>\>
 
 ***
 
@@ -298,7 +298,7 @@ The Obsidian app instance.
 
 > **formatToYAMLSaveString**(`text`, `replaceBy`): `string`
 
-Defined in: [src/tools.ts:733](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L733)
+Defined in: [src/tools.ts:734](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L734)
 
 Formats a given text string to be safe for use in YAML by replacing special characters.
 
@@ -332,7 +332,7 @@ The formatted string safe for YAML usage.
 
 > **formatUpperCamelCase**(`text`): `string`
 
-Defined in: [src/tools.ts:889](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L889)
+Defined in: [src/tools.ts:890](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L890)
 
 Converts a given string to camelCase format.
 
@@ -360,7 +360,7 @@ The camelCase formatted string.
 
 > **getActiveFile**(): `undefined` \| `TFile`
 
-Defined in: [src/tools.ts:293](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L293)
+Defined in: [src/tools.ts:293](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L293)
 
 Returns the currently active file.
 
@@ -376,7 +376,7 @@ The active file object, or `undefined` if no file is active.
 
 > **getCurrentContent**(): `any`
 
-Defined in: [src/tools.ts:338](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L338)
+Defined in: [src/tools.ts:338](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L338)
 
 Retrieves the current content stored in the instance.
 
@@ -392,7 +392,7 @@ The current content.
 
 > **getFilesInVault**(`folderPath`): `TFile`[]
 
-Defined in: [src/tools.ts:411](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L411)
+Defined in: [src/tools.ts:412](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L412)
 
 Retrieves all markdown files in the vault whose paths include the specified matching string.
 
@@ -419,7 +419,7 @@ An array of `TFile` objects whose paths include the normalized `matching` string
 
 > **getFolderFromPath**(`path`, `separator`): `undefined` \| `null` \| `string`
 
-Defined in: [src/tools.ts:906](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L906)
+Defined in: [src/tools.ts:907](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L907)
 
 get the path to a file from a string containing the full parh/name string
 
@@ -449,7 +449,7 @@ string
 
 > **getFrontmatter**(): `any`
 
-Defined in: [src/tools.ts:250](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L250)
+Defined in: [src/tools.ts:250](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L250)
 
 Retrieves the frontmatter object associated with the current instance.
 
@@ -465,7 +465,7 @@ The frontmatter data.
 
 > **getFrontmatterProperty**(`key`): `any`
 
-Defined in: [src/tools.ts:277](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L277)
+Defined in: [src/tools.ts:277](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L277)
 
 Retrieves the value of a specified property from the frontmatter object.
 
@@ -487,9 +487,9 @@ The value associated with the specified key in the frontmatter, or `undefined` i
 
 ### getKnownProperties()
 
-> **getKnownProperties**(): `Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\>
+> **getKnownProperties**(): `Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\>
 
-Defined in: [src/tools.ts:547](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L547)
+Defined in: [src/tools.ts:548](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L548)
 
 Retrieves the known properties, initializing them if they have not been loaded yet.
 If the properties are not already cached, this method fetches them using `fetchCustomPropertyInfos`
@@ -497,7 +497,7 @@ and stores them for future access.
 
 #### Returns
 
-`Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\>
+`Record`\<`string`, [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)\>
 
 The cached or newly fetched known properties.
 
@@ -507,7 +507,7 @@ The cached or newly fetched known properties.
 
 > **getMockFileFromPath**(`path`): `undefined` \| `TFile`
 
-Defined in: [src/tools.ts:428](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L428)
+Defined in: [src/tools.ts:429](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L429)
 
 Creates a mock `TFile` object from a given file path string.
 
@@ -536,7 +536,7 @@ A mock `TFile` object representing the file at the given path, or `undefined` if
 
 > **getOptionConfig**(`ruleId`, `optionId?`): `any`
 
-Defined in: [src/tools.ts:386](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L386)
+Defined in: [src/tools.ts:386](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L386)
 
 * Get the option config for a specific rule. Optional the specific parameter by providing an option ID.
 
@@ -558,15 +558,15 @@ Defined in: [src/tools.ts:386](https://github.com/Christian-Me/folder-to-tags-pl
 
 ### getRule()
 
-> **getRule**(): `undefined` \| [`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+> **getRule**(): `undefined` \| [`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
-Defined in: [src/tools.ts:309](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L309)
+Defined in: [src/tools.ts:309](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L309)
 
 Retrieves the current rule associated with this instance.
 
 #### Returns
 
-`undefined` \| [`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+`undefined` \| [`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 The rule object or value stored in the `rule` property.
 
@@ -574,9 +574,9 @@ The rule object or value stored in the `rule` property.
 
 ### getRuleFunction()
 
-> **getRuleFunction**(`rule?`): `undefined` \| [`RulePrototype`](../../rules/rules/classes/RulePrototype.md)
+> **getRuleFunction**(`rule?`): `undefined` \| [`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md)
 
-Defined in: [src/tools.ts:319](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L319)
+Defined in: [src/tools.ts:319](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L319)
 
 Retrieves a rule function based on the provided rule settings.
 
@@ -584,14 +584,14 @@ Retrieves a rule function based on the provided rule settings.
 
 ##### rule?
 
-[`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 Optional. The rule settings to use for retrieving the rule function.
               If not provided, the method uses the instance's default rule.
 
 #### Returns
 
-`undefined` \| [`RulePrototype`](../../rules/rules/classes/RulePrototype.md)
+`undefined` \| [`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md)
 
 The rule function associated with the specified rule settings, or `undefined` if no rule is found.
 
@@ -601,7 +601,7 @@ The rule function associated with the specified rule settings, or `undefined` if
 
 > **getTFileFromPath**(`path`, `filesCheck`): `undefined` \| `TFile`
 
-Defined in: [src/tools.ts:452](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L452)
+Defined in: [src/tools.ts:453](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L453)
 
 Retrieves a `TFile` object from a given file path.
 
@@ -631,7 +631,7 @@ The matching `TFile` if found; otherwise, `undefined`.
 
 > **isISOString**(`str`, `options`): `boolean`
 
-Defined in: [src/tools.ts:628](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L628)
+Defined in: [src/tools.ts:629](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L629)
 
 Check if a string complies with ISO Standard
 
@@ -673,7 +673,7 @@ Options to look for
 
 > **removeAllExtensions**(`fileName`): `string`
 
-Defined in: [src/tools.ts:863](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L863)
+Defined in: [src/tools.ts:864](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L864)
 
 Removes the ALL file extension(s) from a given file name.
 
@@ -697,7 +697,7 @@ The file name without its extension.
 
 > **removeDuplicateStrings**(`stringArray`): `string`[]
 
-Defined in: [src/tools.ts:919](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L919)
+Defined in: [src/tools.ts:920](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L920)
 
 removes duplicate strings in an array and deletes empty strings
 
@@ -717,7 +717,7 @@ removes duplicate strings in an array and deletes empty strings
 
 > **removeExtensions**(`fileName`): `string`
 
-Defined in: [src/tools.ts:872](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L872)
+Defined in: [src/tools.ts:873](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L873)
 
 Removes the last file extension(s) from a given file name.
 
@@ -741,7 +741,7 @@ The file name without its extension.
 
 > **removeLeadingSlash**(`path`): `string`
 
-Defined in: [src/tools.ts:608](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L608)
+Defined in: [src/tools.ts:609](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L609)
 
 Removes one or more leading slashes from the beginning of the given path string.
 
@@ -765,7 +765,7 @@ The input string without any leading slashes.
 
 > **replaceSpaces**(`text`, `replaceBy`): `string`
 
-Defined in: [src/tools.ts:848](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L848)
+Defined in: [src/tools.ts:849](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L849)
 
 Replaces all whitespace characters in the given text with a specified replacement string.
 
@@ -795,7 +795,7 @@ The modified string with spaces replaced by the specified replacement string.
 
 > **setActiveFile**(`file`): `void`
 
-Defined in: [src/tools.ts:285](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L285)
+Defined in: [src/tools.ts:285](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L285)
 
 Sets the currently active file.
 
@@ -817,7 +817,7 @@ The file to set as active. Must be an instance of `TFile`.
 
 > **setCurrentContent**(`content`): `void`
 
-Defined in: [src/tools.ts:330](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L330)
+Defined in: [src/tools.ts:330](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L330)
 
 Sets the current content to the provided value.
 
@@ -839,7 +839,7 @@ The content to set as the current content. Can be of any type.
 
 > **setFrontmatter**(`frontmatter`): `void`
 
-Defined in: [src/tools.ts:258](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L258)
+Defined in: [src/tools.ts:258](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L258)
 
 Sets the frontmatter property for the current instance.
 
@@ -861,7 +861,7 @@ The frontmatter object to assign.
 
 > **setFrontmatterProperty**(`key`, `value`): `void`
 
-Defined in: [src/tools.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L267)
+Defined in: [src/tools.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L267)
 
 Sets a property in the frontmatter object. If the frontmatter does not exist, it initializes it as an empty object.
 
@@ -889,7 +889,7 @@ The value to assign to the specified property.
 
 > **setRule**(`rule`): `void`
 
-Defined in: [src/tools.ts:301](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L301)
+Defined in: [src/tools.ts:301](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L301)
 
 Sets the current rule configuration for the frontmatter automation.
 
@@ -897,7 +897,7 @@ Sets the current rule configuration for the frontmatter automation.
 
 ##### rule
 
-[`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 The rule settings to apply, represented by a `FrontmatterAutomateRuleSettings` object.
 
@@ -911,7 +911,7 @@ The rule settings to apply, represented by a `FrontmatterAutomateRuleSettings` o
 
 > **showConfirmDialog**(`message`, `title`, `button1`, `button2`): `Promise`\<`boolean`\>
 
-Defined in: [src/tools.ts:375](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L375)
+Defined in: [src/tools.ts:375](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L375)
 
 Displays a confirmation dialog with customizable message, title, and button labels.
 
@@ -953,7 +953,7 @@ A promise that resolves to a boolean indicating whether the user confirmed (true
 
 > **toMarkdownLink**(`input`, `replaceSpaces?`): `string` \| `string`[]
 
-Defined in: [src/tools.ts:803](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L803)
+Defined in: [src/tools.ts:804](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L804)
 
 Converts an input string or array of strings into a Markdown Link format.
 
@@ -991,7 +991,7 @@ If the input is an array, each element is converted to a WikiLink and joined wit
 
 > **toWikiLink**(`input`, `replaceSpaces`): `string` \| `string`[]
 
-Defined in: [src/tools.ts:829](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L829)
+Defined in: [src/tools.ts:830](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L830)
 
 Converts an input string or array of strings into a WikiLink format string or array of strings.
 
@@ -1028,7 +1028,7 @@ If the input is an array, each element is converted to a WikiLink and joined wit
 
 > **toYamlSafeString**(`input`): `string` \| `number` \| `string`[]
 
-Defined in: [src/tools.ts:747](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L747)
+Defined in: [src/tools.ts:748](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L748)
 
 Converts a string to a YAML-safe format by adding quotes when necessary.
 
@@ -1052,7 +1052,7 @@ The safely quoted string when needed, or the original string if safe
 
 > **tryConvert**(`input`, `typeString`): `undefined` \| `string` \| `number` \| `boolean` \| `string`[]
 
-Defined in: [src/tools.ts:677](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L677)
+Defined in: [src/tools.ts:678](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L678)
 
 Try to convert Any Types to a specific Type
 
@@ -1078,7 +1078,7 @@ Try to convert Any Types to a specific Type
 
 > **updateFrontmatter**(`property`, `newContent`, `file?`): `void`
 
-Defined in: [src/tools.ts:353](https://github.com/Christian-Me/folder-to-tags-plugin/blob/a733ed2c2245ed051659b6c3e9c71ef47c30835a/src/tools.ts#L353)
+Defined in: [src/tools.ts:353](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/tools.ts#L353)
 
 Updates the specified frontmatter property of a given file with new content.
 
