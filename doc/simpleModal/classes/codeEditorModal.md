@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [simpleModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/simpleModal/README.md) / codeEditorModal
+[Documentation](../../README.md) / [simpleModal](../README.md) / codeEditorModal
 
 # Class: codeEditorModal
 
-Defined in: [src/simpleModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/simpleModal.ts#L16)
+Defined in: [src/simpleModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/simpleModal.ts#L16)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new codeEditorModal**(`app`, `plugin`, `expectedType`, `activeFile`, `frontmatter`, `okCallback`): `codeEditorModal`
 
-Defined in: [src/simpleModal.ts:41](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/simpleModal.ts#L41)
+Defined in: [src/simpleModal.ts:41](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/simpleModal.ts#L41)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -40,7 +40,7 @@ The plugin instance.
 
 ##### expectedType
 
-[`ObsidianPropertyTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/ObsidianPropertyTypes.md)
+[`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
 Expected return type.
 
@@ -178,7 +178,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/simpleModal.ts:157](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/simpleModal.ts#L157)
+Defined in: [src/simpleModal.ts:157](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/simpleModal.ts#L157)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -196,7 +196,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/simpleModal.ts:77](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/simpleModal.ts#L77)
+Defined in: [src/simpleModal.ts:77](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/simpleModal.ts#L77)
 
 Called when the modal is opened. Builds the UI.
 

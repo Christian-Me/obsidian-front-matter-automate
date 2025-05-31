@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [alertBox](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/alertBox/README.md) / AlertModal
+[Documentation](../../README.md) / [alertBox](../README.md) / AlertModal
 
 # Class: AlertModal
 
-Defined in: [src/alertBox.ts:6](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/alertBox.ts#L6)
+Defined in: [src/alertBox.ts:6](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/alertBox.ts#L6)
 
 display an Alert Modal
 
@@ -20,7 +20,7 @@ display an Alert Modal
 
 > **new AlertModal**(`app`, `title`, `description`, `btn1`, `btn2`, `askAgainLabel?`): `AlertModal`
 
-Defined in: [src/alertBox.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/alertBox.ts#L16)
+Defined in: [src/alertBox.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/alertBox.ts#L16)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/alertBox.ts:60](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/alertBox.ts#L60)
+Defined in: [src/alertBox.ts:60](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/alertBox.ts#L60)
 
 #### Returns
 
@@ -180,7 +180,7 @@ Defined in: [src/alertBox.ts:60](https://github.com/Christian-Me/folder-to-tags-
 
 > **onOpen**(): `void`
 
-Defined in: [src/alertBox.ts:28](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/alertBox.ts#L28)
+Defined in: [src/alertBox.ts:28](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/alertBox.ts#L28)
 
 #### Returns
 
@@ -214,7 +214,7 @@ Show the modal on the the active window. On mobile, the modal will animate on sc
 
 > **openAndGetValue**(): `Promise`\<\{ `data`: `any`; `proceed`: `boolean`; \}\>
 
-Defined in: [src/alertBox.ts:65](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/alertBox.ts#L65)
+Defined in: [src/alertBox.ts:65](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/alertBox.ts#L65)
 
 #### Returns
 

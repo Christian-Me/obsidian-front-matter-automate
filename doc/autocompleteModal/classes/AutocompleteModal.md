@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [autocompleteModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/README.md) / AutocompleteModal
+[Documentation](../../README.md) / [autocompleteModal](../README.md) / AutocompleteModal
 
 # Class: AutocompleteModal
 
-Defined in: [src/autocompleteModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L17)
+Defined in: [src/autocompleteModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L17)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new AutocompleteModal**(`app`, `plugin`, `rule`, `options`, `activeFile`, `frontmatter`, `okCallback?`): `AutocompleteModal`
 
-Defined in: [src/autocompleteModal.ts:51](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L51)
+Defined in: [src/autocompleteModal.ts:51](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L51)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -40,7 +40,7 @@ The plugin instance.
 
 ##### rule
 
-[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 ##### options
 
@@ -162,13 +162,13 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2885
 
 > **changeCallback**(`propertyInfo`, `value`): `void`
 
-Defined in: [src/autocompleteModal.ts:167](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L167)
+Defined in: [src/autocompleteModal.ts:167](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L167)
 
 #### Parameters
 
 ##### propertyInfo
 
-`undefined` | [`PropertyInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyInfo.md)
+`undefined` | [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)
 
 ##### value
 
@@ -202,7 +202,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/autocompleteModal.ts:226](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L226)
+Defined in: [src/autocompleteModal.ts:226](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L226)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -220,7 +220,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/autocompleteModal.ts:97](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L97)
+Defined in: [src/autocompleteModal.ts:97](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L97)
 
 Called when the modal is opened. Builds the UI.
 
@@ -254,13 +254,13 @@ Show the modal on the the active window. On mobile, the modal will animate on sc
 
 ### openAndGetValues()
 
-> **openAndGetValues**(): `Promise`\<`null` \| [`autocompleteModalResult`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/interfaces/autocompleteModalResult.md)\>
+> **openAndGetValues**(): `Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
-Defined in: [src/autocompleteModal.ts:231](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L231)
+Defined in: [src/autocompleteModal.ts:231](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L231)
 
 #### Returns
 
-`Promise`\<`null` \| [`autocompleteModalResult`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/interfaces/autocompleteModalResult.md)\>
+`Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
 ***
 

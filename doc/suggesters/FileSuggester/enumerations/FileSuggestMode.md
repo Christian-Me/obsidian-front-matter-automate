@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [suggesters/FileSuggester](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/FileSuggester/README.md) / FileSuggestMode
+[Documentation](../../../README.md) / [suggesters/FileSuggester](../README.md) / FileSuggestMode
 
 # Enumeration: FileSuggestMode
 
-Defined in: [src/suggesters/FileSuggester.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FileSuggester.ts#L10)
+Defined in: [src/suggesters/FileSuggester.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FileSuggester.ts#L10)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [src/suggesters/FileSuggester.ts:10](https://github.com/Christian-Me
 
 > **ScriptFiles**: `1`
 
-Defined in: [src/suggesters/FileSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FileSuggester.ts#L12)
+Defined in: [src/suggesters/FileSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FileSuggester.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/suggesters/FileSuggester.ts:12](https://github.com/Christian-Me
 
 > **TemplateFiles**: `0`
 
-Defined in: [src/suggesters/FileSuggester.ts:11](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FileSuggester.ts#L11)
+Defined in: [src/suggesters/FileSuggester.ts:11](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FileSuggester.ts#L11)

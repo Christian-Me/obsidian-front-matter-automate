@@ -1,15 +1,15 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / suggesters/FileSuggester
+[Documentation](../../README.md) / suggesters/FileSuggester
 
 # suggesters/FileSuggester
 
 ## Enumerations
 
-- [FileSuggestMode](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/FileSuggester/enumerations/FileSuggestMode.md)
+- [FileSuggestMode](enumerations/FileSuggestMode.md)
 
 ## Classes
 
-- [FileSuggest](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/FileSuggester/classes/FileSuggest.md)
+- [FileSuggest](classes/FileSuggest.md)

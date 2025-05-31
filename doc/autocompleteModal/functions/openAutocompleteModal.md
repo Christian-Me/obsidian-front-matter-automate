@@ -1,14 +1,14 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [autocompleteModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/README.md) / openAutocompleteModal
+[Documentation](../../README.md) / [autocompleteModal](../README.md) / openAutocompleteModal
 
 # Function: openAutocompleteModal()
 
-> **openAutocompleteModal**(`app`, `plugin`, `rule`, `options`, `activeFile`, `frontmatter`): `Promise`\<`null` \| [`autocompleteModalResult`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/interfaces/autocompleteModalResult.md)\>
+> **openAutocompleteModal**(`app`, `plugin`, `rule`, `options`, `activeFile`, `frontmatter`): `Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
-Defined in: [src/autocompleteModal.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/autocompleteModal.ts#L248)
+Defined in: [src/autocompleteModal.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L248)
 
 Opens an autocomplete modal for selecting or entering values based on the provided parameters.
 
@@ -28,7 +28,7 @@ The plugin instance that is invoking the modal.
 
 ### rule
 
-[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 The folder-to-tag rule definition to be used in the modal.
 
@@ -50,6 +50,6 @@ The frontmatter data associated with the active file.
 
 ## Returns
 
-`Promise`\<`null` \| [`autocompleteModalResult`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/autocompleteModal/interfaces/autocompleteModalResult.md)\>
+`Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
 A promise that resolves to the result of the autocomplete modal, or `null` if no selection was made.

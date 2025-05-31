@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [directorySelectionModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/README.md) / DirectorySelectionModal
+[Documentation](../../README.md) / [directorySelectionModal](../README.md) / DirectorySelectionModal
 
 # Class: DirectorySelectionModal
 
-Defined in: [src/directorySelectionModal.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/directorySelectionModal.ts#L36)
+Defined in: [src/directorySelectionModal.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/directorySelectionModal.ts#L36)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new DirectorySelectionModal**(`app`, `initialFolders`, `initialFiles`, `initialOptions`, `okCallback`): `DirectorySelectionModal`
 
-Defined in: [src/directorySelectionModal.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/directorySelectionModal.ts#L66)
+Defined in: [src/directorySelectionModal.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/directorySelectionModal.ts#L66)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -46,7 +46,7 @@ Array of initially selected file paths.
 
 ##### initialOptions
 
-[`DirectorySelectionOptions`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/directorySelectionModal/interfaces/DirectorySelectionOptions.md)
+[`DirectorySelectionOptions`](../interfaces/DirectorySelectionOptions.md)
 
 ##### okCallback
 
@@ -170,7 +170,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/directorySelectionModal.ts:658](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/directorySelectionModal.ts#L658)
+Defined in: [src/directorySelectionModal.ts:658](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/directorySelectionModal.ts#L658)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -188,7 +188,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `void`
 
-Defined in: [src/directorySelectionModal.ts:110](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/directorySelectionModal.ts#L110)
+Defined in: [src/directorySelectionModal.ts:110](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/directorySelectionModal.ts#L110)
 
 Called when the modal is opened. Builds the UI.
 

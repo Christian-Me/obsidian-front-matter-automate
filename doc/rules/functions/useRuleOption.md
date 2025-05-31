@@ -1,14 +1,14 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [rules](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/README.md) / useRuleOption
+[Documentation](../../README.md) / [rules](../README.md) / useRuleOption
 
 # Function: useRuleOption()
 
 > **useRuleOption**(`ruleFn`, `option`): `boolean`
 
-Defined in: [src/rules.ts:421](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules.ts#L421)
+Defined in: [src/rules.ts:421](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules.ts#L421)
 
 Determines whether a specific option is enabled for a given rule function.
 
@@ -18,7 +18,7 @@ Determines whether a specific option is enabled for a given rule function.
 
 The rule function object, which may be undefined. If defined, it should contain a `configElements` property.
 
-`undefined` | [`RuleFunction`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/interfaces/RuleFunction.md)
+`undefined` | [`RuleFunction`](../interfaces/RuleFunction.md)
 
 ### option
 

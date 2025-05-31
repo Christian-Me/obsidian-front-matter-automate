@@ -1,16 +1,16 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / uiMarkdownHelpModal
+[Documentation](../README.md) / uiMarkdownHelpModal
 
 # uiMarkdownHelpModal
 
 ## Classes
 
-- [MarkdownHelpModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiMarkdownHelpModal/classes/MarkdownHelpModal.md)
+- [MarkdownHelpModal](classes/MarkdownHelpModal.md)
 
 ## Functions
 
-- [fetchMarkdownFromGitHub](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiMarkdownHelpModal/functions/fetchMarkdownFromGitHub.md)
-- [readPluginDocFile](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiMarkdownHelpModal/functions/readPluginDocFile.md)
+- [fetchMarkdownFromGitHub](functions/fetchMarkdownFromGitHub.md)
+- [readPluginDocFile](functions/readPluginDocFile.md)

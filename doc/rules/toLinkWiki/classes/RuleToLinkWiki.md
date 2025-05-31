@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [rules/toLinkWiki](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toLinkWiki/README.md) / RuleToLinkWiki
+[Documentation](../../../README.md) / [rules/toLinkWiki](../README.md) / RuleToLinkWiki
 
 # Class: RuleToLinkWiki
 
-Defined in: [src/rules/toLinkWiki.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/toLinkWiki.ts#L36)
+Defined in: [src/rules/toLinkWiki.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/toLinkWiki.ts#L36)
 
 Represents a rule for formatting input as a wiki link.
 
@@ -30,7 +30,7 @@ console.log(formattedInput); // Outputs the input formatted as a wiki link.
 
 ## Extends
 
-- [`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md)
+- [`RulePrototype`](../../rules/classes/RulePrototype.md)
 
 ## Constructors
 
@@ -38,7 +38,7 @@ console.log(formattedInput); // Outputs the input formatted as a wiki link.
 
 > **new RuleToLinkWiki**(): `RuleToLinkWiki`
 
-Defined in: [src/rules/toLinkWiki.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/toLinkWiki.ts#L37)
+Defined in: [src/rules/toLinkWiki.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/toLinkWiki.ts#L37)
 
 #### Returns
 
@@ -46,19 +46,19 @@ Defined in: [src/rules/toLinkWiki.ts:37](https://github.com/Christian-Me/folder-
 
 #### Overrides
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`constructor`](../../rules/classes/RulePrototype.md#constructor)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`constructor`](../../rules/classes/RulePrototype.md#constructor)
 
 ## Properties
 
 ### configElements
 
-> **configElements**: `object` \| [`RuleConfigElements`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md) = `{}`
+> **configElements**: `object` \| [`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md) = `{}`
 
-Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L39)
+Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L39)
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`configElements`](../../rules/classes/RulePrototype.md#configelements)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`configElements`](../../rules/classes/RulePrototype.md#configelements)
 
 ***
 
@@ -66,13 +66,13 @@ Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-ta
 
 > **description**: `string`
 
-Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L35)
+Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L35)
 
 A brief description of the rule's purpose.
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`description`](../../rules/classes/RulePrototype.md#description)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`description`](../../rules/classes/RulePrototype.md#description)
 
 ***
 
@@ -80,13 +80,13 @@ A brief description of the rule's purpose.
 
 > **id**: `string`
 
-Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L33)
+Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L33)
 
 The unique identifier for the rule (`toWikiLink`).
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`id`](../../rules/classes/RulePrototype.md#id)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`id`](../../rules/classes/RulePrototype.md#id)
 
 ***
 
@@ -94,11 +94,11 @@ The unique identifier for the rule (`toWikiLink`).
 
 > **isLiveRule**: `boolean` = `false`
 
-Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L37)
+Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L37)
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`isLiveRule`](../../rules/classes/RulePrototype.md#isliverule)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`isLiveRule`](../../rules/classes/RulePrototype.md#isliverule)
 
 ***
 
@@ -106,13 +106,13 @@ Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-ta
 
 > **name**: `string`
 
-Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L34)
+Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L34)
 
 The display name of the rule (`wiki link`).
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`name`](../../rules/classes/RulePrototype.md#name)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`name`](../../rules/classes/RulePrototype.md#name)
 
 ***
 
@@ -120,37 +120,37 @@ The display name of the rule (`wiki link`).
 
 > **rulesConfigDiv**: `undefined` \| `HTMLDivElement` = `undefined`
 
-Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L31)
+Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L31)
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`rulesConfigDiv`](../../rules/classes/RulePrototype.md#rulesconfigdiv)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`rulesConfigDiv`](../../rules/classes/RulePrototype.md#rulesconfigdiv)
 
 ***
 
 ### ruleType
 
-> **ruleType**: [`FrontmatterAutomateRuleTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/type-aliases/FrontmatterAutomateRuleTypes.md) = `'buildIn'`
+> **ruleType**: [`FrontmatterAutomateRuleTypes`](../../rules/type-aliases/FrontmatterAutomateRuleTypes.md) = `'buildIn'`
 
-Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L36)
+Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L36)
 
 The type of rule (`linkFormatter`).
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`ruleType`](../../rules/classes/RulePrototype.md#ruletype)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`ruleType`](../../rules/classes/RulePrototype.md#ruletype)
 
 ***
 
 ### scriptingTools
 
-> **scriptingTools**: [`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
+> **scriptingTools**: [`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
 
-Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L32)
+Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L32)
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`scriptingTools`](../../rules/classes/RulePrototype.md#scriptingtools)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`scriptingTools`](../../rules/classes/RulePrototype.md#scriptingtools)
 
 ***
 
@@ -158,13 +158,13 @@ Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-ta
 
 > **source**: `string` = `'function (app, file, tools) { // do not change this line!\n  let result = \'\'\n  return result;\n}'`
 
-Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L40)
+Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L40)
 
 The source code template for the rule's functionality.
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`source`](../../rules/classes/RulePrototype.md#source)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`source`](../../rules/classes/RulePrototype.md#source)
 
 ***
 
@@ -172,14 +172,14 @@ The source code template for the rule's functionality.
 
 > **type**: `string`[]
 
-Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L38)
+Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L38)
 
 The applicable input types for the rule 
 (`['text', 'tags', 'aliases', 'multitext']`).
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`type`](../../rules/classes/RulePrototype.md#type)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`type`](../../rules/classes/RulePrototype.md#type)
 
 ## Methods
 
@@ -187,7 +187,7 @@ The applicable input types for the rule
 
 > **configTab**(`optionEL`, `rule`, `that`, `previewComponent`): `void`
 
-Defined in: [src/rules/rules.ts:63](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L63)
+Defined in: [src/rules/rules.ts:63](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L63)
 
 Configures the settings tab for a specific rule in the plugin.
 
@@ -201,7 +201,7 @@ The HTML element where the configuration options will be rendered.
 
 ##### rule
 
-[`FrontmatterAutomateRuleSettings`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/interfaces/FrontmatterAutomateRuleSettings.md)
+[`FrontmatterAutomateRuleSettings`](../../../types/interfaces/FrontmatterAutomateRuleSettings.md)
 
 The settings object for the frontmatter automation rule.
 
@@ -223,15 +223,15 @@ The component used to render a preview of the rule's effect.
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`configTab`](../../rules/classes/RulePrototype.md#configtab)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`configTab`](../../rules/classes/RulePrototype.md#configtab)
 
 ***
 
 ### defaultConfigElements()
 
-> **defaultConfigElements**(`modifiers`): [`RuleConfigElements`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md)
+> **defaultConfigElements**(`modifiers`): [`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md)
 
-Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L67)
+Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L67)
 
 #### Parameters
 
@@ -241,11 +241,11 @@ Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-ta
 
 #### Returns
 
-[`RuleConfigElements`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/interfaces/RuleConfigElements.md)
+[`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md)
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`defaultConfigElements`](../../rules/classes/RulePrototype.md#defaultconfigelements)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`defaultConfigElements`](../../rules/classes/RulePrototype.md#defaultconfigelements)
 
 ***
 
@@ -253,7 +253,7 @@ Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-ta
 
 > **execute**(`app`, `file`, `tools`, `input?`): `string`
 
-Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L115)
+Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L115)
 
 Executes the `fx` function based on the `ruleType`.
 Handles different function signatures dynamically.
@@ -274,7 +274,7 @@ The file to pass to the rule's `fx` function.
 
 ##### tools
 
-[`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
+[`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
 
 The scripting tools to pass to the rule's `fx` function.
 
@@ -292,7 +292,7 @@ Optional input for rules that require it (e.g., `buildIn.inputProperty`).
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`execute`](../../rules/classes/RulePrototype.md#execute)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`execute`](../../rules/classes/RulePrototype.md#execute)
 
 ***
 
@@ -300,7 +300,7 @@ Optional input for rules that require it (e.g., `buildIn.inputProperty`).
 
 > **fx**(`app`, `file`, `tools`, `input`): `any`
 
-Defined in: [src/rules/toLinkWiki.ts:48](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/toLinkWiki.ts#L48)
+Defined in: [src/rules/toLinkWiki.ts:48](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/toLinkWiki.ts#L48)
 
 The function that applies the rule logic, converting
 input to a wiki link format using the provided `ScriptingTools`.
@@ -317,7 +317,7 @@ input to a wiki link format using the provided `ScriptingTools`.
 
 ##### tools
 
-[`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
+[`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
 
 ##### input
 
@@ -329,7 +329,7 @@ input to a wiki link format using the provided `ScriptingTools`.
 
 #### Overrides
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`fx`](../../rules/classes/RulePrototype.md#fx)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`fx`](../../rules/classes/RulePrototype.md#fx)
 
 ***
 
@@ -337,7 +337,7 @@ input to a wiki link format using the provided `ScriptingTools`.
 
 > **getSource**(): `string`
 
-Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L46)
+Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L46)
 
 #### Returns
 
@@ -345,7 +345,7 @@ Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-ta
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`getSource`](../../rules/classes/RulePrototype.md#getsource)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`getSource`](../../rules/classes/RulePrototype.md#getsource)
 
 ***
 
@@ -353,7 +353,7 @@ Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-ta
 
 > **hasOwnConfigTab**(): `boolean`
 
-Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L102)
+Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L102)
 
 Checks if the rule has any configuration options.
 
@@ -365,7 +365,7 @@ Checks if the rule has any configuration options.
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`hasOwnConfigTab`](../../rules/classes/RulePrototype.md#hasownconfigtab)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`hasOwnConfigTab`](../../rules/classes/RulePrototype.md#hasownconfigtab)
 
 ***
 
@@ -373,7 +373,7 @@ Checks if the rule has any configuration options.
 
 > **useRuleOption**(`option`): `boolean`
 
-Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/rules/rules.ts#L91)
+Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/rules/rules.ts#L91)
 
 Checks if a specific rule option is enabled.
 
@@ -393,4 +393,4 @@ The name of the rule option to check.
 
 #### Inherited from
 
-[`RulePrototype`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/rules/classes/RulePrototype.md).[`useRuleOption`](../../rules/classes/RulePrototype.md#useruleoption)
+[`RulePrototype`](../../rules/classes/RulePrototype.md).[`useRuleOption`](../../rules/classes/RulePrototype.md#useruleoption)

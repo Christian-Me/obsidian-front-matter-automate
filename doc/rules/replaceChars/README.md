@@ -1,11 +1,11 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/replaceChars
+[Documentation](../../README.md) / rules/replaceChars
 
 # rules/replaceChars
 
 ## Classes
 
-- [RuleReplaceChars](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/replaceChars/classes/RuleReplaceChars.md)
+- [RuleReplaceChars](classes/RuleReplaceChars.md)

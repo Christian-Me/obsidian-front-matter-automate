@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [editorModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/editorModal/README.md) / codeEditorModal
+[Documentation](../../README.md) / [editorModal](../README.md) / codeEditorModal
 
 # Class: codeEditorModal
 
-Defined in: [src/editorModal.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L23)
+Defined in: [src/editorModal.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L23)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new codeEditorModal**(`app`, `plugin`, `initialCode`, `expectedType`, `activeFile`, `frontmatter`, `okCallback`): `codeEditorModal`
 
-Defined in: [src/editorModal.ts:55](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L55)
+Defined in: [src/editorModal.ts:55](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L55)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -46,7 +46,7 @@ String with the initial code.
 
 ##### expectedType
 
-[`ObsidianPropertyTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/ObsidianPropertyTypes.md)
+[`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
 Expected return type.
 
@@ -184,7 +184,7 @@ Hide the modal.
 
 > **loadCodeMirrorMode**(`mode`): `void`
 
-Defined in: [src/editorModal.ts:107](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L107)
+Defined in: [src/editorModal.ts:107](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L107)
 
 #### Parameters
 
@@ -202,7 +202,7 @@ Defined in: [src/editorModal.ts:107](https://github.com/Christian-Me/folder-to-t
 
 > **onClose**(): `void`
 
-Defined in: [src/editorModal.ts:337](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L337)
+Defined in: [src/editorModal.ts:337](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L337)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -220,7 +220,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/editorModal.ts:119](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L119)
+Defined in: [src/editorModal.ts:119](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L119)
 
 Called when the modal is opened. Builds the UI.
 
@@ -300,7 +300,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2923
 
 > **updateTypeIcons**(`value`, `container`, `expectedType`, `currentType`, `settings`): `void`
 
-Defined in: [src/editorModal.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/editorModal.ts#L261)
+Defined in: [src/editorModal.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L261)
 
 #### Parameters
 
@@ -314,11 +314,11 @@ Defined in: [src/editorModal.ts:261](https://github.com/Christian-Me/folder-to-t
 
 ##### expectedType
 
-[`ObsidianPropertyTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/ObsidianPropertyTypes.md)
+[`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
 ##### currentType
 
-[`ObsidianPropertyTypes`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/ObsidianPropertyTypes.md)
+[`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
 ##### settings
 

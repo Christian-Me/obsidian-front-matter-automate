@@ -1,11 +1,11 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/toPascalCase
+[Documentation](../../README.md) / rules/toPascalCase
 
 # rules/toPascalCase
 
 ## Classes
 
-- [RuleToPascalCase](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toPascalCase/classes/RuleToPascalCase.md)
+- [RuleToPascalCase](classes/RuleToPascalCase.md)

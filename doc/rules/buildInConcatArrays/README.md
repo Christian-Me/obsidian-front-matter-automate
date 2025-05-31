@@ -1,11 +1,11 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/buildInConcatArrays
+[Documentation](../../README.md) / rules/buildInConcatArrays
 
 # rules/buildInConcatArrays
 
 ## Classes
 
-- [RuleBuildInConcatArrays](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/buildInConcatArrays/classes/RuleBuildInConcatArrays.md)
+- [RuleBuildInConcatArrays](classes/RuleBuildInConcatArrays.md)

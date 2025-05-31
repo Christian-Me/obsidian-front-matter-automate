@@ -1,12 +1,12 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [settings](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/settings/README.md) / FolderTagSettingTab
+[Documentation](../../README.md) / [settings](../README.md) / FolderTagSettingTab
 
 # Class: FolderTagSettingTab
 
-Defined in: [src/settings.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L15)
+Defined in: [src/settings.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L15)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/settings.ts:15](https://github.com/Christian-Me/folder-to-tags-
 
 > **new FolderTagSettingTab**(`app`, `plugin`): `FolderTagSettingTab`
 
-Defined in: [src/settings.ts:24](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L24)
+Defined in: [src/settings.ts:24](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L24)
 
 #### Parameters
 
@@ -70,9 +70,9 @@ Outermost HTML element on the setting tab.
 
 ### knownProperties
 
-> **knownProperties**: [`PropertyTypeInfo`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/types/type-aliases/PropertyTypeInfo.md)[]
+> **knownProperties**: [`PropertyTypeInfo`](../../types/type-aliases/PropertyTypeInfo.md)[]
 
-Defined in: [src/settings.ts:20](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L20)
+Defined in: [src/settings.ts:20](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L20)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/settings.ts:20](https://github.com/Christian-Me/folder-to-tags-
 
 > **knownTypes**: `any`
 
-Defined in: [src/settings.ts:21](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L21)
+Defined in: [src/settings.ts:21](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L21)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/settings.ts:21](https://github.com/Christian-Me/folder-to-tags-
 
 > **plugin**: `any`
 
-Defined in: [src/settings.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L16)
+Defined in: [src/settings.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L16)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [src/settings.ts:16](https://github.com/Christian-Me/folder-to-tags-
 
 > **rulesContainer**: `HTMLDivElement`
 
-Defined in: [src/settings.ts:18](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L18)
+Defined in: [src/settings.ts:18](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L18)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/settings.ts:18](https://github.com/Christian-Me/folder-to-tags-
 
 > **rulesControl**: `HTMLDivElement`
 
-Defined in: [src/settings.ts:19](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L19)
+Defined in: [src/settings.ts:19](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L19)
 
 ***
 
@@ -112,15 +112,15 @@ Defined in: [src/settings.ts:19](https://github.com/Christian-Me/folder-to-tags-
 
 > **rulesDiv**: `HTMLDivElement`
 
-Defined in: [src/settings.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L17)
+Defined in: [src/settings.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L17)
 
 ***
 
 ### scriptingTools
 
-> **scriptingTools**: [`ScriptingTools`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/tools/classes/ScriptingTools.md)
+> **scriptingTools**: [`ScriptingTools`](../../tools/classes/ScriptingTools.md)
 
-Defined in: [src/settings.ts:22](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L22)
+Defined in: [src/settings.ts:22](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L22)
 
 ## Methods
 
@@ -128,7 +128,7 @@ Defined in: [src/settings.ts:22](https://github.com/Christian-Me/folder-to-tags-
 
 > **display**(): `void`
 
-Defined in: [src/settings.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L46)
+Defined in: [src/settings.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L46)
 
 Called when the settings tab should be rendered.
 
@@ -150,7 +150,7 @@ Called when the settings tab should be rendered.
 
 > **hide**(): `void`
 
-Defined in: [src/settings.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/settings.ts#L29)
+Defined in: [src/settings.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/settings.ts#L29)
 
 Hides the contents of the setting tab.
 Any registered components should be unloaded when the view is hidden.

@@ -1,11 +1,11 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / rules/toUpperCase
+[Documentation](../../README.md) / rules/toUpperCase
 
 # rules/toUpperCase
 
 ## Classes
 
-- [RuleToUpperCase](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/rules/toUpperCase/classes/RuleToUpperCase.md)
+- [RuleToUpperCase](classes/RuleToUpperCase.md)

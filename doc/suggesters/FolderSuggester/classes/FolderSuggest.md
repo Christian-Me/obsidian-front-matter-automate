@@ -1,16 +1,16 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [suggesters/FolderSuggester](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/FolderSuggester/README.md) / FolderSuggest
+[Documentation](../../../README.md) / [suggesters/FolderSuggester](../README.md) / FolderSuggest
 
 # Class: FolderSuggest
 
-Defined in: [src/suggesters/FolderSuggester.ts:7](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FolderSuggester.ts#L7)
+Defined in: [src/suggesters/FolderSuggester.ts:7](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L7)
 
 ## Extends
 
-- [`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md)\<`TFolder`\>
+- [`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md)\<`TFolder`\>
 
 ## Constructors
 
@@ -18,7 +18,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:7](https://github.com/Christian-M
 
 > **new FolderSuggest**(`app`, `inputEl`): `FolderSuggest`
 
-Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FolderSuggester.ts#L8)
+Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L8)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-M
 
 #### Overrides
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`constructor`](../../suggest/classes/TextInputSuggest.md#constructor)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`constructor`](../../suggest/classes/TextInputSuggest.md#constructor)
 
 ## Properties
 
@@ -44,11 +44,11 @@ Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-M
 
 > `protected` **app**: `App`
 
-Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/suggest.ts#L114)
+Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L114)
 
 #### Inherited from
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`app`](../../suggest/classes/TextInputSuggest.md#app)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`app`](../../suggest/classes/TextInputSuggest.md#app)
 
 ***
 
@@ -56,11 +56,11 @@ Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/fold
 
 > `protected` **inputEl**: `HTMLInputElement` \| `HTMLTextAreaElement`
 
-Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/suggest.ts#L115)
+Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L115)
 
 #### Inherited from
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`inputEl`](../../suggest/classes/TextInputSuggest.md#inputel)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`inputEl`](../../suggest/classes/TextInputSuggest.md#inputel)
 
 ## Methods
 
@@ -68,7 +68,7 @@ Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/fold
 
 > **close**(): `void`
 
-Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/suggest.ts#L192)
+Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L192)
 
 #### Returns
 
@@ -76,7 +76,7 @@ Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/fold
 
 #### Inherited from
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`close`](../../suggest/classes/TextInputSuggest.md#close)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`close`](../../suggest/classes/TextInputSuggest.md#close)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/fold
 
 > **getSuggestions**(`inputStr`): `TFolder`[]
 
-Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FolderSuggester.ts#L12)
+Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L12)
 
 #### Parameters
 
@@ -98,7 +98,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-
 
 #### Overrides
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`getSuggestions`](../../suggest/classes/TextInputSuggest.md#getsuggestions)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`getSuggestions`](../../suggest/classes/TextInputSuggest.md#getsuggestions)
 
 ***
 
@@ -106,7 +106,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-
 
 > **onInputChanged**(): `void`
 
-Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/suggest.ts#L145)
+Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L145)
 
 #### Returns
 
@@ -114,7 +114,7 @@ Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/fold
 
 #### Inherited from
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`onInputChanged`](../../suggest/classes/TextInputSuggest.md#oninputchanged)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`onInputChanged`](../../suggest/classes/TextInputSuggest.md#oninputchanged)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/fold
 
 > **open**(`container`, `inputEl`): `void`
 
-Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/suggest.ts#L163)
+Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L163)
 
 #### Parameters
 
@@ -140,7 +140,7 @@ Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/fold
 
 #### Inherited from
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`open`](../../suggest/classes/TextInputSuggest.md#open)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`open`](../../suggest/classes/TextInputSuggest.md#open)
 
 ***
 
@@ -148,7 +148,7 @@ Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/fold
 
 > **renderSuggestion**(`file`, `el`): `void`
 
-Defined in: [src/suggesters/FolderSuggester.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FolderSuggester.ts#L29)
+Defined in: [src/suggesters/FolderSuggester.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L29)
 
 Render the suggestion item into DOM.
 
@@ -168,7 +168,7 @@ Render the suggestion item into DOM.
 
 #### Overrides
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`renderSuggestion`](../../suggest/classes/TextInputSuggest.md#rendersuggestion)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`renderSuggestion`](../../suggest/classes/TextInputSuggest.md#rendersuggestion)
 
 ***
 
@@ -176,7 +176,7 @@ Render the suggestion item into DOM.
 
 > **selectSuggestion**(`file`): `void`
 
-Defined in: [src/suggesters/FolderSuggester.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/suggesters/FolderSuggester.ts#L33)
+Defined in: [src/suggesters/FolderSuggester.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L33)
 
 Called when the user makes a selection.
 
@@ -192,4 +192,4 @@ Called when the user makes a selection.
 
 #### Overrides
 
-[`TextInputSuggest`](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/suggesters/suggest/classes/TextInputSuggest.md).[`selectSuggestion`](../../suggest/classes/TextInputSuggest.md#selectsuggestion)
+[`TextInputSuggest`](../../suggest/classes/TextInputSuggest.md).[`selectSuggestion`](../../suggest/classes/TextInputSuggest.md#selectsuggestion)

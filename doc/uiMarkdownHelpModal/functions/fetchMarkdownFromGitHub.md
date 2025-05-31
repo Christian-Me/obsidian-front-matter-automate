@@ -1,14 +1,14 @@
-[**Documentation**](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md)
+[**Documentation**](../../README.md)
 
 ***
 
-[Documentation](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md) / [uiMarkdownHelpModal](https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/uiMarkdownHelpModal/README.md) / fetchMarkdownFromGitHub
+[Documentation](../../README.md) / [uiMarkdownHelpModal](../README.md) / fetchMarkdownFromGitHub
 
 # Function: fetchMarkdownFromGitHub()
 
 > **fetchMarkdownFromGitHub**(`url`): `Promise`\<`string`\>
 
-Defined in: [src/uiMarkdownHelpModal.ts:18](https://github.com/Christian-Me/folder-to-tags-plugin/blob/ea97d76ce7b235ca1e3494401efc98e537acc1fb/src/uiMarkdownHelpModal.ts#L18)
+Defined in: [src/uiMarkdownHelpModal.ts:42](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/uiMarkdownHelpModal.ts#L42)
 
 ## Parameters
 
