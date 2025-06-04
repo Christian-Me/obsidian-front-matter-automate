@@ -1,6 +1,7 @@
 import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
 import { TreeHierarchyData } from './uiTreeHierarchySortableSettings';
 import { WARNING } from './Log';
+import { AnyNsRecord } from 'dns';
 
 export const versionString = "0.0.26";
 
@@ -92,7 +93,7 @@ export interface FrontmatterAutomateRuleSettings {
     inputProperty: string;
     onlyModify: boolean;
     useCustomCode: boolean;
-    optionConfig?:{};
+    optionsConfig: any | undefined; // used for custom code options, can be any type
 }
 
 export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
@@ -131,6 +132,7 @@ export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
     inputProperty: '',
     onlyModify: true,
     useCustomCode: false,
+    optionsConfig: undefined,
 }
 
 export type PropertyInfo = {

@@ -99,8 +99,12 @@ export class RulesTable extends PluginSettingTab {
         propertyDevDropdown.selectEl.style.maxWidth = '50%';
         propertyDevDropdown.addOption("", "Select a content");
 
-        // add rule functions to dropdown
+        // add built-in rule functions to dropdown
         rulesManager.getRulesByType('buildIn', rule.type).forEach(rule => {
+            propertyDevDropdown.addOption(rule.id, rule.name);
+        });
+        // add automation rule functions to dropdown
+        rulesManager.getRulesByType('automation', rule.type).forEach(rule => {
             propertyDevDropdown.addOption(rule.id, rule.name);
         });
 
@@ -112,6 +116,7 @@ export class RulesTable extends PluginSettingTab {
                 switch (ruleFunction?.ruleType) {
                     case 'script':
                     case 'buildIn.inputProperty':
+                    case 'automation':
                     case 'buildIn':
                         //rule.buildInCode = rulesManager.getSource(value) || rulesManager.getSource('default') || '';
                         let oldOriginalCode = rulesManager.getSource(value) || rulesManager.getSource('default') || '';
@@ -137,7 +142,6 @@ export class RulesTable extends PluginSettingTab {
                         }
                         await this.plugin.saveSettings();
                         break;
-                    case 'automation':
                     case 'autocomplete.modal':
                         // rule.isLiveRule = true;
                         break;
@@ -459,7 +463,7 @@ export class RulesTable extends PluginSettingTab {
      * @returns The configuration value for the specified property, or undefined if not found.
      */
     getOptionConfig(ruleId:string,propertyId:string){
-        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
+        const rule = this.getRuleById(ruleId);
         if (rule) {
             const optionConfig = rule.optionsConfig[ruleId]
             if (optionConfig[propertyId]) {
@@ -468,7 +472,21 @@ export class RulesTable extends PluginSettingTab {
         }
         return undefined;
     }
-
+    /**
+     * Retrieves a rule from the plugin's settings by its unique identifier.
+     *
+     * @param ruleId - The unique identifier of the rule to retrieve.
+     * @returns The matching {@link FrontmatterAutomateRuleSettings} object if found; otherwise, `undefined`.
+     */
+    getRuleById(ruleId:string): FrontmatterAutomateRuleSettings | undefined {
+        const row = this.plugin.settings.folderConfig.rows.find((row:TreeHierarchyRow) => {
+            if (row.payload && row.payload.id) {
+                return row.payload.id === ruleId;
+            }
+            return false;
+        });
+        return row?.payload;
+    }
     /**
      * Sets the configuration option for a specific rule and property.
      *
@@ -477,7 +495,8 @@ export class RulesTable extends PluginSettingTab {
      * @param config - The configuration value to be set.
      */
     setOptionConfig(ruleId:string,propertyId:string,config:any){
-        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
+
+        const rule = this.getRuleById(ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
             if (!rule.optionsConfig[ruleId]) rule.optionsConfig[ruleId] = {};
@@ -488,7 +507,7 @@ export class RulesTable extends PluginSettingTab {
     }
 
     hasOptionConfig(ruleId:string):boolean{
-        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
+        const rule = this.getRuleById(ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
             if (!rule.optionsConfig[ruleId]) rule.optionsConfig[ruleId] = {};
@@ -498,12 +517,13 @@ export class RulesTable extends PluginSettingTab {
     }
 
     setOptionConfigDefaults(ruleId:string, defaults:any){
-        const rule = this.plugin.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
+        const rule = this.getRuleById(ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
             rule.optionsConfig[ruleId] = Object.assign({}, defaults, rule.optionsConfig[ruleId] || {});
+            return rule.optionsConfig[ruleId];
         }
-        return rule.optionsConfig[ruleId];
+        return {};
     }
 
     renderSearchResults(searchContainerEl: HTMLElement, searchTerm: string, payload: any) {
@@ -738,6 +758,23 @@ export class RulesTable extends PluginSettingTab {
         }
     }
 
+    updateKeywords(row: TreeHierarchyRow| undefined) {
+        if (row?.payload?.id) { // Update Keywords
+            row.payload.keywords = [];
+            row.payload.keywords.push(row.payload.content);
+            if (Array.isArray(row.payload.Value) && row.payload.Value.length > 0) {
+                row.payload.keywords.push(...row.payload.Value);
+            } else if (typeof row.payload.Value === 'string') {
+                row.payload.keywords.push(row.payload.Value);
+            }
+            const rule = rulesManager.getRuleById(row.payload.content);
+            if (rule) {
+                row.payload.keywords.push(rule.name);
+                row.payload.keywords.push(rule.description);
+            }
+            logger.log(DEBUG, 'Updated keywords for rule', row.payload.id, row.payload.keywords);
+        }
+    }
 
     async display(): Promise<void> {
         const containerEl = this.container;
@@ -758,20 +795,38 @@ export class RulesTable extends PluginSettingTab {
             )
             .setTitle('Rules')
             .setDescription('add rules to selected frontmatter properties')
-            .onChange((data) => {
+            .onChange((data, row) => {
                 this.plugin.settings.folderConfig = data;
                 this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
                 this.plugin.saveSettings();
+            })
+            .onFilter((row: TreeHierarchyRow, filter: string):boolean => {
+                if (row?.payload) {
+                    filter = filter.toLowerCase();
+                    const ruleSettings = row.payload;
+                    if (ruleSettings.content.toLowerCase().contains(filter)) return true;
+                    if (ruleSettings.value.toString().toLowerCase().contains(filter)) return true;
+                    const rule = rulesManager.getRuleById(row.payload.content);
+                    if (!rule) return false;
+                    if (rule.name.toLowerCase().contains(filter)) return true;
+                    if (rule.description.toLowerCase().contains(filter)) return true;
+
+                }
+                return false;
             })
             .onRendered(() => {
                 this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
             })
             .onRowCreated(async (row) => {
                 const defaultName = ''; //Object.keys(this.knownProperties)[0] || '';
-                row.payload = Object.assign({}, DEFAULT_RULE_DEFINITION, {
-                    id: randomUUID().toString(),
-                });
-                await this.plugin.saveSettings();
+                if (!row.payload) {
+                    row.payload = Object.assign({}, DEFAULT_RULE_DEFINITION, {
+                        id: randomUUID().toString(),
+                    });
+                    await this.plugin.saveSettings();
+                    logger.log(DEBUG, 'New rule created', row, this.plugin.settings.folderConfig);
+                }
+                this.updateKeywords(row);
             })
             .onDeleteBt(async () => {
                 const shouldProceed = await new AlertModal(
@@ -836,6 +891,10 @@ export class RulesTable extends PluginSettingTab {
         if (activeFile) { //TODO: fix for new sortable Table
             this.plugin.settings.folderConfig.rows.forEach((row: TreeHierarchyRow, index: number) => {
                 const rule = row.payload as FrontmatterAutomateRuleSettings;
+                if (!rule || !rule.id) {
+                    logger.log(WARNING, `updateFilterIndicator: Rule with id ${rule?.id} not found in folderConfig rows.`);
+                    return; // Skip if no rule or id is not set
+                }
                 const propertyRowElements = propertiesListEl.getElementsByClassName('property-setting-row');
                 const propertyRowEl = Array.from(propertyRowElements).filter(el => el.id === rule.id)[0] as HTMLDivElement;
                 if (!propertyRowEl) {

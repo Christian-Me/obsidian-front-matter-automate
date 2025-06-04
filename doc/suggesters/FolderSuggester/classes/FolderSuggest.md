@@ -6,7 +6,7 @@
 
 # Class: FolderSuggest
 
-Defined in: [src/suggesters/FolderSuggester.ts:7](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L7)
+Defined in: [src/suggesters/FolderSuggester.ts:7](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FolderSuggester.ts#L7)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:7](https://github.com/Christian-M
 
 > **new FolderSuggest**(`app`, `inputEl`): `FolderSuggest`
 
-Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L8)
+Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FolderSuggester.ts#L8)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:8](https://github.com/Christian-M
 
 > `protected` **app**: `App`
 
-Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L114)
+Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L114)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/fold
 
 > `protected` **inputEl**: `HTMLInputElement` \| `HTMLTextAreaElement`
 
-Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L115)
+Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L115)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/fold
 
 > **close**(): `void`
 
-Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L192)
+Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L192)
 
 #### Returns
 
@@ -84,7 +84,7 @@ Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/fold
 
 > **getSuggestions**(`inputStr`): `TFolder`[]
 
-Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L12)
+Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FolderSuggester.ts#L12)
 
 #### Parameters
 
@@ -106,7 +106,7 @@ Defined in: [src/suggesters/FolderSuggester.ts:12](https://github.com/Christian-
 
 > **onInputChanged**(): `void`
 
-Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L145)
+Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L145)
 
 #### Returns
 
@@ -122,7 +122,7 @@ Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/fold
 
 > **open**(`container`, `inputEl`): `void`
 
-Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/suggest.ts#L163)
+Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L163)
 
 #### Parameters
 
@@ -148,7 +148,7 @@ Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/fold
 
 > **renderSuggestion**(`file`, `el`): `void`
 
-Defined in: [src/suggesters/FolderSuggester.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L29)
+Defined in: [src/suggesters/FolderSuggester.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FolderSuggester.ts#L29)
 
 Render the suggestion item into DOM.
 
@@ -176,7 +176,7 @@ Render the suggestion item into DOM.
 
 > **selectSuggestion**(`file`): `void`
 
-Defined in: [src/suggesters/FolderSuggester.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/suggesters/FolderSuggester.ts#L33)
+Defined in: [src/suggesters/FolderSuggester.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FolderSuggester.ts#L33)
 
 Called when the user makes a selection.
 

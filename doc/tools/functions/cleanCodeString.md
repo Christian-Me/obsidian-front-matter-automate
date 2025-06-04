@@ -8,7 +8,7 @@
 
 > **cleanCodeString**(`codeString`): `string`
 
-Defined in: [src/tools.ts:42](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/tools.ts#L42)
+Defined in: [src/tools.ts:43](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/tools.ts#L43)
 
 Cleans a JavaScript/TypeScript code string by removing comments.
 This function handles both single-line comments (`// ...`) and

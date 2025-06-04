@@ -8,7 +8,7 @@
 
 > **errorWrapperSync**\<`T`\>(`fn`, `msg`): `T`
 
-Defined in: [src/Error.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/Error.ts#L30)
+Defined in: [src/Error.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Error.ts#L30)
 
 ## Type Parameters
 

@@ -126,7 +126,7 @@ export class RulePrototype {
                 // Handle async functions by resolving the Promise synchronously
                 let result = '';
                 this.fx(app, file, tools)
-                    .then((res: string) => {
+                    .then((res: any) => {
                         result = res;
                     })
                     .catch((err: any) => {

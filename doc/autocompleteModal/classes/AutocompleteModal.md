@@ -6,7 +6,7 @@
 
 # Class: AutocompleteModal
 
-Defined in: [src/autocompleteModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L17)
+Defined in: [src/autocompleteModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L17)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new AutocompleteModal**(`app`, `plugin`, `rule`, `options`, `activeFile`, `frontmatter`, `okCallback?`): `AutocompleteModal`
 
-Defined in: [src/autocompleteModal.ts:51](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L51)
+Defined in: [src/autocompleteModal.ts:51](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L51)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -162,7 +162,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2885
 
 > **changeCallback**(`propertyInfo`, `value`): `void`
 
-Defined in: [src/autocompleteModal.ts:167](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L167)
+Defined in: [src/autocompleteModal.ts:167](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L167)
 
 #### Parameters
 
@@ -202,7 +202,7 @@ Hide the modal.
 
 > **onClose**(): `void`
 
-Defined in: [src/autocompleteModal.ts:226](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L226)
+Defined in: [src/autocompleteModal.ts:226](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L226)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -220,7 +220,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/autocompleteModal.ts:97](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L97)
+Defined in: [src/autocompleteModal.ts:97](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L97)
 
 Called when the modal is opened. Builds the UI.
 
@@ -256,7 +256,7 @@ Show the modal on the the active window. On mobile, the modal will animate on sc
 
 > **openAndGetValues**(): `Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
-Defined in: [src/autocompleteModal.ts:231](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/autocompleteModal.ts#L231)
+Defined in: [src/autocompleteModal.ts:231](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L231)
 
 #### Returns
 

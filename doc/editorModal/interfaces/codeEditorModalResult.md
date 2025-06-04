@@ -6,7 +6,7 @@
 
 # Interface: codeEditorModalResult
 
-Defined in: [src/editorModal.ts:14](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L14)
+Defined in: [src/editorModal.ts:14](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L14)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/editorModal.ts:14](https://github.com/Christian-Me/folder-to-ta
 
 > **checked**: `boolean`
 
-Defined in: [src/editorModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L17)
+Defined in: [src/editorModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L17)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/editorModal.ts:17](https://github.com/Christian-Me/folder-to-ta
 
 > **code**: `string`
 
-Defined in: [src/editorModal.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L15)
+Defined in: [src/editorModal.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L15)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/editorModal.ts:15](https://github.com/Christian-Me/folder-to-ta
 
 > **type**: [`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
-Defined in: [src/editorModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L16)
+Defined in: [src/editorModal.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L16)

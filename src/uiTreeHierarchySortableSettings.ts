@@ -34,12 +34,16 @@ export class TreeHierarchySortableSettings {
     private description: string = "";
     private filter: string = "";
     private rowRenderCb: RowRenderCallback;
-    private onChangeCb: (data: TreeHierarchyData) => void = () => {};
+    private onChangeCb: (data: TreeHierarchyData, row?: TreeHierarchyRow | undefined ) => void = () => {};
     private onRowCreatedCb: (row: TreeHierarchyRow) => void = () => {};
     private onRowDeletedCb: (row: TreeHierarchyRow) => void = () => {};
     private onDeleteBtCb: () => void = () => {};
     private onRenderedCb: () => void = () => {};
     private extraButtonCbs: ((btn: Setting) => void)[] = [];
+    private rowMatchesFilterFn: (row: TreeHierarchyRow, filter: string) => boolean = (row, filter) => {
+        if (!filter) return true;
+        return row.keywords.some(k => k.toLowerCase().includes(filter.toLowerCase()));
+    };
     
     constructor(container: HTMLElement, data: TreeHierarchyData, rowRenderCb: RowRenderCallback) {
         this.container = container;
@@ -47,6 +51,7 @@ export class TreeHierarchySortableSettings {
         this.data = data || { folders: [], rows: [] };
         this.rowRenderCb = rowRenderCb;
         this.render();
+        this.onRenderedCb = () => {};
     }
     setTitle(title: string) {
         this.title = title;
@@ -78,7 +83,8 @@ export class TreeHierarchySortableSettings {
         if (!folderId) {
             // If no folderId, add to root (undefined folder)
             this.data.rows.push(newRow);
-            this.onChangeCb(this.data);
+            this.onRowCreatedCb(newRow);
+            this.onChangeCb(this.data, newRow);
             this.render();
             return this;
         }
@@ -92,7 +98,7 @@ export class TreeHierarchySortableSettings {
             this.data.rows.splice(lastIdx + 1, 0, newRow);
         }
         this.onRowCreatedCb(newRow);
-        this.onChangeCb(this.data);
+        this.onChangeCb(this.data, newRow);
         this.render();
         return this;
     }
@@ -115,7 +121,7 @@ export class TreeHierarchySortableSettings {
         return this;
     }
 
-    onChange(cb: (data: TreeHierarchyData) => void) {
+    public onChange(cb: (data: TreeHierarchyData, row: TreeHierarchyRow | undefined) => void) {	
         this.onChangeCb = cb;
         return this;
     }
@@ -127,8 +133,12 @@ export class TreeHierarchySortableSettings {
         this.onRowDeletedCb = cb;
         return this;
     }
-    onRendered(cb: () => void) {
+    public onRendered(cb: () => void) {
         this.onRenderedCb = cb;
+        return this;
+    }
+    public onFilter(cb: (row: TreeHierarchyRow, filter: string) => boolean) {
+        this.rowMatchesFilterFn = cb;
         return this;
     }
     private moveRow(rowId: string, targetRowId?: string) {
@@ -216,6 +226,9 @@ export class TreeHierarchySortableSettings {
         }
     }
     private render() {
+        this.data.rows.forEach(row => {
+            this.onRowCreatedCb(row);
+        });
         this.settingEl.empty();
 
         // --- Root Header as a Setting Row ---
@@ -232,15 +245,15 @@ export class TreeHierarchySortableSettings {
         headerSetting.setDesc(this.description || "");
 
         // Filter input (inline, left of buttons)
-        const filterInput = new SearchComponent(headerSetting.controlEl);
-        filterInput.setPlaceholder("Filter folders/rows...");
-        filterInput.setValue(this.filter);
+        const filterInput = new SearchComponent(headerSetting.controlEl)
+           .setPlaceholder("Filter folders/rows...")
+           .setValue(this.filter)
+           .onChange((val) => {
+                this.filter = val;
+                // Only re-render the rows/folders, not the whole UI
+                this.renderList();
+            }); 
         filterInput.inputEl.style.width = "200px";
-        filterInput.onChange((val) => {
-            this.filter = val;
-            // Only re-render the rows/folders, not the whole UI
-            this.renderList();
-        }); 
 
         // Add row button (right)
         headerSetting.addExtraButton(btn => {
@@ -448,7 +461,13 @@ export class TreeHierarchySortableSettings {
 
     private renderRows(folderId: string | undefined, parentEl: HTMLElement, depth: number) {
         if (!this.data || !this.data.rows) return;
-        const rows = this.data.rows.filter(r => r.folderId === folderId && this.rowMatchesFilter(r));
+        if (this.filter) {
+            // Apply filtering logic here
+            logger.log(TRACE,`Filtering rows with filter: ${this.filter}`, this.data.rows.filter(r => {
+                logger.log(TRACE, `Row ${r.id} matches filter: ${this.rowMatchesFilterFn(r,this.filter)}`, r.keywords);
+            }));
+        }
+        const rows = this.data.rows.filter(r => r.folderId === folderId && this.rowMatchesFilterFn(r, this.filter));
         rows.forEach(row => {
             const setting = new Setting(parentEl)
                 .setClass("FMA-folder-list-row-setting");
@@ -560,11 +579,6 @@ export class TreeHierarchySortableSettings {
                 return;
             }
         }
-    }
-
-    private rowMatchesFilter(row: TreeHierarchyRow): boolean {
-        if (!this.filter) return true;
-        return row.keywords.some(k => k.toLowerCase().includes(this.filter.toLowerCase()));
     }
 
     private getNextFolderName(): string {

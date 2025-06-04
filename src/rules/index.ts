@@ -5,7 +5,6 @@ import { RuleAddPrefix } from "./addPrefix";
 import { RuleAddSuffix } from "./addSuffix";
 import { RuleAutomationAutoLink } from "./automationAutoLink";
 import { RuleBuildInAutoCompleteModal } from "./buildInAutoCompleteModal";
-import { RuleBuildInConcatArrays } from "./buildInConcatArrays";
 import { RuleBuildInConcatProperties } from "./buildInConcatProperties";
 import { RuleBuildInConstant } from "./buildInConstant";
 import { RuleBuildInDateTimeCreated } from "./buildInDateTimeCreated";
@@ -20,6 +19,7 @@ import { RuleBuildInFullPath } from "./buildInFullPath";
 import { RuleBuildInFullPathExt } from "./buildInFullPathExt";
 import { RuleBuildInFullPathExtFolderNotes } from "./buildInFullPathExtFolderNotes";
 import { RuleBuildInFullPathFolderNotes } from "./buildInFullPathFolderNotes";
+import { RuleBuildInGetProperties } from "./buildInGetProperties";
 import { RuleBuildInGetProperty } from "./buildInGetProperty";
 import { RuleBuildInIsRoot } from "./buildInIsRoot";
 import { RuleBuildInLinkToFile } from "./buildInLinkToFile";
@@ -46,7 +46,7 @@ import { RuleToTitleCaseEN } from "./toTitleCaseEN";
 import { RuleToUpperCase } from "./toUpperCase";
 
 // List of all rule classes
-const ruleClasses = [RuleAddPrefix, RuleAddSuffix, RuleAutomationAutoLink, RuleBuildInAutoCompleteModal, RuleBuildInConcatArrays, RuleBuildInConcatProperties, RuleBuildInConstant, RuleBuildInDateTimeCreated, RuleBuildInDateTimeModified, RuleBuildInDefault, RuleBuildInFileSizeBytes, RuleBuildInFileSizeString, RuleBuildInFolder, RuleBuildInFolderFolderNotes, RuleBuildInFolders, RuleBuildInFullPath, RuleBuildInFullPathExt, RuleBuildInFullPathExtFolderNotes, RuleBuildInFullPathFolderNotes, RuleBuildInGetProperty, RuleBuildInIsRoot, RuleBuildInLinkToFile, RuleBuildInName, RuleBuildInNameExt, RuleBuildInPath, RuleBuildInPathFolderNotes, RuleBuildInRootFolder, RuleBuildInScript, RuleReplaceChars, RuleReplaceSpaces, RuleReplaceSpecialChars, RuleToCamelCase, RuleToLinkMarkdown, RuleToLinkOriginal, RuleToLinkSimple, RuleToLinkWiki, RuleToLowerCase, RuleToOriginal, RuleToPascalCase, RuleToTitleCase, RuleToTitleCaseDE, RuleToTitleCaseEN, RuleToUpperCase];
+const ruleClasses = [RuleAddPrefix, RuleAddSuffix, RuleAutomationAutoLink, RuleBuildInAutoCompleteModal, RuleBuildInConcatProperties, RuleBuildInConstant, RuleBuildInDateTimeCreated, RuleBuildInDateTimeModified, RuleBuildInDefault, RuleBuildInFileSizeBytes, RuleBuildInFileSizeString, RuleBuildInFolder, RuleBuildInFolderFolderNotes, RuleBuildInFolders, RuleBuildInFullPath, RuleBuildInFullPathExt, RuleBuildInFullPathExtFolderNotes, RuleBuildInFullPathFolderNotes, RuleBuildInGetProperties, RuleBuildInGetProperty, RuleBuildInIsRoot, RuleBuildInLinkToFile, RuleBuildInName, RuleBuildInNameExt, RuleBuildInPath, RuleBuildInPathFolderNotes, RuleBuildInRootFolder, RuleBuildInScript, RuleReplaceChars, RuleReplaceSpaces, RuleReplaceSpecialChars, RuleToCamelCase, RuleToLinkMarkdown, RuleToLinkOriginal, RuleToLinkSimple, RuleToLinkWiki, RuleToLowerCase, RuleToOriginal, RuleToPascalCase, RuleToTitleCase, RuleToTitleCaseDE, RuleToTitleCaseEN, RuleToUpperCase];
 
 // Register each rule class
 ruleClasses.forEach((RuleClass) => {

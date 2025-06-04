@@ -5,6 +5,7 @@ import { AlertModal } from './alertBox';
 import { delimiter } from 'path';
 import { rulesManager } from './rules/rules';
 import { DEBUG, ERROR, logger, TRACE, WARNING } from './Log';
+import { TreeHierarchyRow } from './uiTreeHierarchySortableSettings';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -351,6 +352,7 @@ export function resolveFile(app: App, file_str: string): TFile {
      * @param file - (Optional) The file whose frontmatter should be updated. If omitted, the active file is used.
      */
     updateFrontmatter(property:string, newContent:any, file?:TFile) {
+      this.plugin.preventOnMetadataChange = true; // prevent the onMetadataChange event to be triggered
       if (!this.app) return;
       if (!file) file = this.activeFile;
       if (!file) return;
@@ -362,6 +364,7 @@ export function resolveFile(app: App, file_str: string): TFile {
           frontmatter[property] = newContent;
         }
       },{'mtime':file.stat.mtime}); // do not change the modify time.
+      this.plugin.preventOnMetadataChange = false; // allow the onMetadataChange event to be triggered again
     }
     /**
      * Displays a confirmation dialog with customizable message, title, and button labels.
@@ -377,6 +380,22 @@ export function resolveFile(app: App, file_str: string): TFile {
       return result.proceed;
     }
     /**
+     * Retrieves a rule from the plugin's settings by its unique identifier.
+     *
+     * @param ruleId - The unique identifier of the rule to retrieve.
+     * @returns The matching {@link FrontmatterAutomateRuleSettings} object if found; otherwise, `undefined`.
+     */
+    getRuleById(ruleId:string): FrontmatterAutomateRuleSettings | undefined {
+        if (!this.settings || !this.settings.folderConfig || !this.settings.folderConfig.rows) return undefined;
+        const row = this.settings.folderConfig.rows.find((row:TreeHierarchyRow) => {
+            if (row.payload && row.payload.id) {
+                return row.payload.id === ruleId;
+            }
+            return false;
+        });
+        return row?.payload;
+    }
+    /**
      * * Get the option config for a specific rule. Optional the specific parameter by providing an option ID.
      *
      * @param {string} ruleId
@@ -385,7 +404,7 @@ export function resolveFile(app: App, file_str: string): TFile {
      */
     getOptionConfig(ruleId:string|undefined, optionId?:string){
       if (!ruleId || ruleId === undefined || !this.settings ) return undefined;
-      const rule = this.settings.rules.find((rule: FrontmatterAutomateRuleSettings) => rule.id === ruleId);
+      const rule = this.getRuleById(ruleId);
       if (rule && rule.hasOwnProperty('optionsConfig')) {
           //@ts-ignore
           const optionConfig = rule.optionsConfig[ruleId]

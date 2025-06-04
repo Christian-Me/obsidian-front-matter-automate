@@ -6,7 +6,7 @@
 
 # Class: codeEditorModal
 
-Defined in: [src/editorModal.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L23)
+Defined in: [src/editorModal.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L23)
 
 Obsidian Modal for selecting directories and files from the vault structure.
 
@@ -20,7 +20,7 @@ Obsidian Modal for selecting directories and files from the vault structure.
 
 > **new codeEditorModal**(`app`, `plugin`, `initialCode`, `expectedType`, `activeFile`, `frontmatter`, `okCallback`): `codeEditorModal`
 
-Defined in: [src/editorModal.ts:55](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L55)
+Defined in: [src/editorModal.ts:55](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L55)
 
 Creates an instance of the DirectorySelectionModal.
 
@@ -184,7 +184,7 @@ Hide the modal.
 
 > **loadCodeMirrorMode**(`mode`): `void`
 
-Defined in: [src/editorModal.ts:107](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L107)
+Defined in: [src/editorModal.ts:107](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L107)
 
 #### Parameters
 
@@ -202,7 +202,7 @@ Defined in: [src/editorModal.ts:107](https://github.com/Christian-Me/folder-to-t
 
 > **onClose**(): `void`
 
-Defined in: [src/editorModal.ts:337](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L337)
+Defined in: [src/editorModal.ts:337](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L337)
 
 Called when the modal is closed. Cleans up resources.
 
@@ -220,7 +220,7 @@ Called when the modal is closed. Cleans up resources.
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/editorModal.ts:119](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L119)
+Defined in: [src/editorModal.ts:119](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L119)
 
 Called when the modal is opened. Builds the UI.
 
@@ -300,7 +300,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2923
 
 > **updateTypeIcons**(`value`, `container`, `expectedType`, `currentType`, `settings`): `void`
 
-Defined in: [src/editorModal.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/editorModal.ts#L261)
+Defined in: [src/editorModal.ts:261](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/editorModal.ts#L261)
 
 #### Parameters
 

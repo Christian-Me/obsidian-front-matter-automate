@@ -9,8 +9,14 @@ export class MultiPropertySetting {
     private onChangeCb: (val: string[]) => void = () => {};
     private options: string[] | Array<{id: string, name: string}> = [];
     private container: HTMLElement;
-    private extraButtonCallbacks: ((setting: Setting, idx: number) => void)[] = [];
-
+    private extraButtonCbs: ((setting: Setting, idx: number) => void)[] = [];
+    private onRenderRowCb?: (
+        setting: Setting,
+        value: string,
+        idx: number,
+        onChange: (val: string) => void
+    ) => void;
+    
     constructor(container: HTMLElement) {
         this.container = container;
         this.settingEl = container.createDiv();
@@ -48,7 +54,7 @@ export class MultiPropertySetting {
      * The callback receives the Setting and the row index.
      */
     addExtraButton(cb: (setting: Setting, idx: number) => void) {
-        this.extraButtonCallbacks.push(cb);
+        this.extraButtonCbs.push(cb);
         this.render();
         return this;
     }
@@ -143,7 +149,7 @@ export class MultiPropertySetting {
             });
 
             // Call extra button callbacks for this row
-            this.extraButtonCallbacks.forEach(cb => cb(setting, idx));
+            this.extraButtonCbs.forEach(cb => cb(setting, idx));
         });
 
         // Plus button under the last row

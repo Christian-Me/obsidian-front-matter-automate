@@ -6,7 +6,7 @@ import { FolderSuggest } from "../suggesters/FolderSuggester";
 import { DirectorySelectionResult, openDirectorySelectionModal } from "../directorySelectionModal";
 import { FileSuggest } from "../suggesters/FileSuggester";
 import { AlertModal } from "../alertBox";
-import { ERROR, logger } from "../Log";
+import { DEBUG, ERROR, logger, TRACE } from "../Log";
 
 export class RuleAutomationAutoLink extends RulePrototype {
     constructor() {
@@ -19,6 +19,9 @@ export class RuleAutomationAutoLink extends RulePrototype {
         this.type = ['text', 'multitext'];
         this.configElements = this.defaultConfigElements({removeContent: false,  inputProperty: false, addPrefix: false, spaceReplacement: false, specialCharacterReplacement: false, convertToLowerCase: false, resultAsLink: false, script: false});
     };
+
+    async createNewFile (app: App, file: TFile, tools: ScriptingTools) {
+    }
     /**
      * Function to create a link to a file. If the file does not exist, it creates a new file based on a template.
      * @param app - The Obsidian app instance.
@@ -26,7 +29,7 @@ export class RuleAutomationAutoLink extends RulePrototype {
      * @param tools - The scripting tools instance.
      * @returns The new content for the frontmatter property.
      */
-    async fx (app:App, file:TFile, tools:ScriptingTools) { // do not change this line!
+    fx (app:App, file:TFile, tools:ScriptingTools) { // do not change this line!
         const currentContent = tools.getCurrentContent();
         let newContent = new Array<string>();
         const rule = tools.getRule();
@@ -48,32 +51,40 @@ export class RuleAutomationAutoLink extends RulePrototype {
             let link = tools.extractLinkParts(part);
             let linkFile = tools.getTFileFromPath(link.path, filesToCheck);
             if (!linkFile) { // create new File
-            if (options.askConfirmation) {
-                const result = await new AlertModal(app, 'Create new file', `File ${link.path} does not exist. Do you want to create it?`, 'Create', 'Cancel', "Don't ask again.").openAndGetValue();
-                if (!result.proceed) return; // do not create the file if the user does not confirm
-                options.askConfirmation = !result.data.askConfirmation;
-            }
-            link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
-            //logger.log(DEBUG,`autoLink: creating new file ${link.path}`);
-            linkFile = await tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined); // create the file if it does not exist
-            //logger.log(DEBUG,`autoLink: new file created ${linkFile.path}`);
-            tools.updateFrontmatter(rule.property, [`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`], linkFile); // add location of new path to itself
-            } else {
-            //logger.log(DEBUG,`autoLink: creating Link to existing File ${linkFile.path}`);
+                if (options.askConfirmation) {
+                    new AlertModal(app, 'Create new file', `File ${link.path} does not exist. Do you want to create it?`, 'Create', 'Cancel', "Don't ask again.").openAndGetValue()
+                        .then(async (result: { proceed: boolean, data: { askConfirmation: boolean } }) => {
+                            logger.log(DEBUG,`autoLink: user confirmed to create new file "${link.path}"`, result); 
+                            if (!result) return; // user cancelled
+                            if (!result.proceed) return; // do not create the file if the user does not confirm
+                            options.askConfirmation = !result.data.askConfirmation;
+                            link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
+                            linkFile = await tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined); // create the file if it does not exist
+                            newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
+                            logger.log(DEBUG,`autoLink: returning (after askConfirmation) "${newContent}"`);
+                            return newContent;
+                        });
+                };
+                link.path = options.destinationFolder + '/' + link.title + '.md'; // add the destination folder to the link path
+                logger.log(TRACE,`autoLink: creating new file "${link.path}"`);
+                tools.createFileFromPath(link.path, options.addTemplate ? options.templateFile : undefined)
+                    .then((newFile) => {
+                        newContent.push(`[[${tools.removeLeadingSlash(newFile.path)}|${newFile.name}]]`); // add the file path to the new content
+                        logger.log(DEBUG,`autoLink: new file created "${newFile.path}" returning "${newContent}"`);
+                        return newContent;
+                    });
             }
             if (linkFile) {
-            link.path = linkFile.path;
-            newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
+                logger.log(DEBUG,`autoLink: creating Link to existing File "${linkFile.path}"`);
+                link.path = linkFile.path;
+                newContent.push(`[[${tools.removeLeadingSlash(link.path)}|${link.title}]]`); // add the file path to the new content
             }
-            //logger.log(DEBUG,`autoLink: new content`, newContent);
         }
-        //logger.log(DEBUG,`autoLink: write content`, newContent);
-        tools.updateFrontmatter(rule.property, newContent); // update the frontmatter with the new content
+        logger.log(DEBUG,`autoLink: returning "${newContent}"`);
         return newContent;    
     };
 
     configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
-        optionEL.empty();
         // Create a setting for the auto link
         that.setOptionConfigDefaults(rule.id, {
             addTemplate: true,

@@ -27,16 +27,6 @@ export class FolderTagSettingTab extends PluginSettingTab {
         this.scriptingTools = new ScriptingTools(app, plugin);
     }
     hide(): void {
-        // update the rules to remove the ones that are not live anymore
-        this.plugin.settings.liveRules=[];
-        this.plugin.settings.rules.forEach((rule: FrontmatterAutomateRuleSettings) => {
-            let ruleFunction = rulesManager.getRuleById(rule.content);
-            if (!ruleFunction) return;
-            if (ruleFunction.isLiveRule) {
-                this.plugin.settings.liveRules.push(rule);
-            }
-        })
-        this.plugin.saveSettings();
         // update active file if it is open
         const activeFile = this.app.workspace.getActiveFile();
         if (activeFile && activeFile.extension === 'md') {
@@ -51,8 +41,8 @@ export class FolderTagSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         new Setting(containerEl)
-            .setName(`Front matter automate V${versionString}`)
-            .setDesc(`This plugin automates the management of front matter in your Obsidian notes. It allows you to set rules for automatically adding, modifying, or removing front matter properties based on various events like file creation, renaming, or active leaf changes.`)
+            .setName(`Front matter automate V${this.plugin.manifest.version} Settings`)
+            .setDesc(this.plugin.manifest.description)
             .addButton(button => button
                 .setIcon("circle-help")
                 .setTooltip("Online Help")

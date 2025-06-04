@@ -6,7 +6,7 @@
 
 # Class: ErrorManager
 
-Defined in: [src/Error.ts:3](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/Error.ts#L3)
+Defined in: [src/Error.ts:3](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Error.ts#L3)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/Error.ts:3](https://github.com/Christian-Me/folder-to-tags-plug
 
 > **new ErrorManager**(`msg`, `console_msg?`): `ErrorManager`
 
-Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/Error.ts#L4)
+Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Error.ts#L4)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plug
 
 > `optional` **console\_msg**: `string`
 
-Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/Error.ts#L4)
+Defined in: [src/Error.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Error.ts#L4)
 
 ***
 

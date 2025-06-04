@@ -1,6 +1,5 @@
-import { read } from "fs";
+
 import { Modal, MarkdownRenderer, App } from "obsidian";
-import * as path from "path";
 import { ERROR, logger } from "./Log";
 
 export class MarkdownHelpModal extends Modal {
@@ -35,11 +34,25 @@ export class MarkdownHelpModal extends Modal {
                 if (href && href.endsWith(".md") && !href.match(/^https?:\/\//) && !href.startsWith("/")) {
                     evt.preventDefault();
                     try {
-                        const currentDir = this.sourcePath ? path.dirname(this.sourcePath) : "";
-                        const resolvedPath = path.normalize(path.join(currentDir, href)).replace(/\\/g, "/");
+                        const pluginId = this.plugin.manifest.id;
+                        // Remove .obsidian/plugins/${pluginId}/doc/ from sourcePath to get relative dir
+                        const docRoot = `.obsidian/plugins/${pluginId}/doc/`;
+                        let relativeSource = this.sourcePath.startsWith(docRoot)
+                            ? this.sourcePath.slice(docRoot.length)
+                            : this.sourcePath;
+                        let currentDir = relativeSource.split("/").slice(0, -1).join("/");
+                        let resolvedPath = (currentDir ? currentDir + "/" : "") + href;
+                        // Normalize: remove any './' or '../'
+                        const parts = [];
+                        for (const part of resolvedPath.split("/")) {
+                            if (part === "..") parts.pop();
+                            else if (part !== "." && part !== "") parts.push(part);
+                        }
+                        resolvedPath = parts.join("/");
+                        // Now resolvedPath is relative to docRoot
                         const newMarkdown = await this.readPluginDocFile(resolvedPath);
                         this.markdown = newMarkdown;
-                        this.sourcePath = resolvedPath;
+                        this.sourcePath = docRoot + resolvedPath;
                         contentEl.empty();
                         // @ts-ignore
                         await MarkdownRenderer.render(this.app, this.markdown, contentEl, this.sourcePath, this);
@@ -59,9 +72,10 @@ export class MarkdownHelpModal extends Modal {
     }
 
     async readPluginDocFile(filename: string): Promise<string> {
-        // const vaultRoot = (this.app.vault.adapter as any).basePath as string;
         const pluginId = this.plugin.manifest.id;
-        const filePath = path.posix.join('.obsidian', 'plugins', pluginId, 'doc', filename);
+        // Ensure no leading slash in filename
+        const cleanFilename = filename.replace(/^\/+/, "");
+        const filePath = `.obsidian/plugins/${pluginId}/doc/${cleanFilename}`;
         try {
             return await this.app.vault.adapter.read(filePath);
         } catch (error) {

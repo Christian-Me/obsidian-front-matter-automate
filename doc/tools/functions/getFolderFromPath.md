@@ -8,7 +8,7 @@
 
 > **getFolderFromPath**(`path`, `separator`): `undefined` \| `null` \| `string`
 
-Defined in: [src/tools.ts:933](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/tools.ts#L933)
+Defined in: [src/tools.ts:952](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/tools.ts#L952)
 
 get the path to a file from a string containing the full parh/name string
 

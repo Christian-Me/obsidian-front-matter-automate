@@ -8,4 +8,4 @@
 
 > `const` **DEFAULT\_FRONTMATTER\_AUTOMATE\_SETTINGS**: [`FrontmatterAutomateSettings`](../interfaces/FrontmatterAutomateSettings.md)
 
-Defined in: [src/types.ts:41](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/types.ts#L41)
+Defined in: [src/types.ts:42](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L42)

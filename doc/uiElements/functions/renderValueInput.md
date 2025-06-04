@@ -8,7 +8,7 @@
 
 > **renderValueInput**(`containerEl`, `propertyInfo`, `currentValue`, `changeCallback`): `any`
 
-Defined in: [src/uiElements.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/324c4975948764581637da1ab1e4cb12dc3f447a/src/uiElements.ts#L4)
+Defined in: [src/uiElements.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiElements.ts#L4)
 
 ## Parameters
 

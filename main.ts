@@ -13,15 +13,16 @@ export default class FolderTagPlugin extends Plugin {
     settings!: FrontmatterAutomateSettings;
     private tools!: ScriptingTools;
     fileInProgress: TFile | null = null; // Track the file currently being processed
+    preventOnMetadataChange: boolean = false; // Prevent metadata change events from triggering updates
     //private oldFolderPaths = new Map<string, string | null>();
 
     async onload() {
         await this.loadSettings();
-        logger.log(INFO,`Front Matter Automate ${versionString} loaded with settings: `, this.settings);
+        logger.log(INFO,`Front Matter Automate ${this.manifest.version} loaded with settings: `, this.settings);
         logger.setLevel(this.settings.debugLevel);
         this.tools = new ScriptingTools(this.app, this);
         rulesManager.init(this.app, this, this.tools);
-        let noticeMessage = `Front Matter Automate ${versionString}\n loading ...`;
+        let noticeMessage = `Front Matter Automate ${this.manifest.version}\n loading ...`;
         const loadingNotice = new Notice(noticeMessage,0)
 
         noticeMessage = noticeMessage + '\n register events ...';
@@ -34,7 +35,9 @@ export default class FolderTagPlugin extends Plugin {
                     this.fileInProgress = file; // Set the file in progress
                     setTimeout(() => {
                         logger.log(DEBUG,`Event creating file started: `, file.path);
+                        this.preventOnMetadataChange = true; // Prevent further metadata change events
                         this.updateFrontmatterParameters('create', file, this.settings.folderConfig);
+                        this.preventOnMetadataChange = false; // Allow further metadata change events
                         this.fileInProgress = null; // Clear the file in progress after processing
                     }
                     , this.settings.delayCreateEvent);
@@ -46,9 +49,11 @@ export default class FolderTagPlugin extends Plugin {
         this.registerEvent(
             this.app.vault.on('rename', (file, oldPath) => {
                 if (this.fileInProgress) return; // Ignore if file is in progress
+                this.preventOnMetadataChange = true; // Prevent further metadata change events
                 if (file instanceof TFile && file.extension === 'md') {
                     this.updateFrontmatterParameters('rename', file, this.settings.folderConfig, oldPath);
                 }
+                this.preventOnMetadataChange = false; // Allow further metadata change events
             })
         );
 
@@ -67,6 +72,7 @@ export default class FolderTagPlugin extends Plugin {
         // Metadata changed handler
         this.registerEvent(
             this.app.metadataCache.on('changed', async (file, data, cache) => {
+                if (this.preventOnMetadataChange) return; // Prevent processing during metadata changes
                 if (this.fileInProgress) return; // Ignore if file is in progress
                 if (!checkIfFileAllowed(file, this.settings)) {
                     logger.log(DEBUG,`file ${file.path} globally rejected!`)
@@ -76,7 +82,9 @@ export default class FolderTagPlugin extends Plugin {
                     logger.log(DEBUG,`Event metadata changed: ${file.path} not a markdown file!`);
                     return;
                 }
+                this.preventOnMetadataChange = true; // Prevent further metadata change events
                 if (file) this.updateFrontmatterParameters('metadata-changed', file, this.settings.folderConfig);
+                this.preventOnMetadataChange = false; // Allow further metadata change events
             })
         );
             
@@ -197,6 +205,7 @@ export default class FolderTagPlugin extends Plugin {
                 switch (rulesManager.getRuleById(rule.content)?.ruleType) {
                     case 'buildIn':
                     case 'script':
+                    case 'automation':
                         result = executeRuleObject(eventName, this.app, this, this.settings, file, frontmatter[rule.property], rule, frontmatter, oldLocationResults);
                         break;
                     default:

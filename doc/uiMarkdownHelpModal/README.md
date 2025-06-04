@@ -9,8 +9,3 @@
 ## Classes
 
 - [MarkdownHelpModal](classes/MarkdownHelpModal.md)
-
-## Functions
-
-- [fetchMarkdownFromGitHub](functions/fetchMarkdownFromGitHub.md)
-- [readPluginDocFile](functions/readPluginDocFile.md)
