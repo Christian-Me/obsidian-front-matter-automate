@@ -95,7 +95,7 @@ export class RuleBuildInGetProperties extends RulePrototype {
     that.setOptionConfigDefaults(rule.id, {
         inputProperties: [],
         onlyWhenAllPropertiesExist: false, // Default to false
-        propertyDelimiter: '',
+        delimiter: '',
     });
 
     const multiProp = new MultiPropertySetting(optionEL)
@@ -132,10 +132,10 @@ export class RuleBuildInGetProperties extends RulePrototype {
       .setName('Delimiter')
       .setDesc('Character to separate concatenated values if placed into a text property. If empty, no delimiter is used.')
       .addText(text => text
-          .setValue(that.getOptionConfig(rule.id ,'propertyDelimiter') || '.')
+          .setValue(that.getOptionConfig(rule.id ,'delimiter') || '.')
           .setPlaceholder('e.g. "." or ","')
           .onChange(async (value) => {
-              that.setOptionConfig(rule.id,'propertyDelimiter', value);
+              that.setOptionConfig(rule.id,'delimiter', value);
           }));
   };
 }

@@ -6,7 +6,7 @@
 
 # Interface: FrontmatterAutomateRuleSettings
 
-Defined in: [src/types.ts:70](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L70)
+Defined in: [src/types.ts:70](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L70)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:70](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **active**: `boolean`
 
-Defined in: [src/types.ts:72](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L72)
+Defined in: [src/types.ts:72](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L72)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:72](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **addContent**: `"overwrite"` \| `"start"` \| `"end"`
 
-Defined in: [src/types.ts:73](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L73)
+Defined in: [src/types.ts:73](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L73)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:73](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **asLink**: `boolean`
 
-Defined in: [src/types.ts:74](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L74)
+Defined in: [src/types.ts:74](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L74)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:74](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **buildInCode**: `string`
 
-Defined in: [src/types.ts:81](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L81)
+Defined in: [src/types.ts:81](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L81)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/types.ts:81](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **content**: `string`
 
-Defined in: [src/types.ts:80](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L80)
+Defined in: [src/types.ts:80](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L80)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/types.ts:80](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **customProperty**: `string`
 
-Defined in: [src/types.ts:77](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L77)
+Defined in: [src/types.ts:77](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L77)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/types.ts:77](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **exclude**: [`FilterFilesAndFolders`](FilterFilesAndFolders.md)
 
-Defined in: [src/types.ts:84](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L84)
+Defined in: [src/types.ts:84](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L84)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/types.ts:84](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **formatter**: `string`
 
-Defined in: [src/types.ts:90](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L90)
+Defined in: [src/types.ts:90](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L90)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [src/types.ts:90](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **formatters**: `string`[]
 
-Defined in: [src/types.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L91)
+Defined in: [src/types.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L91)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [src/types.ts:91](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **id**: `string`
 
-Defined in: [src/types.ts:71](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L71)
+Defined in: [src/types.ts:71](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L71)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [src/types.ts:71](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **include**: [`FilterFilesAndFolders`](FilterFilesAndFolders.md)
 
-Defined in: [src/types.ts:85](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L85)
+Defined in: [src/types.ts:85](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L85)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [src/types.ts:85](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **inputProperty**: `string`
 
-Defined in: [src/types.ts:93](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L93)
+Defined in: [src/types.ts:93](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L93)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [src/types.ts:93](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **jsCode**: `string`
 
-Defined in: [src/types.ts:82](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L82)
+Defined in: [src/types.ts:82](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L82)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: [src/types.ts:82](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **linkFormatter**: `string`
 
-Defined in: [src/types.ts:92](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L92)
+Defined in: [src/types.ts:92](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L92)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: [src/types.ts:92](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **lowercaseTags**: `boolean`
 
-Defined in: [src/types.ts:89](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L89)
+Defined in: [src/types.ts:89](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L89)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: [src/types.ts:89](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **onlyModify**: `boolean`
 
-Defined in: [src/types.ts:94](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L94)
+Defined in: [src/types.ts:94](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L94)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: [src/types.ts:94](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **optionsConfig**: `any`
 
-Defined in: [src/types.ts:96](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L96)
+Defined in: [src/types.ts:96](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L96)
 
 ***
 
@@ -150,7 +150,7 @@ Defined in: [src/types.ts:96](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **prefix**: `string`
 
-Defined in: [src/types.ts:86](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L86)
+Defined in: [src/types.ts:86](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L86)
 
 ***
 
@@ -158,7 +158,7 @@ Defined in: [src/types.ts:86](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **property**: `string`
 
-Defined in: [src/types.ts:75](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L75)
+Defined in: [src/types.ts:75](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L75)
 
 ***
 
@@ -166,7 +166,7 @@ Defined in: [src/types.ts:75](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **showContent**: `boolean`
 
-Defined in: [src/types.ts:83](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L83)
+Defined in: [src/types.ts:83](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L83)
 
 ***
 
@@ -174,7 +174,7 @@ Defined in: [src/types.ts:83](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **spaceReplacement**: `string`
 
-Defined in: [src/types.ts:87](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L87)
+Defined in: [src/types.ts:87](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L87)
 
 ***
 
@@ -182,7 +182,7 @@ Defined in: [src/types.ts:87](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **specialCharReplacement**: `string`
 
-Defined in: [src/types.ts:88](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L88)
+Defined in: [src/types.ts:88](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L88)
 
 ***
 
@@ -190,7 +190,7 @@ Defined in: [src/types.ts:88](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **type**: [`ObsidianPropertyTypes`](../type-aliases/ObsidianPropertyTypes.md)
 
-Defined in: [src/types.ts:78](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L78)
+Defined in: [src/types.ts:78](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L78)
 
 ***
 
@@ -198,7 +198,7 @@ Defined in: [src/types.ts:78](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **typeProperty**: `undefined` \| [`PropertyTypeInfo`](../type-aliases/PropertyTypeInfo.md)
 
-Defined in: [src/types.ts:79](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L79)
+Defined in: [src/types.ts:79](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L79)
 
 ***
 
@@ -206,7 +206,7 @@ Defined in: [src/types.ts:79](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **useCustomCode**: `boolean`
 
-Defined in: [src/types.ts:95](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L95)
+Defined in: [src/types.ts:95](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L95)
 
 ***
 
@@ -214,4 +214,4 @@ Defined in: [src/types.ts:95](https://github.com/Christian-Me/folder-to-tags-plu
 
 > **value**: `string` \| `number` \| `boolean`
 
-Defined in: [src/types.ts:76](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/types.ts#L76)
+Defined in: [src/types.ts:76](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/types.ts#L76)

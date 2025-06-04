@@ -6,7 +6,7 @@
 
 # Class: RulesTable
 
-Defined in: [src/settings-properties.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L17)
+Defined in: [src/settings-properties.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L17)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/settings-properties.ts:17](https://github.com/Christian-Me/fold
 
 > **new RulesTable**(`app`, `plugin`, `container`, `settings`): `RulesTable`
 
-Defined in: [src/settings-properties.ts:26](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L26)
+Defined in: [src/settings-properties.ts:26](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L26)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: [src/settings-properties.ts:26](https://github.com/Christian-Me/fold
 
 > **activeFile**: `null` \| `TFile` = `null`
 
-Defined in: [src/settings-properties.ts:24](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L24)
+Defined in: [src/settings-properties.ts:24](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L24)
 
 ***
 
@@ -74,7 +74,7 @@ Reference to the app instance.
 
 > **container**: `HTMLDivElement`
 
-Defined in: [src/settings-properties.ts:20](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L20)
+Defined in: [src/settings-properties.ts:20](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L20)
 
 ***
 
@@ -96,7 +96,7 @@ Outermost HTML element on the setting tab.
 
 > **knownProperties**: `Record`\<`string`, [`PropertyInfo`](../../types/type-aliases/PropertyInfo.md)\> = `{}`
 
-Defined in: [src/settings-properties.ts:19](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L19)
+Defined in: [src/settings-properties.ts:19](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L19)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/settings-properties.ts:19](https://github.com/Christian-Me/fold
 
 > **plugin**: `any`
 
-Defined in: [src/settings-properties.ts:18](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L18)
+Defined in: [src/settings-properties.ts:18](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L18)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [src/settings-properties.ts:18](https://github.com/Christian-Me/fold
 
 > **propertiesListEl**: `HTMLDivElement`
 
-Defined in: [src/settings-properties.ts:21](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L21)
+Defined in: [src/settings-properties.ts:21](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L21)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/settings-properties.ts:21](https://github.com/Christian-Me/fold
 
 > **settings**: [`TreeHierarchyData`](../../uiTreeHierarchySortableSettings/type-aliases/TreeHierarchyData.md)
 
-Defined in: [src/settings-properties.ts:22](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L22)
+Defined in: [src/settings-properties.ts:22](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L22)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [src/settings-properties.ts:22](https://github.com/Christian-Me/fold
 
 > **tools**: [`ScriptingTools`](../../tools/classes/ScriptingTools.md)
 
-Defined in: [src/settings-properties.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L23)
+Defined in: [src/settings-properties.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L23)
 
 ## Methods
 
@@ -136,7 +136,7 @@ Defined in: [src/settings-properties.ts:23](https://github.com/Christian-Me/fold
 
 > **clearSearchResults**(`searchContainerEl`): `void`
 
-Defined in: [src/settings-properties.ts:610](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L610)
+Defined in: [src/settings-properties.ts:610](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L610)
 
 #### Parameters
 
@@ -154,7 +154,7 @@ Defined in: [src/settings-properties.ts:610](https://github.com/Christian-Me/fol
 
 > **display**(): `Promise`\<`void`\>
 
-Defined in: [src/settings-properties.ts:779](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L779)
+Defined in: [src/settings-properties.ts:779](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L779)
 
 Called when the settings tab should be rendered.
 
@@ -176,7 +176,7 @@ Called when the settings tab should be rendered.
 
 > **getOptionConfig**(`ruleId`, `propertyId`): `any`
 
-Defined in: [src/settings-properties.ts:465](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L465)
+Defined in: [src/settings-properties.ts:465](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L465)
 
 Retrieves the configuration option for a specific rule and property.
 
@@ -206,7 +206,7 @@ The configuration value for the specified property, or undefined if not found.
 
 > **getRuleById**(`ruleId`): `undefined` \| [`FrontmatterAutomateRuleSettings`](../../types/interfaces/FrontmatterAutomateRuleSettings.md)
 
-Defined in: [src/settings-properties.ts:481](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L481)
+Defined in: [src/settings-properties.ts:481](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L481)
 
 Retrieves a rule from the plugin's settings by its unique identifier.
 
@@ -230,7 +230,7 @@ The matching [FrontmatterAutomateRuleSettings](../../types/interfaces/Frontmatte
 
 > **hasOptionConfig**(`ruleId`): `boolean`
 
-Defined in: [src/settings-properties.ts:509](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L509)
+Defined in: [src/settings-properties.ts:509](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L509)
 
 #### Parameters
 
@@ -268,7 +268,7 @@ Override this if you need to perform additional cleanup.
 
 > **renderPropertyOptions**(`optionEL`, `rule`, `previewComponent`): `void`
 
-Defined in: [src/settings-properties.ts:214](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L214)
+Defined in: [src/settings-properties.ts:214](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L214)
 
 #### Parameters
 
@@ -294,7 +294,7 @@ Defined in: [src/settings-properties.ts:214](https://github.com/Christian-Me/fol
 
 > **renderPropertyRow**(`containerEl`, `rule`): `void`
 
-Defined in: [src/settings-properties.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L38)
+Defined in: [src/settings-properties.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L38)
 
 #### Parameters
 
@@ -316,7 +316,7 @@ Defined in: [src/settings-properties.ts:38](https://github.com/Christian-Me/fold
 
 > **renderSearchResults**(`searchContainerEl`, `searchTerm`, `payload`): `void`
 
-Defined in: [src/settings-properties.ts:529](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L529)
+Defined in: [src/settings-properties.ts:529](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L529)
 
 #### Parameters
 
@@ -342,7 +342,7 @@ Defined in: [src/settings-properties.ts:529](https://github.com/Christian-Me/fol
 
 > **renderValueInput**(`containerEl`, `propertyInfo`, `currentValue`, `payload`): `any`
 
-Defined in: [src/settings-properties.ts:617](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L617)
+Defined in: [src/settings-properties.ts:617](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L617)
 
 #### Parameters
 
@@ -372,7 +372,7 @@ Defined in: [src/settings-properties.ts:617](https://github.com/Christian-Me/fol
 
 > **setOptionConfig**(`ruleId`, `propertyId`, `config`): `void`
 
-Defined in: [src/settings-properties.ts:497](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L497)
+Defined in: [src/settings-properties.ts:497](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L497)
 
 Sets the configuration option for a specific rule and property.
 
@@ -406,7 +406,7 @@ The configuration value to be set.
 
 > **setOptionConfigDefaults**(`ruleId`, `defaults`): `any`
 
-Defined in: [src/settings-properties.ts:519](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L519)
+Defined in: [src/settings-properties.ts:519](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L519)
 
 #### Parameters
 
@@ -428,7 +428,7 @@ Defined in: [src/settings-properties.ts:519](https://github.com/Christian-Me/fol
 
 > **updateKeywords**(`row`): `void`
 
-Defined in: [src/settings-properties.ts:761](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L761)
+Defined in: [src/settings-properties.ts:761](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L761)
 
 #### Parameters
 
@@ -446,7 +446,7 @@ Defined in: [src/settings-properties.ts:761](https://github.com/Christian-Me/fol
 
 > **updatePreview**(`rule`, `previewComponent`): `Promise`\<`void`\>
 
-Defined in: [src/settings-properties.ts:740](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/settings-properties.ts#L740)
+Defined in: [src/settings-properties.ts:740](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/settings-properties.ts#L740)
 
 #### Parameters
 

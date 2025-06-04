@@ -340,6 +340,21 @@ export function resolveFile(app: App, file_str: string): TFile {
       return this.currentContent;
     }
     /**
+     * Retrieves the current content type based on the associated rule.
+     *
+     * If a rule is present, it returns the `type` property of the rule,
+     * or, if not available, the `type` property from the rule's `typeProperty` object.
+     * If no rule is defined, it defaults to returning `'text'`.
+     *
+     * @returns {string} The determined content type, or `'text'` if not specified.
+     */
+    getCurrentContentType() {
+      if (this.rule) {
+        return this.rule.type || this.rule.typeProperty?.type;
+      }
+      return 'text';
+    }
+    /**
      * Updates the specified frontmatter property of a given file with new content.
      *
      * If no file is provided, the currently active file is used. If neither is available, the method returns early.

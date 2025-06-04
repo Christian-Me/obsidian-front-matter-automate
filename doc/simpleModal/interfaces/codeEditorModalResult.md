@@ -6,7 +6,7 @@
 
 # Interface: codeEditorModalResult
 
-Defined in: [src/simpleModal.ts:9](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/simpleModal.ts#L9)
+Defined in: [src/simpleModal.ts:9](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/simpleModal.ts#L9)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/simpleModal.ts:9](https://github.com/Christian-Me/folder-to-tag
 
 > **type**: [`ObsidianPropertyTypes`](../../types/type-aliases/ObsidianPropertyTypes.md)
 
-Defined in: [src/simpleModal.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/simpleModal.ts#L10)
+Defined in: [src/simpleModal.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/simpleModal.ts#L10)

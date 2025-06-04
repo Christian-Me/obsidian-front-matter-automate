@@ -843,20 +843,20 @@
       {
         "id": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
         "name": "Testing",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
+        "name": "Concat Test",
         "disabled": true,
         "collapsed": false
       },
       {
         "id": "79464f6c-42dc-45a8-86f3-123a0ae93b4a",
         "name": "Auto Location",
-        "disabled": false,
+        "disabled": true,
         "collapsed": true
-      },
-      {
-        "id": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
-        "name": "Concat Test",
-        "disabled": false,
-        "collapsed": false
       }
     ],
     "rows": [
@@ -864,14 +864,16 @@
         "id": "74ac7a24-4081-4fe5-8104-4c4788017d7e",
         "folderId": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "86a939b0-28c4-4b7b-8d77-a3b87878b99d",
           "active": true,
           "asLink": false,
           "addContent": "overwrite",
           "property": "Concat-List",
-          "value": "",
+          "value": [
+            "Eins,Zwei,Drei"
+          ],
           "customProperty": "",
           "type": "multitext",
           "typeProperty": {
@@ -920,7 +922,9 @@
             }
           },
           "keywords": [
-            "concatArrays"
+            "getProperties",
+            "Get Properties",
+            "Retrieves multiple frontmatter properties (Multitext, Tags, Aliases)."
           ]
         }
       },
@@ -928,14 +932,14 @@
         "id": "03ac47b1-bf3f-4a33-ac1b-71bf1a516f3b",
         "folderId": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "cfb936f0-a93a-499f-ab85-10d20aa0ba2b",
           "active": true,
           "asLink": false,
           "addContent": "overwrite",
           "property": "Concat-Text",
-          "value": "",
+          "value": "Eins,Zwei,Drei",
           "customProperty": "",
           "typeProperty": {
             "name": "",
@@ -983,7 +987,9 @@
             }
           },
           "keywords": [
-            "concatArrays"
+            "getProperties",
+            "Get Properties",
+            "Retrieves multiple frontmatter properties (Multitext, Tags, Aliases)."
           ]
         }
       },
@@ -991,14 +997,18 @@
         "id": "5ad96b0d-1828-45ad-bac6-2d6644fa6b27",
         "folderId": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
         "keywords": [],
-        "disabled": true,
+        "disabled": false,
         "payload": {
           "id": "060bdef1-fbd6-492c-aad6-b849b1cd4292",
           "active": true,
           "asLink": false,
           "addContent": "overwrite",
           "property": "list",
-          "value": "testValue",
+          "value": [
+            "eins",
+            "zwei",
+            "drei"
+          ],
           "customProperty": "",
           "type": "multitext",
           "typeProperty": {
@@ -1036,21 +1046,92 @@
           "useCustomCode": false,
           "optionsConfig": {
             "060bdef1-fbd6-492c-aad6-b849b1cd4292": {
-              "constantValue": "testValue"
+              "constantValue": "testValue",
+              "constantValues": [
+                "eins",
+                "zwei",
+                "drei"
+              ],
+              "delimiter": ","
             }
           },
           "keywords": [
             "constant",
-            "Constant value",
+            "Constant value(s)",
             "Returns a constant value instead of the frontmatter parameter."
           ]
+        }
+      },
+      {
+        "id": "604908de-9da0-4425-b9a1-74523f915628",
+        "folderId": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "2aa8600d-3c77-4af2-87e5-78f209af1ee2",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "Text",
+          "value": "Text",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "constant",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const result = tools.getOptionConfig(tools.getRule()?.id,'constantValue');\n  return result; // Return the constant value\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatter": "toOriginal",
+          "formatters": [
+            "toOriginal"
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "keywords": [
+            "constant",
+            "Constant value(s)",
+            "Returns a constant value instead of the frontmatter parameter."
+          ],
+          "optionsConfig": {
+            "2aa8600d-3c77-4af2-87e5-78f209af1ee2": {
+              "constantValue": "",
+              "delimiter": ",",
+              "constantValues": [
+                "Eins",
+                "Zwei",
+                "Drei"
+              ]
+            }
+          }
         }
       },
       {
         "id": "970768a5-5a70-4ca6-a38e-5fccc6969257",
         "folderId": "79464f6c-42dc-45a8-86f3-123a0ae93b4a",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "1705607a-129f-4ea5-9392-d206b7017a3a",
           "active": true,
@@ -1104,8 +1185,8 @@
             "1705607a-129f-4ea5-9392-d206b7017a3a": {
               "addTemplate": true,
               "askConfirmation": true,
-              "destinationFolder": "/",
-              "templateFile": ""
+              "destinationFolder": "/category/locations/location",
+              "templateFile": "global/template/t_location.md"
             }
           }
         },
@@ -1122,7 +1203,7 @@
         "id": "1c697bb3-f34a-4556-b54b-6c98a8a7176f",
         "folderId": "79464f6c-42dc-45a8-86f3-123a0ae93b4a",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "85b8afaa-b844-4bab-acc8-1242fc5614d3",
           "active": true,
@@ -1183,14 +1264,14 @@
         "id": "27e9e8ee-daff-4455-8919-d9cc091af658",
         "folderId": "79464f6c-42dc-45a8-86f3-123a0ae93b4a",
         "keywords": [],
-        "disabled": false,
+        "disabled": true,
         "payload": {
           "id": "6d244111-37df-45c2-8444-754b4cc29922",
           "active": true,
           "asLink": false,
           "addContent": "overwrite",
           "property": "location-type",
-          "value": "country",
+          "value": "",
           "customProperty": "",
           "type": "text",
           "typeProperty": {
@@ -1203,16 +1284,18 @@
           "jsCode": "",
           "showContent": false,
           "exclude": {
-            "selectedFolders": [],
+            "selectedFolders": [
+              "/"
+            ],
             "selectedFiles": [],
-            "mode": "exclude",
-            "display": "folders"
+            "mode": "exclude"
           },
           "include": {
-            "selectedFolders": [],
+            "selectedFolders": [
+              "/category/locations/location"
+            ],
             "selectedFiles": [],
-            "mode": "include",
-            "display": "folders"
+            "mode": "include"
           },
           "prefix": "",
           "spaceReplacement": "",
@@ -1228,7 +1311,7 @@
           "useCustomCode": false,
           "keywords": [
             "constant",
-            "Constant value",
+            "Constant value(s)",
             "Returns a constant value instead of the frontmatter parameter."
           ],
           "optionsConfig": {

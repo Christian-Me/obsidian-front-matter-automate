@@ -6,7 +6,7 @@
 
 # Class: `abstract` TextInputSuggest\<T\>
 
-Defined in: [src/suggesters/suggest.ts:113](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L113)
+Defined in: [src/suggesters/suggest.ts:113](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L113)
 
 ## Extended by
 
@@ -29,7 +29,7 @@ Defined in: [src/suggesters/suggest.ts:113](https://github.com/Christian-Me/fold
 
 > **new TextInputSuggest**\<`T`\>(`app`, `inputEl`): `TextInputSuggest`\<`T`\>
 
-Defined in: [src/suggesters/suggest.ts:122](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L122)
+Defined in: [src/suggesters/suggest.ts:122](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L122)
 
 #### Parameters
 
@@ -51,7 +51,7 @@ Defined in: [src/suggesters/suggest.ts:122](https://github.com/Christian-Me/fold
 
 > `protected` **app**: `App`
 
-Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L114)
+Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L114)
 
 ***
 
@@ -59,7 +59,7 @@ Defined in: [src/suggesters/suggest.ts:114](https://github.com/Christian-Me/fold
 
 > `protected` **inputEl**: `HTMLInputElement` \| `HTMLTextAreaElement`
 
-Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L115)
+Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L115)
 
 ## Methods
 
@@ -67,7 +67,7 @@ Defined in: [src/suggesters/suggest.ts:115](https://github.com/Christian-Me/fold
 
 > **close**(): `void`
 
-Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L192)
+Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L192)
 
 #### Returns
 
@@ -79,7 +79,7 @@ Defined in: [src/suggesters/suggest.ts:192](https://github.com/Christian-Me/fold
 
 > `abstract` **getSuggestions**(`inputStr`): `T`[]
 
-Defined in: [src/suggesters/suggest.ts:200](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L200)
+Defined in: [src/suggesters/suggest.ts:200](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L200)
 
 #### Parameters
 
@@ -97,7 +97,7 @@ Defined in: [src/suggesters/suggest.ts:200](https://github.com/Christian-Me/fold
 
 > **onInputChanged**(): `void`
 
-Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L145)
+Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L145)
 
 #### Returns
 
@@ -109,7 +109,7 @@ Defined in: [src/suggesters/suggest.ts:145](https://github.com/Christian-Me/fold
 
 > **open**(`container`, `inputEl`): `void`
 
-Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L163)
+Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L163)
 
 #### Parameters
 
@@ -131,7 +131,7 @@ Defined in: [src/suggesters/suggest.ts:163](https://github.com/Christian-Me/fold
 
 > `abstract` **renderSuggestion**(`item`, `el`): `void`
 
-Defined in: [src/suggesters/suggest.ts:201](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L201)
+Defined in: [src/suggesters/suggest.ts:201](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L201)
 
 Render the suggestion item into DOM.
 
@@ -159,7 +159,7 @@ Render the suggestion item into DOM.
 
 > `abstract` **selectSuggestion**(`item`): `void`
 
-Defined in: [src/suggesters/suggest.ts:202](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/suggest.ts#L202)
+Defined in: [src/suggesters/suggest.ts:202](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/suggest.ts#L202)
 
 Called when the user makes a selection.
 

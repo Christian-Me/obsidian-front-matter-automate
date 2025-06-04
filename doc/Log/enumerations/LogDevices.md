@@ -6,7 +6,7 @@
 
 # Enumeration: LogDevices
 
-Defined in: [src/Log.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Log.ts#L15)
+Defined in: [src/Log.ts:15](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/Log.ts#L15)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [src/Log.ts:15](https://github.com/Christian-Me/folder-to-tags-plugi
 
 > **CONSOLE**: `"console"`
 
-Defined in: [src/Log.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Log.ts#L16)
+Defined in: [src/Log.ts:16](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/Log.ts#L16)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/Log.ts:16](https://github.com/Christian-Me/folder-to-tags-plugi
 
 > **NOTIFICATION**: `"notification"`
 
-Defined in: [src/Log.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/Log.ts#L17)
+Defined in: [src/Log.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/Log.ts#L17)

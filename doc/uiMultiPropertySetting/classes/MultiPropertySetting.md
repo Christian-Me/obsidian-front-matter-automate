@@ -6,7 +6,7 @@
 
 # Class: MultiPropertySetting
 
-Defined in: [src/uiMultiPropertySetting.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L4)
+Defined in: [src/uiMultiPropertySetting.ts:4](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L4)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [src/uiMultiPropertySetting.ts:4](https://github.com/Christian-Me/fo
 
 > **new MultiPropertySetting**(`container`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:20](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L20)
+Defined in: [src/uiMultiPropertySetting.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L34)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [src/uiMultiPropertySetting.ts:20](https://github.com/Christian-Me/f
 
 > **settingEl**: `HTMLElement`
 
-Defined in: [src/uiMultiPropertySetting.ts:5](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L5)
+Defined in: [src/uiMultiPropertySetting.ts:5](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L5)
 
 ## Methods
 
@@ -40,7 +40,7 @@ Defined in: [src/uiMultiPropertySetting.ts:5](https://github.com/Christian-Me/fo
 
 > **addExtraButton**(`cb`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:56](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L56)
+Defined in: [src/uiMultiPropertySetting.ts:80](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L80)
 
 Allows adding extra buttons to each row.
 The callback receives the Setting and the row index.
@@ -61,7 +61,7 @@ The callback receives the Setting and the row index.
 
 > **onChange**(`cb`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:47](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L47)
+Defined in: [src/uiMultiPropertySetting.ts:61](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L61)
 
 #### Parameters
 
@@ -75,11 +75,29 @@ Defined in: [src/uiMultiPropertySetting.ts:47](https://github.com/Christian-Me/f
 
 ***
 
+### onRenderRow()
+
+> **onRenderRow**(`cb`): `MultiPropertySetting`
+
+Defined in: [src/uiMultiPropertySetting.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L66)
+
+#### Parameters
+
+##### cb
+
+(`setting`, `value`, `idx`, `onChange`) => `void`
+
+#### Returns
+
+`MultiPropertySetting`
+
+***
+
 ### setDesc()
 
 > **setDesc**(`desc`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L30)
+Defined in: [src/uiMultiPropertySetting.ts:44](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L44)
 
 #### Parameters
 
@@ -97,7 +115,7 @@ Defined in: [src/uiMultiPropertySetting.ts:30](https://github.com/Christian-Me/f
 
 > **setName**(`name`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:25](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L25)
+Defined in: [src/uiMultiPropertySetting.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L39)
 
 #### Parameters
 
@@ -115,7 +133,7 @@ Defined in: [src/uiMultiPropertySetting.ts:25](https://github.com/Christian-Me/f
 
 > **setOptions**(`options`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:41](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L41)
+Defined in: [src/uiMultiPropertySetting.ts:55](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L55)
 
 #### Parameters
 
@@ -133,7 +151,7 @@ Defined in: [src/uiMultiPropertySetting.ts:41](https://github.com/Christian-Me/f
 
 > **setValue**(`value`): `MultiPropertySetting`
 
-Defined in: [src/uiMultiPropertySetting.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L35)
+Defined in: [src/uiMultiPropertySetting.ts:49](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L49)
 
 #### Parameters
 
@@ -151,7 +169,7 @@ Defined in: [src/uiMultiPropertySetting.ts:35](https://github.com/Christian-Me/f
 
 > **styleDisabled**(`el`, `disabled`): `void`
 
-Defined in: [src/uiMultiPropertySetting.ts:62](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMultiPropertySetting.ts#L62)
+Defined in: [src/uiMultiPropertySetting.ts:86](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L86)
 
 #### Parameters
 
@@ -162,6 +180,18 @@ Defined in: [src/uiMultiPropertySetting.ts:62](https://github.com/Christian-Me/f
 ##### disabled
 
 `boolean`
+
+#### Returns
+
+`void`
+
+***
+
+### updatePlusButtonState()
+
+> **updatePlusButtonState**(): `void`
+
+Defined in: [src/uiMultiPropertySetting.ts:97](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMultiPropertySetting.ts#L97)
 
 #### Returns
 

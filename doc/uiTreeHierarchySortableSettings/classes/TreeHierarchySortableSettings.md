@@ -6,7 +6,7 @@
 
 # Class: TreeHierarchySortableSettings
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L29)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:29](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L29)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:29](https://github.com/Chris
 
 > **new TreeHierarchySortableSettings**(`container`, `data`, `rowRenderCb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:48](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L48)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:48](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L48)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:48](https://github.com/Chris
 
 > **settingEl**: `HTMLElement`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L30)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:30](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L30)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:30](https://github.com/Chris
 
 > **addExtraButtonToHeader**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L66)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:66](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L66)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:66](https://github.com/Chris
 
 > **addFolder**(`name`, `parentId?`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:105](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L105)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:105](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L105)
 
 #### Parameters
 
@@ -88,7 +88,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:105](https://github.com/Chri
 
 > **addRow**(`folderId`, `keywords`, `payload?`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:75](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L75)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:75](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L75)
 
 #### Parameters
 
@@ -114,7 +114,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:75](https://github.com/Chris
 
 > **onChange**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:124](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L124)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:124](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L124)
 
 #### Parameters
 
@@ -132,7 +132,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:124](https://github.com/Chri
 
 > **onDeleteBt**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:71](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L71)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:71](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L71)
 
 #### Parameters
 
@@ -150,7 +150,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:71](https://github.com/Chris
 
 > **onFilter**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:140](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L140)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:140](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L140)
 
 #### Parameters
 
@@ -168,7 +168,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:140](https://github.com/Chri
 
 > **onRendered**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:136](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L136)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:136](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L136)
 
 #### Parameters
 
@@ -186,7 +186,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:136](https://github.com/Chri
 
 > **onRowCreated**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:128](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L128)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:128](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L128)
 
 #### Parameters
 
@@ -204,7 +204,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:128](https://github.com/Chri
 
 > **onRowDeleted**(`cb`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:132](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L132)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:132](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L132)
 
 #### Parameters
 
@@ -222,7 +222,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:132](https://github.com/Chri
 
 > **setData**(`data`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:118](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L118)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:118](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L118)
 
 #### Parameters
 
@@ -240,7 +240,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:118](https://github.com/Chri
 
 > **setDescription**(`description`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:61](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L61)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:61](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L61)
 
 #### Parameters
 
@@ -258,7 +258,7 @@ Defined in: [src/uiTreeHierarchySortableSettings.ts:61](https://github.com/Chris
 
 > **setTitle**(`title`): `TreeHierarchySortableSettings`
 
-Defined in: [src/uiTreeHierarchySortableSettings.ts:56](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiTreeHierarchySortableSettings.ts#L56)
+Defined in: [src/uiTreeHierarchySortableSettings.ts:56](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiTreeHierarchySortableSettings.ts#L56)
 
 #### Parameters
 

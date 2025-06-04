@@ -8,7 +8,7 @@
 
 > **openAutocompleteModal**(`app`, `plugin`, `rule`, `options`, `activeFile`, `frontmatter`): `Promise`\<`null` \| [`autocompleteModalResult`](../interfaces/autocompleteModalResult.md)\>
 
-Defined in: [src/autocompleteModal.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/autocompleteModal.ts#L248)
+Defined in: [src/autocompleteModal.ts:248](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/autocompleteModal.ts#L248)
 
 Opens an autocomplete modal for selecting or entering values based on the provided parameters.
 

@@ -6,7 +6,7 @@
 
 # Class: RuleToLinkSimple
 
-Defined in: [src/rules/toLinkSimple.ts:22](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/toLinkSimple.ts#L22)
+Defined in: [src/rules/toLinkSimple.ts:22](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/toLinkSimple.ts#L22)
 
 A rule that formats a given input as a simple Obsidian link by wrapping it in double square brackets ([[...]]).
 Returns an empty string if the input is `undefined`, `null`, or an empty string.
@@ -34,7 +34,7 @@ rule.fx(app, file, tools, ""); // returns ''
 
 > **new RuleToLinkSimple**(): `RuleToLinkSimple`
 
-Defined in: [src/rules/toLinkSimple.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/toLinkSimple.ts#L23)
+Defined in: [src/rules/toLinkSimple.ts:23](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/toLinkSimple.ts#L23)
 
 #### Returns
 
@@ -50,7 +50,7 @@ Defined in: [src/rules/toLinkSimple.ts:23](https://github.com/Christian-Me/folde
 
 > **configElements**: `object` \| [`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md) = `{}`
 
-Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L39)
+Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L39)
 
 #### Inherited from
 
@@ -62,7 +62,7 @@ Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-ta
 
 > **description**: `string`
 
-Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L35)
+Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L35)
 
 #### Inherited from
 
@@ -74,7 +74,7 @@ Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-ta
 
 > **id**: `string`
 
-Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L33)
+Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L33)
 
 #### Inherited from
 
@@ -86,7 +86,7 @@ Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-ta
 
 > **isLiveRule**: `boolean` = `false`
 
-Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L37)
+Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L37)
 
 #### Inherited from
 
@@ -98,7 +98,7 @@ Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-ta
 
 > **name**: `string`
 
-Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L34)
+Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L34)
 
 #### Inherited from
 
@@ -110,7 +110,7 @@ Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-ta
 
 > **rulesConfigDiv**: `undefined` \| `HTMLDivElement` = `undefined`
 
-Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L31)
+Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L31)
 
 #### Inherited from
 
@@ -122,7 +122,7 @@ Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-ta
 
 > **ruleType**: [`FrontmatterAutomateRuleTypes`](../../rules/type-aliases/FrontmatterAutomateRuleTypes.md) = `'buildIn'`
 
-Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L36)
+Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L36)
 
 #### Inherited from
 
@@ -134,7 +134,7 @@ Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-ta
 
 > **scriptingTools**: [`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
 
-Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L32)
+Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L32)
 
 #### Inherited from
 
@@ -146,7 +146,7 @@ Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-ta
 
 > **source**: `string` = `'function (app, file, tools) { // do not change this line!\n  let result = \'\'\n  return result;\n}'`
 
-Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L40)
+Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L40)
 
 #### Inherited from
 
@@ -158,7 +158,7 @@ Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-ta
 
 > **type**: `string`[]
 
-Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L38)
+Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L38)
 
 #### Inherited from
 
@@ -170,7 +170,7 @@ Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-ta
 
 > **configTab**(`optionEL`, `rule`, `that`, `previewComponent`): `void`
 
-Defined in: [src/rules/rules.ts:63](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L63)
+Defined in: [src/rules/rules.ts:63](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L63)
 
 Configures the settings tab for a specific rule in the plugin.
 
@@ -214,7 +214,7 @@ The component used to render a preview of the rule's effect.
 
 > **defaultConfigElements**(`modifiers`): [`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md)
 
-Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L67)
+Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L67)
 
 #### Parameters
 
@@ -236,7 +236,7 @@ Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-ta
 
 > **execute**(`app`, `file`, `tools`, `input?`): `string`
 
-Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L115)
+Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L115)
 
 Executes the `fx` function based on the `ruleType`.
 Handles different function signatures dynamically.
@@ -283,7 +283,7 @@ Optional input for rules that require it (e.g., `buildIn.inputProperty`).
 
 > **fx**(`app`, `file`, `tools`, `input`): `any`
 
-Defined in: [src/rules/toLinkSimple.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/toLinkSimple.ts#L34)
+Defined in: [src/rules/toLinkSimple.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/toLinkSimple.ts#L34)
 
 #### Parameters
 
@@ -317,7 +317,7 @@ Defined in: [src/rules/toLinkSimple.ts:34](https://github.com/Christian-Me/folde
 
 > **getSource**(): `string`
 
-Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L46)
+Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L46)
 
 #### Returns
 
@@ -333,7 +333,7 @@ Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-ta
 
 > **hasOwnConfigTab**(): `boolean`
 
-Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L102)
+Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L102)
 
 Checks if the rule has any configuration options.
 
@@ -353,7 +353,7 @@ Checks if the rule has any configuration options.
 
 > **useRuleOption**(`option`): `boolean`
 
-Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L91)
+Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L91)
 
 Checks if a specific rule option is enabled.
 

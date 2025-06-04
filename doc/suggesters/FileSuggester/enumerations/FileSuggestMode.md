@@ -6,7 +6,7 @@
 
 # Enumeration: FileSuggestMode
 
-Defined in: [src/suggesters/FileSuggester.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FileSuggester.ts#L10)
+Defined in: [src/suggesters/FileSuggester.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/FileSuggester.ts#L10)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [src/suggesters/FileSuggester.ts:10](https://github.com/Christian-Me
 
 > **ScriptFiles**: `1`
 
-Defined in: [src/suggesters/FileSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FileSuggester.ts#L12)
+Defined in: [src/suggesters/FileSuggester.ts:12](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/FileSuggester.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/suggesters/FileSuggester.ts:12](https://github.com/Christian-Me
 
 > **TemplateFiles**: `0`
 
-Defined in: [src/suggesters/FileSuggester.ts:11](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/suggesters/FileSuggester.ts#L11)
+Defined in: [src/suggesters/FileSuggester.ts:11](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/suggesters/FileSuggester.ts#L11)

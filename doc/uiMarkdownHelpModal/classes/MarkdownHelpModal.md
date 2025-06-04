@@ -6,7 +6,7 @@
 
 # Class: MarkdownHelpModal
 
-Defined in: [src/uiMarkdownHelpModal.ts:5](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L5)
+Defined in: [src/uiMarkdownHelpModal.ts:5](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L5)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/uiMarkdownHelpModal.ts:5](https://github.com/Christian-Me/folde
 
 > **new MarkdownHelpModal**(`app`, `plugin`, `markdown`, `sourcePath`): `MarkdownHelpModal`
 
-Defined in: [src/uiMarkdownHelpModal.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L10)
+Defined in: [src/uiMarkdownHelpModal.ts:10](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L10)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: [src/uiMarkdownHelpModal.ts:10](https://github.com/Christian-Me/fold
 
 > **app**: `App`
 
-Defined in: [src/uiMarkdownHelpModal.ts:8](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L8)
+Defined in: [src/uiMarkdownHelpModal.ts:8](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L8)
 
 #### Overrides
 
@@ -88,7 +88,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2889
 
 > **markdown**: `string` = `""`
 
-Defined in: [src/uiMarkdownHelpModal.ts:6](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L6)
+Defined in: [src/uiMarkdownHelpModal.ts:6](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L6)
 
 ***
 
@@ -108,7 +108,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2880
 
 > **plugin**: `any`
 
-Defined in: [src/uiMarkdownHelpModal.ts:9](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L9)
+Defined in: [src/uiMarkdownHelpModal.ts:9](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L9)
 
 ***
 
@@ -140,7 +140,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2894
 
 > **sourcePath**: `string` = `""`
 
-Defined in: [src/uiMarkdownHelpModal.ts:7](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L7)
+Defined in: [src/uiMarkdownHelpModal.ts:7](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L7)
 
 ***
 
@@ -178,7 +178,7 @@ Hide the modal.
 
 > **fetchMarkdownFromGitHub**(`url`): `Promise`\<`string`\>
 
-Defined in: [src/uiMarkdownHelpModal.ts:68](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L68)
+Defined in: [src/uiMarkdownHelpModal.ts:68](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L68)
 
 #### Parameters
 
@@ -212,7 +212,7 @@ Defined in: node\_modules/obsidian/obsidian.d.ts:2918
 
 > **onOpen**(): `Promise`\<`void`\>
 
-Defined in: [src/uiMarkdownHelpModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L17)
+Defined in: [src/uiMarkdownHelpModal.ts:17](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L17)
 
 #### Returns
 
@@ -246,7 +246,7 @@ Show the modal on the the active window. On mobile, the modal will animate on sc
 
 > **readPluginDocFile**(`filename`): `Promise`\<`string`\>
 
-Defined in: [src/uiMarkdownHelpModal.ts:74](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/uiMarkdownHelpModal.ts#L74)
+Defined in: [src/uiMarkdownHelpModal.ts:74](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/uiMarkdownHelpModal.ts#L74)
 
 #### Parameters
 

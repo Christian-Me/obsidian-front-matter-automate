@@ -6,7 +6,7 @@
 
 # Class: Rules
 
-Defined in: [src/rules/rules.ts:167](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L167)
+Defined in: [src/rules/rules.ts:167](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L167)
 
 The `Rules` class is responsible for managing and organizing a collection of rules.
 It provides methods to register new rules and retrieve rules based on their type.
@@ -36,7 +36,7 @@ console.log(filteredRules);
 
 > **new Rules**(`app?`, `plugin?`): `Rules`
 
-Defined in: [src/rules/rules.ts:173](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L173)
+Defined in: [src/rules/rules.ts:173](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L173)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ Defined in: [src/rules/rules.ts:173](https://github.com/Christian-Me/folder-to-t
 
 > **app**: `undefined` \| `App` = `undefined`
 
-Defined in: [src/rules/rules.ts:168](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L168)
+Defined in: [src/rules/rules.ts:168](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L168)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [src/rules/rules.ts:168](https://github.com/Christian-Me/folder-to-t
 
 > **plugin**: `any` = `undefined`
 
-Defined in: [src/rules/rules.ts:169](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L169)
+Defined in: [src/rules/rules.ts:169](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L169)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [src/rules/rules.ts:169](https://github.com/Christian-Me/folder-to-t
 
 > **rules**: [`RulePrototype`](RulePrototype.md)[]
 
-Defined in: [src/rules/rules.ts:170](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L170)
+Defined in: [src/rules/rules.ts:170](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L170)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [src/rules/rules.ts:170](https://github.com/Christian-Me/folder-to-t
 
 > **tools**: `undefined` \| [`ScriptingTools`](../../../tools/classes/ScriptingTools.md) = `undefined`
 
-Defined in: [src/rules/rules.ts:171](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L171)
+Defined in: [src/rules/rules.ts:171](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L171)
 
 ## Methods
 
@@ -90,7 +90,7 @@ Defined in: [src/rules/rules.ts:171](https://github.com/Christian-Me/folder-to-t
 
 > **applyFormatOptions**(`value`, `rule`, `activeFile`, `tools`): `any`
 
-Defined in: [src/rules/rules.ts:291](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L291)
+Defined in: [src/rules/rules.ts:291](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L291)
 
 #### Parameters
 
@@ -120,7 +120,7 @@ Defined in: [src/rules/rules.ts:291](https://github.com/Christian-Me/folder-to-t
 
 > **buildConfigTab**(`id`, `optionEL`, `rule`, `that`, `previewComponent`): `void`
 
-Defined in: [src/rules/rules.ts:375](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L375)
+Defined in: [src/rules/rules.ts:375](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L375)
 
 Builds the configuration tab for a specific rule by its ID.
 
@@ -171,7 +171,7 @@ If no rule is found, a warning is logged to the console.
 
 > **executeRule**(`ruleSettings`, `rule`, `app`, `file`, `tools`, `input?`): `null` \| `string`
 
-Defined in: [src/rules/rules.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L267)
+Defined in: [src/rules/rules.ts:267](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L267)
 
 Executes the `fx` function of a given rule and returns its result.
 
@@ -223,7 +223,7 @@ Optional input for rules that require it.
 
 > **executeRuleById**(`id`, `ruleSettings`, `app`, `file`, `tools`, `input?`): `null` \| `string`
 
-Defined in: [src/rules/rules.ts:249](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L249)
+Defined in: [src/rules/rules.ts:249](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L249)
 
 Executes the `fx` function of a rule matching the given `id` and returns its result.
 
@@ -275,7 +275,7 @@ Optional input for rules that require it.
 
 > **getRuleById**(`id`): `undefined` \| [`RulePrototype`](RulePrototype.md)
 
-Defined in: [src/rules/rules.ts:216](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L216)
+Defined in: [src/rules/rules.ts:216](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L216)
 
 Retrieves a rule object by its unique identifier.
 
@@ -303,7 +303,7 @@ Logs a warning to the console if the rule with the specified ID is not found.
 
 > **getRulesByType**(`ruleType`, `propertyType?`): `object`[]
 
-Defined in: [src/rules/rules.ts:202](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L202)
+Defined in: [src/rules/rules.ts:202](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L202)
 
 Retrieves a list of rules filtered by the specified rule type and property type.
 
@@ -333,7 +333,7 @@ An array of objects containing the `id` and `name` of each matching rule, sorted
 
 > **getSource**(`id`): `undefined` \| `string`
 
-Defined in: [src/rules/rules.ts:230](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L230)
+Defined in: [src/rules/rules.ts:230](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L230)
 
 Retrieves the source code of a rule by its unique identifier.
 
@@ -357,7 +357,7 @@ The source code of the rule, or `undefined` if the rule is not found.
 
 > **init**(`app`, `plugin`, `tools`): `void`
 
-Defined in: [src/rules/rules.ts:180](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L180)
+Defined in: [src/rules/rules.ts:180](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L180)
 
 #### Parameters
 
@@ -383,7 +383,7 @@ Defined in: [src/rules/rules.ts:180](https://github.com/Christian-Me/folder-to-t
 
 > **mergeResult**(`result`, `oldResult`, `returnResult`, `rule`): `any`
 
-Defined in: [src/rules/rules.ts:321](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L321)
+Defined in: [src/rules/rules.ts:321](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L321)
 
 #### Parameters
 
@@ -413,7 +413,7 @@ Defined in: [src/rules/rules.ts:321](https://github.com/Christian-Me/folder-to-t
 
 > **registerRule**(`rule`): `void`
 
-Defined in: [src/rules/rules.ts:191](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L191)
+Defined in: [src/rules/rules.ts:191](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L191)
 
 Registers a new rule by adding it to the list of existing rules.
 

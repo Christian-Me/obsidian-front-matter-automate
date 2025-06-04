@@ -8,7 +8,7 @@
 
 > **useRuleOption**(`ruleFn`, `option`): `boolean`
 
-Defined in: [src/rules.ts:421](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules.ts#L421)
+Defined in: [src/rules.ts:421](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules.ts#L421)
 
 Determines whether a specific option is enabled for a given rule function.
 

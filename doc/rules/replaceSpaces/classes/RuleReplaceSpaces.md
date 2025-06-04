@@ -6,7 +6,7 @@
 
 # Class: RuleReplaceSpaces
 
-Defined in: [src/rules/replaceSpaces.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/replaceSpaces.ts#L31)
+Defined in: [src/rules/replaceSpaces.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/replaceSpaces.ts#L31)
 
 A rule class that replaces spaces in a given input value with a specified character.
 
@@ -40,7 +40,7 @@ Renders the configuration UI for setting the space replacement character.
 
 > **new RuleReplaceSpaces**(): `RuleReplaceSpaces`
 
-Defined in: [src/rules/replaceSpaces.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/replaceSpaces.ts#L32)
+Defined in: [src/rules/replaceSpaces.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/replaceSpaces.ts#L32)
 
 #### Returns
 
@@ -56,7 +56,7 @@ Defined in: [src/rules/replaceSpaces.ts:32](https://github.com/Christian-Me/fold
 
 > **configElements**: `object` \| [`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md) = `{}`
 
-Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L39)
+Defined in: [src/rules/rules.ts:39](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L39)
 
 The configuration elements for the rule.
 
@@ -70,7 +70,7 @@ The configuration elements for the rule.
 
 > **description**: `string`
 
-Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L35)
+Defined in: [src/rules/rules.ts:35](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L35)
 
 A description of what the rule does.
 
@@ -84,7 +84,7 @@ A description of what the rule does.
 
 > **id**: `string`
 
-Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L33)
+Defined in: [src/rules/rules.ts:33](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L33)
 
 The unique identifier for the rule ("replaceSpaces").
 
@@ -98,7 +98,7 @@ The unique identifier for the rule ("replaceSpaces").
 
 > **isLiveRule**: `boolean` = `false`
 
-Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L37)
+Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L37)
 
 #### Inherited from
 
@@ -110,7 +110,7 @@ Defined in: [src/rules/rules.ts:37](https://github.com/Christian-Me/folder-to-ta
 
 > **name**: `string`
 
-Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L34)
+Defined in: [src/rules/rules.ts:34](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L34)
 
 The display name for the rule.
 
@@ -124,7 +124,7 @@ The display name for the rule.
 
 > **rulesConfigDiv**: `undefined` \| `HTMLDivElement` = `undefined`
 
-Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L31)
+Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L31)
 
 #### Inherited from
 
@@ -136,7 +136,7 @@ Defined in: [src/rules/rules.ts:31](https://github.com/Christian-Me/folder-to-ta
 
 > **ruleType**: [`FrontmatterAutomateRuleTypes`](../../rules/type-aliases/FrontmatterAutomateRuleTypes.md) = `'buildIn'`
 
-Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L36)
+Defined in: [src/rules/rules.ts:36](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L36)
 
 The type of rule ("formatter").
 
@@ -150,7 +150,7 @@ The type of rule ("formatter").
 
 > **scriptingTools**: [`ScriptingTools`](../../../tools/classes/ScriptingTools.md)
 
-Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L32)
+Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L32)
 
 #### Inherited from
 
@@ -162,7 +162,7 @@ Defined in: [src/rules/rules.ts:32](https://github.com/Christian-Me/folder-to-ta
 
 > **source**: `string` = `'function (app, file, tools) { // do not change this line!\n  let result = \'\'\n  return result;\n}'`
 
-Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L40)
+Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L40)
 
 #### Inherited from
 
@@ -174,7 +174,7 @@ Defined in: [src/rules/rules.ts:40](https://github.com/Christian-Me/folder-to-ta
 
 > **type**: `string`[]
 
-Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L38)
+Defined in: [src/rules/rules.ts:38](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L38)
 
 The applicable field types for the rule.
 
@@ -188,7 +188,7 @@ The applicable field types for the rule.
 
 > **configTab**(`optionEL`, `rule`, `that`, `previewComponent`): `void`
 
-Defined in: [src/rules/replaceSpaces.ts:48](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/replaceSpaces.ts#L48)
+Defined in: [src/rules/replaceSpaces.ts:48](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/replaceSpaces.ts#L48)
 
 Configures the settings tab for a specific rule in the plugin.
 
@@ -232,7 +232,7 @@ The component used to render a preview of the rule's effect.
 
 > **defaultConfigElements**(`modifiers`): [`RuleConfigElements`](../../rules/interfaces/RuleConfigElements.md)
 
-Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L67)
+Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L67)
 
 #### Parameters
 
@@ -254,7 +254,7 @@ Defined in: [src/rules/rules.ts:67](https://github.com/Christian-Me/folder-to-ta
 
 > **execute**(`app`, `file`, `tools`, `input?`): `string`
 
-Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L115)
+Defined in: [src/rules/rules.ts:115](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L115)
 
 Executes the `fx` function based on the `ruleType`.
 Handles different function signatures dynamically.
@@ -301,7 +301,7 @@ Optional input for rules that require it (e.g., `buildIn.inputProperty`).
 
 > **fx**(`app`, `file`, `tools`, `input?`): `any`
 
-Defined in: [src/rules/replaceSpaces.ts:43](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/replaceSpaces.ts#L43)
+Defined in: [src/rules/replaceSpaces.ts:43](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/replaceSpaces.ts#L43)
 
 #### Parameters
 
@@ -335,7 +335,7 @@ Defined in: [src/rules/replaceSpaces.ts:43](https://github.com/Christian-Me/fold
 
 > **getSource**(): `string`
 
-Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L46)
+Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L46)
 
 #### Returns
 
@@ -351,7 +351,7 @@ Defined in: [src/rules/rules.ts:46](https://github.com/Christian-Me/folder-to-ta
 
 > **hasOwnConfigTab**(): `boolean`
 
-Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L102)
+Defined in: [src/rules/rules.ts:102](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L102)
 
 Checks if the rule has any configuration options.
 
@@ -371,7 +371,7 @@ Checks if the rule has any configuration options.
 
 > **useRuleOption**(`option`): `boolean`
 
-Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/bf42295620335492a0928fbbe8ccca5ae986f975/src/rules/rules.ts#L91)
+Defined in: [src/rules/rules.ts:91](https://github.com/Christian-Me/folder-to-tags-plugin/blob/1b47fd7d007d2f33409aeb5e2ff62bca31adb1cf/src/rules/rules.ts#L91)
 
 Checks if a specific rule option is enabled.
 
