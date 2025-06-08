@@ -36,8 +36,8 @@ export class RuleToOriginal extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    
-    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any) { // Default function signature
+
+    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any, extraId?: string) { // Default function signature
         return input; // Return the input unaltered
     };
 }

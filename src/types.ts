@@ -2,6 +2,7 @@ import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelecti
 import { TreeHierarchyData } from './uiTreeHierarchySortableSettings';
 import { WARNING } from './Log';
 import { AnyNsRecord } from 'dns';
+import { MultiPropertyItem } from './uiMultiPropertySetting';
 
 export const versionString = "0.0.26";
 
@@ -87,8 +88,8 @@ export interface FrontmatterAutomateRuleSettings {
     spaceReplacement: string;
     specialCharReplacement: string;
     lowercaseTags: boolean; //deprecated
-    formatter: string; //deprecated
-    formatters: string[]; //added
+    //formatter: string; //deprecated
+    formatters: MultiPropertyItem[]; //added
     linkFormatter: string; //added
     inputProperty: string;
     onlyModify: boolean;
@@ -126,8 +127,8 @@ export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
     spaceReplacement: '',
     specialCharReplacement: '',
     lowercaseTags: false, //deprecated
-    formatter: 'toOriginal', //deprecated
-    formatters: ['toOriginal'],
+    //formatter: 'toOriginal', //deprecated
+    formatters: [{id:'toOriginal', name:'toOriginal', payload: {}}],
     linkFormatter: 'toOriginalLink',
     inputProperty: '',
     onlyModify: true,

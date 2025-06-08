@@ -43,7 +43,7 @@ export class RuleToUpperCase extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any) { // do not change this line!
+    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any, extraId?: string) { // do not change this line!
         if (String.isString(input)) {
             return input.toUpperCase();
         } else if(Array.isArray(input)) {

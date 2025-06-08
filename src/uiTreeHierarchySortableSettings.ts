@@ -7,6 +7,7 @@ export type TreeHierarchyFolder = {
     parentId?: string;
     disabled: boolean; // Added to support disabling folders
     collapsed: boolean; // Add this line
+    payload?: any; // Optional payload for custom data
 };
 export type TreeHierarchyRow = {
     id: string;
@@ -39,7 +40,8 @@ export class TreeHierarchySortableSettings {
     private onRowDeletedCb: (row: TreeHierarchyRow) => void = () => {};
     private onDeleteBtCb: () => void = () => {};
     private onRenderedCb: () => void = () => {};
-    private extraButtonCbs: ((btn: Setting) => void)[] = [];
+    private extraHeaderButtonCbs: ((btn: Setting) => void)[] = [];
+    private extraFolderButtonCbs: ((btn: Setting, folder: TreeHierarchyFolder) => void)[] = [];
     private rowMatchesFilterFn: (row: TreeHierarchyRow, filter: string) => boolean = (row, filter) => {
         if (!filter) return true;
         return row.keywords.some(k => k.toLowerCase().includes(filter.toLowerCase()));
@@ -64,7 +66,12 @@ export class TreeHierarchySortableSettings {
         return this;
     }
     addExtraButtonToHeader(cb: (btn: Setting) => void) {
-        this.extraButtonCbs.push(cb);
+        this.extraHeaderButtonCbs.push(cb);
+        this.render();
+        return this;
+    }
+    addExtraButtonToFolders(cb: (btn: Setting, folder: TreeHierarchyFolder) => void) {
+        this.extraFolderButtonCbs.push(cb);
         this.render();
         return this;
     }
@@ -307,7 +314,7 @@ export class TreeHierarchySortableSettings {
         });
 
         // Add extra buttons to the header
-        this.extraButtonCbs.forEach(cb => {
+        this.extraHeaderButtonCbs.forEach(cb => {
             cb(headerSetting);
         });
 
@@ -360,17 +367,17 @@ export class TreeHierarchySortableSettings {
         if (!this.data || !this.data.folders) return;
         const folders = this.data.folders.filter(f => f.parentId === parentId);
         folders.forEach(folder => {
-            const setting = new Setting(parentEl)
+            const folderSetting = new Setting(parentEl)
                 .setClass("FMA-folder-list-folder-setting");
 
             // --- LEFT SIDE: Drag handle + editable name ---
-            setting.nameEl.empty();
+            folderSetting.nameEl.empty();
 
             // Indent folders by 20px per depth (frame and content)
-            setting.settingEl.style.marginLeft = `${depth * 20}px`;
+            folderSetting.settingEl.style.marginLeft = `${depth * 20}px`;
 
             // Drag handle (left)
-            const dragHandle = setting.nameEl.createSpan({ cls: "FMA-folder-list-drag-handle" });
+            const dragHandle = folderSetting.nameEl.createSpan({ cls: "FMA-folder-list-drag-handle" });
             dragHandle.setText("☰");
             dragHandle.draggable = true;
             dragHandle.style.marginRight = "0.5em";
@@ -379,7 +386,7 @@ export class TreeHierarchySortableSettings {
             dragHandle.addEventListener("drop", (e) => this.onDrop(e, "folder", folder.id));
 
             // Add checkbox for disabling folder
-            setting.addToggle(toggle => {
+            folderSetting.addToggle(toggle => {
                 toggle
                     .setValue(!folder.disabled)
                     .onChange((val) => {
@@ -391,7 +398,7 @@ export class TreeHierarchySortableSettings {
             }).setTooltip("Disable all rules in this folder and subfolders");
 
             // Editable folder name
-            const nameInput = new TextComponent(setting.nameEl);
+            const nameInput = new TextComponent(folderSetting.nameEl);
             nameInput.setValue(folder.name);
             nameInput.inputEl.style.maxWidth = "100%";
             nameInput.inputEl.style.border = "0"
@@ -402,7 +409,7 @@ export class TreeHierarchySortableSettings {
             });
 
             // --- RIGHT SIDE: Action buttons ---
-            setting.addExtraButton(btn => {
+            folderSetting.addExtraButton(btn => {
                 btn.setIcon("plus-circle")
                     .setTooltip("Add row to folder")
                     .onClick(() => {
@@ -410,7 +417,7 @@ export class TreeHierarchySortableSettings {
                     });
             });
 
-            setting.addExtraButton(btn => {
+            folderSetting.addExtraButton(btn => {
                 btn.setIcon("folder")
                     .setTooltip("Add subfolder")
                     .onClick(() => {
@@ -418,7 +425,12 @@ export class TreeHierarchySortableSettings {
                     });
             });
 
-            setting.addExtraButton(btn => {
+            // Add extra buttons to the folder
+            this.extraFolderButtonCbs.forEach(cb => {
+                cb(folderSetting, folder);
+            });
+
+            folderSetting.addExtraButton(btn => {
                 const isCollapsed = folder.collapsed ?? false;
                 btn.setIcon(isCollapsed ? "chevron-right" : "chevron-down")
                     .setTooltip(isCollapsed ? "Expand" : "Collapse")
@@ -430,26 +442,26 @@ export class TreeHierarchySortableSettings {
             });
 
             // In renderFolder, before adding event listeners:
-            (setting.settingEl as any)._dragEnterCount = 0;
+            (folderSetting.settingEl as any)._dragEnterCount = 0;
 
-            setting.settingEl.addEventListener("dragenter", (e) => {
-                (setting.settingEl as any)._dragEnterCount++;
-                setting.settingEl.classList.add("FMA-drop-target");
+            folderSetting.settingEl.addEventListener("dragenter", (e) => {
+                (folderSetting.settingEl as any)._dragEnterCount++;
+                folderSetting.settingEl.classList.add("FMA-drop-target");
             });
-            setting.settingEl.addEventListener("dragleave", (e) => {
-                (setting.settingEl as any)._dragEnterCount--;
-                if ((setting.settingEl as any)._dragEnterCount <= 0) {
-                    setting.settingEl.classList.remove("FMA-drop-target");
-                    (setting.settingEl as any)._dragEnterCount = 0;
+            folderSetting.settingEl.addEventListener("dragleave", (e) => {
+                (folderSetting.settingEl as any)._dragEnterCount--;
+                if ((folderSetting.settingEl as any)._dragEnterCount <= 0) {
+                    folderSetting.settingEl.classList.remove("FMA-drop-target");
+                    (folderSetting.settingEl as any)._dragEnterCount = 0;
                 }
             });
             
             // Drag events for folder row
-            setting.settingEl.addEventListener("dragover", (e) => this.onDragOver(e, "folder", folder.id));
-            setting.settingEl.addEventListener("drop", (e) => this.onDrop(e, "folder", folder.id));
-            setting.settingEl.addEventListener("dragleave", (e) => this.onDragLeave(e));
+            folderSetting.settingEl.addEventListener("dragover", (e) => this.onDragOver(e, "folder", folder.id));
+            folderSetting.settingEl.addEventListener("drop", (e) => this.onDrop(e, "folder", folder.id));
+            folderSetting.settingEl.addEventListener("dragleave", (e) => this.onDragLeave(e));
             
-            if (folder.disabled) setting.settingEl.classList.add("FMA-mod-FolderList-disabled");
+            if (folder.disabled) folderSetting.settingEl.classList.add("FMA-mod-FolderList-disabled");
 
             // Render rows and subfolders
             if (!folder.collapsed) {

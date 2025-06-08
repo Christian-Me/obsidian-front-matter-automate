@@ -39,27 +39,27 @@ export class RuleReplaceSpaces extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    
-    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any) { // Default function signature
-        const spaceReplacement = tools.getOptionConfig(tools.getRule()?.id, 'spaceReplacement');
+
+    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any, extraId?: string) { // Default function signature
+        const spaceReplacement = tools.getOptionConfig(tools.getRule()?.id, 'spaceReplacement', extraId) || '_'; // Default to underscore if not set
         return input.replace(/\s+/g, spaceReplacement); // Replace all spaces with the specified character
     };
 
-    configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
+    configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any, extraId: string) {
         optionEL.empty();
         // Create a setting for the small words
         that.setOptionConfigDefaults(rule.id, {
             spaceReplacement : '', // Default suffix
-        })
+        }, extraId)
 
         new Setting(optionEL)
             .setName('Space replacement')
             .setDesc('Character to replace spaces (suggested: "_")')
             .addText(text => text
                 .setPlaceholder('will remove spaces')
-                .setValue(that.getOptionConfig(rule.id ,'spaceReplacement') || '')
+                .setValue(that.getOptionConfig(rule.id, 'spaceReplacement', extraId) || '')
                 .onChange(async (value) => {
-                    that.setOptionConfig(rule.id,'spaceReplacement', value);
+                    that.setOptionConfig(rule.id, 'spaceReplacement', value, extraId);
                     that.updatePreview(rule, previewComponent);
                 })
             );

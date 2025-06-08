@@ -30,8 +30,8 @@ export class RuleToLinkSimple extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    
-    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any) { // do not change this line!
+
+    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any, extraId?: string) { // do not change this line!
         if (input === undefined || input === null || input === '') {
             return ''; // Return empty string if input is undefined, null, or empty 
         }

@@ -836,44 +836,756 @@
       "name": ""
     }
   ],
-  "debugLevel": 6,
+  "debugLevel": 4,
   "delayCreateEvent": 1000,
   "folderConfig": {
     "folders": [
       {
-        "id": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
-        "name": "Testing",
+        "id": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
+        "name": "Tests",
         "disabled": false,
         "collapsed": false
       },
       {
+        "id": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
+        "name": "Constant Values",
+        "disabled": false,
+        "collapsed": false,
+        "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
+        "payload": {
+          "exclude": {
+            "selectedFolders": [
+              "/"
+            ],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [
+              "Tests/Testing Constant Value(s).md"
+            ],
+            "mode": "include"
+          }
+        }
+      },
+      {
         "id": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
-        "name": "Concat Test",
-        "disabled": true,
-        "collapsed": false
+        "name": "Get Properies",
+        "disabled": false,
+        "collapsed": false,
+        "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
+        "payload": {
+          "exclude": {
+            "selectedFolders": [
+              "/"
+            ],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [
+              "Tests/Testing Concat.md"
+            ],
+            "mode": "include"
+          }
+        }
       },
       {
         "id": "79464f6c-42dc-45a8-86f3-123a0ae93b4a",
         "name": "Auto Location",
         "disabled": true,
         "collapsed": true
+      },
+      {
+        "id": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "name": "Links & Folders",
+        "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
+        "disabled": false,
+        "collapsed": false,
+        "payload": {
+          "exclude": {
+            "selectedFolders": [
+              "/"
+            ],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [
+              "Tests/Links & Folders.md"
+            ],
+            "mode": "include"
+          }
+        }
+      },
+      {
+        "id": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
+        "name": "Miscellaneous",
+        "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
+        "disabled": false,
+        "collapsed": false,
+        "payload": {
+          "exclude": {
+            "selectedFolders": [
+              "/"
+            ],
+            "selectedFiles": [],
+            "mode": "exclude"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [
+              "Tests/Testing Miscellaneous.md"
+            ],
+            "mode": "include"
+          }
+        }
       }
     ],
     "rows": [
       {
+        "id": "484b8335-39d7-4d83-9a82-8cc9f1b7a9fb",
+        "folderId": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "aae10d3a-24f8-4272-8bdd-9492b20a1590",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "fileSize",
+          "value": 186,
+          "customProperty": "",
+          "type": "number",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fileSizeBytes",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const result = file.stat.size; \n return result; // return you result. \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "fileSizeBytes",
+            "File Size in Bytes",
+            "This rule returns the size of the file in bytes."
+          ]
+        }
+      },
+      {
+        "id": "a7368169-ba3e-4ffb-ac7a-27229e090d67",
+        "folderId": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "7037f6b6-e536-4e40-929f-989232ae4ee8",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "fileSizeText",
+          "value": "186 Bytes",
+          "customProperty": "",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fileSizeString",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n let size =file.stat.size; \n const precision = 2; // number of decimal places \n if (size > 1024) { \n   size = size / 1024; \n   if (size > 1024) { \n     size = size / 1024; \n     if (size > 1024) { \n       size = size / 1024; \n       return size.toFixed(precision) + ' GB'; \n     } \n     return size.toFixed(precision) + ' MB'; \n   } \n   return size.toFixed(precision) + ' KB'; \n }   \n return size + ' Bytes'; // return you result. \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "fileSizeString",
+            "File Size as String",
+            "Converts the file size to a human-readable string (e.g., KB, MB, GB) with 2 decimal places precision."
+          ]
+        }
+      },
+      {
+        "id": "3b2e3cdd-8a3e-4cff-bcdb-e1f525787ee5",
+        "folderId": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "b5facdae-b108-4cb5-90b4-697873dc03b2",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "dateTimeCreated",
+          "value": "2025-06-08T12:55:37.914",
+          "customProperty": "",
+          "type": "datetime",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "dateTimeCreated",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset \n const result = new Date(file.stat.ctime-timeOffset); \n return result.toISOString().split('Z')[0]; // remove UTC symbol \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "dateTimeCreated",
+            "Date (and Time) created",
+            "This rule returns the date and time when the file was created, adjusted for local timezone."
+          ]
+        }
+      },
+      {
+        "id": "dda0fe4c-253b-4b30-b7d8-0705d6b33932",
+        "folderId": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "ff59b18e-ffe8-4618-953f-c8806ad76bfb",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "dateTimeModified",
+          "value": "2025-06-08T13:02:47.472",
+          "customProperty": "",
+          "type": "datetime",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "dateTimeModified",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const timeOffset = new Date(Date.now()).getTimezoneOffset()*60000; // get local time offset \n const result = new Date(file.stat.mtime-timeOffset); \n return result.toISOString().split('Z')[0]; // remove UTC symbol \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "dateTimeModified",
+            "Date (and Time) modified",
+            "This rule returns the date and time when the file was last modified, adjusted for local timezone."
+          ]
+        }
+      },
+      {
+        "id": "fa1482d1-0242-45dc-b300-ce0974ccd376",
+        "folderId": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "b1ac113c-58bd-4c4c-8f02-856e26f9f372",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "Text",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "default",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "keywords": [
+            "default",
+            "Pass parameter unaltered",
+            "Pass the content of the frontmatter parameter unaltered."
+          ]
+        }
+      },
+      {
+        "id": "b40292bc-8d4c-4a27-8c17-6f36c6a2539d",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "1f186520-863e-43d6-91d3-c6621b226743",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "link",
+          "value": "[[Tests/Links & Folders.md|Links & Folders]]",
+          "customProperty": "",
+          "type": "multitext",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "linkToFile",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const parts = file.path.split('/');\n  const rule = tools.getRule();\n  if (!rule) return tools.getCurrentContent();\n  const addExtension = tools.getOptionConfig(rule.id,'addExtension') \n  parts.pop();\n  if (parts[parts.length-1] === file.basename) parts.pop();\n  let fileName = addExtension? file.basename + '.' + file.extension : file.basename; \n  return `[[${parts.join('/')}/${fileName}|${file.basename}]]`;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "1f186520-863e-43d6-91d3-c6621b226743": {
+              "addExtension": true
+            }
+          },
+          "keywords": [
+            "linkToFile",
+            "Create link to file",
+            "Create a link to the file in the current vault. Can be configured to include the file extension."
+          ]
+        }
+      },
+      {
+        "id": "540abeaa-9565-4ff0-bf18-7f5035242db4",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "e744e4a3-bffb-40af-84be-651702f3bec2",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "fileNameExt",
+          "value": "Links & Folders.md",
+          "customProperty": "",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "nameExt",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name with extension\n  const result = file.name;\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "nameExt",
+            "File name with extension",
+            "Returns the file name with extension."
+          ]
+        }
+      },
+      {
+        "id": "5a1e2939-1e45-4bc7-ab41-0e61c8a36bc2",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "1ae521c4-e7f4-453f-8566-5c98009c4b6c",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "fileName",
+          "value": "Links & Folders",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "name",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file name\n  const result = tools.removeAllExtensions(file.name);\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "keywords": [
+            "name",
+            "File name without extension",
+            "Returns the file name without all extensions. I.e. example.note.md => example"
+          ]
+        }
+      },
+      {
+        "id": "996613c4-ec45-4a74-8391-c020e0813756",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "dd9267d0-0df9-46b0-8fcc-77f133f56b94",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "fullPath",
+          "value": "Tests",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "path",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  parts.pop();\n  return parts.join('/');\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "path",
+            "Full path",
+            "Returns the folder path the file is stored in."
+          ]
+        }
+      },
+      {
+        "id": "1cc59faa-c47e-4053-aace-43c159964b0c",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "a6f9e8d6-58bf-4a5b-8927-6a29560dfaf9",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "path",
+          "value": "Tests/Links & Folders.md",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fullPathExt",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  return `${file.path}`;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "fullPathExt",
+            "Full path, filename and extension",
+            "Returns the full path of the file, including its filename and extension."
+          ]
+        }
+      },
+      {
+        "id": "7788b8c5-0d98-4dbc-81c5-1ec7aa45ecf2",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "97802a18-e132-469f-8b6f-dd7dc51b9833",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "parentFolder",
+          "value": "Tests",
+          "customProperty": "",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "folder",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const input = tools.getCurrentContent(); // Get the current content of property\n  return input; // Return the input unaltered\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "keywords": [
+            "folder",
+            "Parent folder",
+            "Returns the parent folder of the file."
+          ]
+        }
+      },
+      {
         "id": "74ac7a24-4081-4fe5-8104-4c4788017d7e",
         "folderId": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
         "keywords": [],
-        "disabled": true,
+        "disabled": false,
         "payload": {
           "id": "86a939b0-28c4-4b7b-8d77-a3b87878b99d",
           "active": true,
           "asLink": false,
           "addContent": "overwrite",
           "property": "Concat-List",
-          "value": [
-            "Eins,Zwei,Drei"
-          ],
+          "value": [],
           "customProperty": "",
           "type": "multitext",
           "typeProperty": {
@@ -903,7 +1615,10 @@
           "lowercaseTags": false,
           "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "toOriginal",
+              "name": "no change"
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
@@ -913,12 +1628,21 @@
             "86a939b0-28c4-4b7b-8d77-a3b87878b99d": {
               "propertyDelimiter": "",
               "inputProperties": [
-                "List-1",
-                "List-2",
-                "List-3",
-                "Text"
+                {
+                  "id": "List-1",
+                  "name": "List-1"
+                },
+                {
+                  "id": "List-2",
+                  "name": "List-2"
+                },
+                {
+                  "id": "List-3",
+                  "name": "List-3"
+                }
               ],
-              "onlyWhenAllPropertiesExist": false
+              "onlyWhenAllPropertiesExist": false,
+              "delimiter": ""
             }
           },
           "keywords": [
@@ -929,18 +1653,19 @@
         }
       },
       {
-        "id": "03ac47b1-bf3f-4a33-ac1b-71bf1a516f3b",
+        "id": "62a9f32c-cf6a-4ac5-a7e8-c3cf2344a4d0",
         "folderId": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
         "keywords": [],
-        "disabled": true,
+        "disabled": false,
         "payload": {
-          "id": "cfb936f0-a93a-499f-ab85-10d20aa0ba2b",
+          "id": "cd20c914-2e93-4d58-9bc2-330e7b26fa52",
           "active": true,
           "asLink": false,
           "addContent": "overwrite",
           "property": "Concat-Text",
-          "value": "Eins,Zwei,Drei",
+          "value": "",
           "customProperty": "",
+          "type": "text",
           "typeProperty": {
             "name": "",
             "type": "text",
@@ -966,24 +1691,46 @@
           "spaceReplacement": "",
           "specialCharReplacement": "",
           "lowercaseTags": false,
-          "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "replaceChars",
+              "name": "Replace Characters",
+              "payload": {}
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
           "onlyModify": true,
           "useCustomCode": false,
           "optionsConfig": {
-            "cfb936f0-a93a-499f-ab85-10d20aa0ba2b": {
-              "propertyDelimiter": "",
+            "cd20c914-2e93-4d58-9bc2-330e7b26fa52": {
+              "replace": "-",
+              "replaceBy": "/",
+              "propertyDelimiter": ".",
               "inputProperties": [
-                "List-1",
-                "List-2",
-                "List-3",
-                "Text"
+                {
+                  "id": "List-1",
+                  "name": "List-1"
+                },
+                {
+                  "id": "List-2",
+                  "name": "List-2",
+                  "payload": {
+                    "id": "870aecb8-1417-49aa-b58f-34cde53c6807"
+                  }
+                },
+                {
+                  "id": "List-3",
+                  "name": "List-3",
+                  "payload": {
+                    "id": "1709d706-c3ae-4b40-b7e1-69bbffb895db"
+                  }
+                }
               ],
-              "onlyWhenAllPropertiesExist": false
+              "onlyWhenAllPropertiesExist": false,
+              "delimiter": "|",
+              "constantValue": "",
+              "constantValues": []
             }
           },
           "keywords": [
@@ -991,6 +1738,85 @@
             "Get Properties",
             "Retrieves multiple frontmatter properties (Multitext, Tags, Aliases)."
           ]
+        }
+      },
+      {
+        "id": "c3b66ef7-8282-4e33-a2f4-13620d6f0c80",
+        "folderId": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "842e47dd-e46f-48f9-b4ab-68bb912aa523",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "Text",
+          "value": "",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "concatProperties",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties');\n  if (!Array.isArray(propertyIds) || propertyIds.length === 0) {\n    return 'No properties selected';\n  }\n  const delimiter = tools.getOptionConfig(tools.getRule()?.id,'delimiter');\n  const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;\n  if (onlyWhenAllPropertiesExist) {\n    // Check if all properties exist\n    const allExist = propertyIds.every(id => { \n      if (id === undefined || id === null || id === '') {\n        return true; // Skip empty or undefined property IDs\n      }\n      const propertyValue = tools.getFrontmatterProperty(id);\n      const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';\n      return result;\n    });\n    if (!allExist) {\n      return '';\n    }\n  }\n  const result = propertyIds.map(id => {\n    let value = tools.getFrontmatterProperty(id);\n    if (value === undefined || value === null || value === '') {\n      return ''; // Skip empty or undefined properties\n    }\n    return value.toString();\n  }).filter(res => res !== undefined).join(delimiter);\n  return result;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "keywords": [
+            "concatProperties",
+            "Concat Properties",
+            "Concatenates multiple properties from the frontmatter."
+          ],
+          "optionsConfig": {
+            "842e47dd-e46f-48f9-b4ab-68bb912aa523": {
+              "delimiter": ",",
+              "inputProperties": [
+                {
+                  "id": "List-1",
+                  "name": "List-1",
+                  "payload": {
+                    "id": "fc751d48-6378-497a-91a1-171883bf0f59"
+                  }
+                },
+                {
+                  "id": "List-2",
+                  "name": "List-2",
+                  "payload": {
+                    "id": "0cd76637-f303-43ac-a412-9a8848affd40"
+                  }
+                }
+              ],
+              "onlyWhenAllPropertiesExist": true
+            }
+          }
         }
       },
       {
@@ -1005,9 +1831,9 @@
           "addContent": "overwrite",
           "property": "list",
           "value": [
-            "eins",
-            "zwei",
-            "drei"
+            "A",
+            "B",
+            "C"
           ],
           "customProperty": "",
           "type": "multitext",
@@ -1038,7 +1864,10 @@
           "lowercaseTags": false,
           "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "toOriginal",
+              "name": "no change"
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
@@ -1048,9 +1877,18 @@
             "060bdef1-fbd6-492c-aad6-b849b1cd4292": {
               "constantValue": "testValue",
               "constantValues": [
-                "eins",
-                "zwei",
-                "drei"
+                {
+                  "id": "A",
+                  "name": "A"
+                },
+                {
+                  "id": "B",
+                  "name": "B"
+                },
+                {
+                  "id": "C",
+                  "name": "C"
+                }
               ],
               "delimiter": ","
             }
@@ -1073,7 +1911,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "Text",
-          "value": "Text",
+          "value": "1,2,3",
           "customProperty": "",
           "type": "text",
           "typeProperty": {
@@ -1103,7 +1941,10 @@
           "lowercaseTags": false,
           "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "toOriginal",
+              "name": "no change"
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
@@ -1117,12 +1958,21 @@
           "optionsConfig": {
             "2aa8600d-3c77-4af2-87e5-78f209af1ee2": {
               "constantValue": "",
-              "delimiter": ",",
               "constantValues": [
-                "Eins",
-                "Zwei",
-                "Drei"
-              ]
+                {
+                  "id": "1",
+                  "name": "1"
+                },
+                {
+                  "id": "2",
+                  "name": "2"
+                },
+                {
+                  "id": "3",
+                  "name": "3"
+                }
+              ],
+              "delimiter": ","
             }
           }
         }
@@ -1170,7 +2020,13 @@
           "lowercaseTags": false,
           "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {
+                "id": "e06a637f-633b-4775-90e2-97ebf890db5e"
+              }
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
@@ -1242,7 +2098,13 @@
           "lowercaseTags": false,
           "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {
+                "id": "16672294-ed8d-4882-9122-e36f9cfb1154"
+              }
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",
@@ -1303,7 +2165,13 @@
           "lowercaseTags": false,
           "formatter": "toOriginal",
           "formatters": [
-            "toOriginal"
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {
+                "id": "bb2b8dfc-a8ee-408e-bcea-1dca67f639cd"
+              }
+            }
           ],
           "linkFormatter": "toOriginalLink",
           "inputProperty": "",

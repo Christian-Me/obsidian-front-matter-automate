@@ -3,7 +3,7 @@ import { ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings, PropertyTypeInfo } from "../types";
 import { App, ExtraButtonComponent, Setting, TFile } from "obsidian";
 import { delimiter } from "path";
-import { MultiPropertySetting } from "../uiMultiPropertySetting";
+import { MultiPropertyItem, MultiPropertySetting } from "../uiMultiPropertySetting";
 
 /**
  * Represents a built-in rule for retrieving a property value from the frontmatter of a file.
@@ -53,11 +53,11 @@ export class RuleBuildInConcatProperties extends RulePrototype {
     const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;
     if (onlyWhenAllPropertiesExist) {
       // Check if all properties exist
-      const allExist = propertyIds.every(id => { 
-        if (id === undefined || id === null || id === '') {
+      const allExist = propertyIds.every(item => { 
+        if (item === undefined || item === null || item.name === '') {
           return true; // Skip empty or undefined property IDs
         }
-        const propertyValue = tools.getFrontmatterProperty(id);
+        const propertyValue = tools.getFrontmatterProperty(item.name);
         const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';
         return result;
       });
@@ -65,8 +65,8 @@ export class RuleBuildInConcatProperties extends RulePrototype {
         return '';
       }
     }
-    const result = propertyIds.map(id => {
-      let value = tools.getFrontmatterProperty(id);
+    const result = propertyIds.map(item => {
+      let value = tools.getFrontmatterProperty(item.name);
       if (value === undefined || value === null || value === '') {
         return ''; // Skip empty or undefined properties
       }
@@ -77,7 +77,7 @@ export class RuleBuildInConcatProperties extends RulePrototype {
 
   configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
     that.setOptionConfigDefaults(rule.id, {
-        delimiter: ' ', // Default delimiter for concatenation
+        delimiter: ',', // Default delimiter for concatenation
         inputProperties: [],
         onlyWhenAllPropertiesExist: true, // Default to false
     });
@@ -85,16 +85,24 @@ export class RuleBuildInConcatProperties extends RulePrototype {
     const multiProp = new MultiPropertySetting(optionEL)
       .setName("Input Properties")
       .setDesc("Select properties as input. Use 'Space replacement' as delimiter.")
-      .setOptions(Object.keys(that.knownProperties).map((key) => key))
+      .setOptions(
+          Object.keys(that.knownProperties).map((key) => {
+            const prop = that.knownProperties[key];
+            if (prop.type === 'text' || prop.type === 'tags' || prop.type === 'aliases' || prop.type === 'multitext') {
+              return {id:key, name: prop.name} as MultiPropertyItem;
+            }
+            return null; // Filter out unsupported types
+          }).filter((item): item is MultiPropertyItem => item !== null)
+        )
       .setValue(that.getOptionConfig(rule.id, 'inputProperties') || [])
       .onChange((arr) => {
           that.setOptionConfig(rule.id, 'inputProperties', arr);
           that.updatePreview(rule, previewComponent);
-      });
+        });
     
     new Setting(optionEL)
         .setName('Delimiter')
-        .setDesc('Specify a delimiter to use when concatenating properties. Default is a space.')
+        .setDesc('Specify a delimiter to use when concatenating properties. Default is a comma.')
         .addText(text => text
             .setValue(that.getOptionConfig(rule.id ,'delimiter') || '')
             .setPlaceholder('Enter delimiter')

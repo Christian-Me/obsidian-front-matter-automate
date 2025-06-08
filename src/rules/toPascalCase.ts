@@ -43,7 +43,7 @@ export class RuleToPascalCase extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any) { // do not change this line!
+    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any, extraId?: string) { // do not change this line!
         const toPascalCase = (str: string) => {
             return str
                 .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match) =>

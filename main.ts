@@ -9,6 +9,8 @@ import { rulesManager } from './src/rules/rules';
 import { DEBUG, ERROR, INFO, logger } from './src/Log';
 import { log } from 'console';
 import { TreeHierarchyData } from './src/uiTreeHierarchySortableSettings';
+import { MultiPropertyItem } from './src/uiMultiPropertySetting';
+import { randomUUID } from 'crypto';
 export default class FolderTagPlugin extends Plugin {
     settings!: FrontmatterAutomateSettings;
     private tools!: ScriptingTools;
@@ -102,7 +104,37 @@ export default class FolderTagPlugin extends Plugin {
 
     async loadSettings() {
         let data = await this.loadData();
+        let migrationNeeded = false;
+        if (!data) {
+            logger.log(INFO,`No settings found, using default settings.`);
+            this.settings = Object.assign({}, DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS);
+            return;
+        }
+        for (let row of data.folderConfig.rows || []) {
+            const rule = row.payload;
+            if (rule.formatters){
+                if (rule.formatters.length > 0 && typeof rule.formatters[0] === 'string') {
+                    if (!migrationNeeded) {
+                        logger.log(INFO,`Migrating formatters to new format...`);
+                        migrationNeeded = true;
+                    }
+                    rule.formatters = rule.formatters.map((formatter:string) => {
+                        return {
+                            id: formatter,
+                            name: formatter,
+                            payload: {
+                                id : randomUUID(),
+                            },
+                        } as MultiPropertyItem;
+                    });
+                }
+            }
+        }
         this.settings = Object.assign({}, DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS, data);
+        if (migrationNeeded) {
+            logger.log(INFO,`Migration of formatters done. Saving new settings...`);
+            await this.saveSettings();
+        }
     }
     
     async saveSettings() {
@@ -149,6 +181,27 @@ export default class FolderTagPlugin extends Plugin {
         }
     }
 
+    getRuleList(file: TFile, ruleSettings?: TreeHierarchyData): FrontmatterAutomateRuleSettings[] {
+        if (!ruleSettings) ruleSettings = this.settings.folderConfig;
+        const rules = ruleSettings?.rows.flatMap((row) => {
+            if (row.folderId) {
+                const folder = ruleSettings.folders.find((folder) => folder.id === row.folderId);
+                let isAllowedByFolder = true;
+                if (!folder) {
+                    row.folderId = undefined;
+                    logger.log(ERROR,`getRuleList: Folder with id ${row.folderId} not found for rule ${row.payload.content}!`);
+                    return [row.payload as FrontmatterAutomateRuleSettings];
+                }
+                if (folder.payload) {
+                    isAllowedByFolder = checkIfFileAllowed(file, folder.payload);
+                }
+                return !folder.disabled && isAllowedByFolder ? [row.payload as FrontmatterAutomateRuleSettings] : [];
+            }
+            return [row.payload as FrontmatterAutomateRuleSettings];
+        }) ?? [];
+        return rules;
+    }
+
     updateFrontmatterParameters(eventName: 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed', file: TFile, ruleSettings: TreeHierarchyData, oldPath?: string) {
         if (!checkIfFileAllowed(file, this.settings)) {
             logger.log(DEBUG,`file ${file.path} globally rejected!`)
@@ -156,18 +209,7 @@ export default class FolderTagPlugin extends Plugin {
         }
         const currentPathTag = this.formatTagName(this.tools.getFolderFromPath(file.path));
         const oldPathTag = this.formatTagName(this.tools.getFolderFromPath(oldPath))
-        const rules = ruleSettings?.rows.flatMap((row) => {
-            if (row.folderId) {
-                const folder = ruleSettings.folders.find((folder) => folder.id === row.folderId);
-                if (!folder) {
-                    row.folderId = undefined;
-                    logger.log(ERROR,`Event ${eventName}: Folder with id ${row.folderId} not found for rule ${row.payload.content}!`);
-                    return [row.payload as FrontmatterAutomateRuleSettings];
-                }
-                return !folder.disabled ? [row.payload as FrontmatterAutomateRuleSettings] : [];
-            }
-            return [row.payload as FrontmatterAutomateRuleSettings];
-        }) ?? [];
+        const rules = this.getRuleList(file, ruleSettings);
         if (!rules || rules.length === 0) {
             logger.log(DEBUG,`Event ${eventName}: No rules found for file ${file.path}`);
             return; // No rules to apply

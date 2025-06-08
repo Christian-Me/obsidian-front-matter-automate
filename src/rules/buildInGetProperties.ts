@@ -3,7 +3,7 @@ import { ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings, PropertyTypeInfo } from "../types";
 import { App, ExtraButtonComponent, Setting, TFile } from "obsidian";
 import { delimiter } from "path";
-import { MultiPropertySetting } from "../uiMultiPropertySetting";
+import { MultiPropertyItem, MultiPropertySetting } from "../uiMultiPropertySetting";
 import { ERROR, logger } from "../Log";
 
 
@@ -72,8 +72,8 @@ export class RuleBuildInGetProperties extends RulePrototype {
     }
 
     let resultArray: string[] = [];
-    propertyIds.forEach(id => {
-      let value = tools.getFrontmatterProperty(id);
+    propertyIds.forEach(item => {
+      let value = tools.getFrontmatterProperty(item.id);
       if (value === undefined || value === null || value === '') {
         return; // Skip empty or undefined properties
       }
@@ -101,13 +101,15 @@ export class RuleBuildInGetProperties extends RulePrototype {
     const multiProp = new MultiPropertySetting(optionEL)
       .setName("Input Properties")
       .setDesc("Select properties as input. (text, tags, aliases or multitext)")
-      .setOptions(Object.keys(that.knownProperties).map((key) => {
-        const prop = that.knownProperties[key];
-        if (prop.type === 'text' || prop.type === 'tags' || prop.type === 'aliases' || prop.type === 'multitext') {
-          return key;
-        }
-        return null; // Filter out unsupported types
-      }).filter((item): item is string => item !== null))
+      .setOptions(
+        Object.keys(that.knownProperties).map((key) => {
+          const prop = that.knownProperties[key];
+          if (prop.type === 'text' || prop.type === 'tags' || prop.type === 'aliases' || prop.type === 'multitext') {
+            return {id:key, name: prop.name} as MultiPropertyItem;
+          }
+          return null; // Filter out unsupported types
+        }).filter((item): item is MultiPropertyItem => item !== null)
+      )
       .setValue(that.getOptionConfig(rule.id, 'inputProperties') || [])
       .onChange((arr) => {
           that.setOptionConfig(rule.id, 'inputProperties', arr);
@@ -136,6 +138,7 @@ export class RuleBuildInGetProperties extends RulePrototype {
           .setPlaceholder('e.g. "." or ","')
           .onChange(async (value) => {
               that.setOptionConfig(rule.id,'delimiter', value);
+              that.updatePreview(rule, previewComponent);
           }));
   };
 }

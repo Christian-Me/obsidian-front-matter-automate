@@ -47,7 +47,7 @@ export class RulePrototype {
         return this.source;
     }
 
-    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any) { // Default function signature
+    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any, extraId?: string) { // Default function signature
         if (input === undefined || input === null) input = tools.getCurrentContent(); // Get the current content of property
         return input; // Return the input unaltered
     };
@@ -59,8 +59,9 @@ export class RulePrototype {
      * @param rule - The settings object for the frontmatter automation rule.
      * @param that - The context or reference to the calling object.
      * @param previewComponent - The component used to render a preview of the rule's effect.
+     * @param extraId - id of formatter or sub rules.
      */
-    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any) {
+    configTab (optionEL: HTMLElement, rule:FrontmatterAutomateRuleSettings, that:any, previewComponent: any, extraId?: string) {
         optionEL.empty();
     };
 
@@ -112,11 +113,11 @@ export class RulePrototype {
      * @param {any} [input] - Optional input for rules that require it (e.g., `buildIn.inputProperty`).
      * @returns {string} - The result of the `fx` function.
     */
-    execute(app: App | undefined, file: any, tools: ScriptingTools, input?: any): string {
+    execute(app: App | undefined, file: any, tools: ScriptingTools, input?: any, extraId?: string): string {
         switch (this.ruleType) {
             case 'formatter':
             case 'linkFormatter':
-                return this.fx(app, file, tools, input); // `formatter` rules expect (input, tools)
+                return this.fx(app, file, tools, input, extraId); // `formatter` rules expect (input, tools)
 
             case 'buildIn.inputProperty':
                 return this.fx(app, file, tools, input); // `buildIn.inputProperty` rules expect (app, file, tools, input)
@@ -246,13 +247,13 @@ export class Rules {
      * @param {any} [input] - Optional input for rules that require it.
      * @returns {string | null} - The result of the `fx` function, or `null` if the rule is not found.
     */
-    executeRuleById(id: string, ruleSettings: FrontmatterAutomateRuleSettings, app: App | undefined, file: any, tools: ScriptingTools, input?: any): string | null {
+    executeRuleById(id: string, ruleSettings: FrontmatterAutomateRuleSettings, app: App | undefined, file: any, tools: ScriptingTools, input?: any, extraId?: string): string | null {
         const rule = this.rules.find(rule => rule.id === id);
         if (!rule) {
             logger.log(WARNING,`Rule with id "${id}" not found.`);
             return null;
         }
-        return this.executeRule(ruleSettings, rule, app, file, tools, input);
+        return this.executeRule(ruleSettings, rule, app, file, tools, input, extraId);
     }
     /**
      * Executes the `fx` function of a given rule and returns its result.
@@ -264,10 +265,11 @@ export class Rules {
      * @param input - Optional input for rules that require it.
      * @returns {string | null} - The result of the `fx` function, or `null` if the rule is not found.
      */
-    executeRule(ruleSettings: FrontmatterAutomateRuleSettings, rule: RulePrototype, app: App | undefined, file: any, tools: ScriptingTools, input?: any): string | null {
+    executeRule(ruleSettings: FrontmatterAutomateRuleSettings, rule: RulePrototype, app: App | undefined, file: any, tools: ScriptingTools, input?: any, extraId?: string): string | null {
         switch (rule.ruleType) {
             case 'formatter':
-            case 'linkFormatter':
+                case 'linkFormatter':
+                return rule.execute(app, file, tools, input, extraId); // Pass input and extraId for formatters
             case 'buildIn.inputProperty':
                 return rule.execute(app, file, tools, input);
             case 'automation':
@@ -300,8 +302,8 @@ export class Rules {
             //if (rule.spaceReplacement && rule.spaceReplacement !== '') value = value.replace(/\s+/g, rule.spaceReplacement);
             //if (rule.specialCharReplacement && rule.specialCharReplacement !=='') value = value.replace(/[^a-zA-Z0-9\-_\/äöüßÄÖÜáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãñõÃÑÕ]/g, rule.specialCharReplacement);
             if (rule.formatters && rule.formatters.length > 0) {
-              rule.formatters.forEach(formatterId => {
-                value = this.executeRuleById(formatterId, rule, this.app, activeFile, tools, value); // execute the formatter rule
+              rule.formatters.forEach(formatter => {
+                value = this.executeRuleById(formatter.id, rule, this.app, activeFile, tools, value, formatter.payload?.id); // execute the formatter rule
               });
             }
             if (rule.linkFormatter && rule.linkFormatter !== '') {

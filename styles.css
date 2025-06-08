@@ -1,3 +1,16 @@
+.FMA-mod-cta {
+    background-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border: none;
+    box-shadow: 0 1px 2px var(--background-modifier-box-shadow);
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.FMA-mod-cta:hover, .FMA-mod-cta:focus {
+    background-color: var(--interactive-accent-hover);
+    color: var(--text-on-accent);
+}
 .FMA-markdown-help-modal--wide {
     width: 800px !important;      /* Adjust width as needed */
     max-width: 95vw !important;

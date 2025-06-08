@@ -6,6 +6,7 @@ import { delimiter } from 'path';
 import { rulesManager } from './rules/rules';
 import { DEBUG, ERROR, logger, TRACE, WARNING } from './Log';
 import { TreeHierarchyRow } from './uiTreeHierarchySortableSettings';
+import { RuleToLinkWiki } from './rules/toLinkWiki';
 /**
  * Parse a JavaScript function, clean comments and define the function 
  *
@@ -417,12 +418,12 @@ export function resolveFile(app: App, file_str: string): TFile {
      * @param {string} [optionId]
      * @return {*} 
      */
-    getOptionConfig(ruleId:string|undefined, optionId?:string){
+    getOptionConfig(ruleId:string|undefined, optionId?:string, extraId?:string): any | undefined {
       if (!ruleId || ruleId === undefined || !this.settings ) return undefined;
+      const id = extraId ? `${ruleId}|${extraId}` : ruleId;
       const rule = this.getRuleById(ruleId);
-      if (rule && rule.hasOwnProperty('optionsConfig')) {
-          //@ts-ignore
-          const optionConfig = rule.optionsConfig[ruleId]
+      if (rule && rule.optionsConfig && rule.optionsConfig[id]) {
+          const optionConfig = rule.optionsConfig[id];
           if (optionConfig) {
             if (optionId) {
               logger.log(TRACE,`getOptionConfig: ${ruleId} option '${optionId}'`, rule, optionConfig[optionId]);

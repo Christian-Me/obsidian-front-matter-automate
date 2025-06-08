@@ -43,7 +43,7 @@ export class RuleToCamelCase extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any) { 
+    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any, extraId?: string) { // Default function signature
         const toCamelCase = (str: string) => {
             let textParts = str.split(' ');
             let convertedTextParts:string[] = [];

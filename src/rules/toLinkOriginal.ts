@@ -36,8 +36,8 @@ export class RuleToLinkOriginal extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    
-    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any) { // do not change this line!
+
+    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any, extraId?: string) { // do not change this line!
         return input; // Return the input unaltered
     };
 }

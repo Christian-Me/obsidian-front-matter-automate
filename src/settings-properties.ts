@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion, TFile } from 'obsidian';
+import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion, TFile, getIconIds } from 'obsidian';
 import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
 import { versionString, FrontmatterAutomateRuleSettings, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS, PropertyInfo} from './types';
 import { checkIfFileAllowed, executeRuleObject } from './rules';
@@ -8,7 +8,7 @@ import { codeEditorModal, codeEditorModalResult, openCodeEditorModal } from './e
 import { copyFileSync } from 'fs';
 import { ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
-import { rulesManager } from './rules/rules';
+import { RulePrototype, rulesManager } from './rules/rules';
 import { DEBUG, logger, WARNING } from './Log';
 import { MultiPropertySetting } from './uiMultiPropertySetting';
 import { TreeHierarchyData, TreeHierarchySortableSettings, ROOT_FOLDER, TreeHierarchyRow } from './uiTreeHierarchySortableSettings';
@@ -260,32 +260,32 @@ export class RulesTable extends PluginSettingTab {
                 }));
         }
         if (rule.type === 'text' || rule.type === 'multitext' || rule.type === 'tags' || rule.type === 'aliases') {
-            let formatRule = rulesManager.getRuleById(rule.formatter);
+            let formatRule: RulePrototype | undefined;
             const formatterRules = rulesManager.getRulesByType('formatter') || [];
-            let formatOptionsButton: any;
             if (ruleFn.useRuleOption('convertToLowerCase')) {
                 const multiProp = new MultiPropertySetting(optionEL)
                     .setName("Format output")
                     .setDesc("Format output using selected options.")
+                    .setValue(rule.formatters || [{id:'toOriginal', name:'toOriginal', payload: {}}])
                     .setOptions(formatterRules)
-                    .setValue(rule.formatters || ['toOriginal'])
-                    .onChange((formatter) => {
-                        rule.formatters = formatter;
-                        formatRule = rulesManager.getRuleById(rule.formatter);
+                    .onChange((formatters) => {
+                        rule.formatters = formatters;
+                        multiProp.render();
+                        // formatRule = rulesManager.getRuleById(rule.formatters[0].id ?? "toOriginal");
                         this.updatePreview(rule, previewComponent);
                     });
                 multiProp.addExtraButton((setting, idx) => {
                         setting.addExtraButton(btn => {
                             btn.setIcon('gear')
                             .setTooltip('Options')
-                            .setDisabled(!rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal")?.hasOwnConfigTab() || false)
+                            .setDisabled(!rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal")?.hasOwnConfigTab() || false)
                             .onClick(() => {
                                 converterOptionDiv.style.display = 'block';
                                 converterOptionDiv.empty(); // clear previous options
-                                formatRule = rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal");
-                                formatRule?.configTab(converterOptionDiv, rule, this, previewComponent);
+                                formatRule = rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal");
+                                formatRule?.configTab(converterOptionDiv, rule, this, previewComponent, rule?.formatters?.[idx].payload.id );
                             });
-                            multiProp.styleDisabled(btn, !rulesManager.getRuleById(rule?.formatters?.[idx] ?? "toOriginal")?.hasOwnConfigTab() || false);
+                            multiProp.styleDisabled(btn, !rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal")?.hasOwnConfigTab() || false);
                         });
                     });
             }
@@ -454,24 +454,6 @@ export class RulesTable extends PluginSettingTab {
         
         this.updatePreview(rule, previewComponent);
     }
-
-    /**
-     * Retrieves the configuration option for a specific rule and property.
-     *
-     * @param ruleId - The unique identifier of the rule.
-     * @param propertyId - The specific property for which the configuration is being retrieved.
-     * @returns The configuration value for the specified property, or undefined if not found.
-     */
-    getOptionConfig(ruleId:string,propertyId:string){
-        const rule = this.getRuleById(ruleId);
-        if (rule) {
-            const optionConfig = rule.optionsConfig[ruleId]
-            if (optionConfig[propertyId]) {
-                return optionConfig[propertyId];
-            }
-        }
-        return undefined;
-    }
     /**
      * Retrieves a rule from the plugin's settings by its unique identifier.
      *
@@ -487,6 +469,25 @@ export class RulesTable extends PluginSettingTab {
         });
         return row?.payload;
     }
+
+    /** TODO: move all methods to ScriptingTools
+     * Retrieves the configuration option for a specific rule and property.
+     *
+     * @param ruleId - The unique identifier of the rule.
+     * @param propertyId - The specific property for which the configuration is being retrieved.
+     * @returns The configuration value for the specified property, or undefined if not found.
+     */
+    getOptionConfig(ruleId:string, propertyId:string, extraId?:string): any {
+        const id = extraId ? `${ruleId}|${extraId}` : ruleId;
+        const rule = this.getRuleById(ruleId);
+        if (rule) {
+            const optionConfig = rule.optionsConfig[id] || {};
+            if (optionConfig[propertyId]) {
+                return optionConfig[propertyId];
+            }
+        }
+        return undefined;
+    }
     /**
      * Sets the configuration option for a specific rule and property.
      *
@@ -494,34 +495,36 @@ export class RulesTable extends PluginSettingTab {
      * @param propertyId - The specific property for which the configuration is being set.
      * @param config - The configuration value to be set.
      */
-    setOptionConfig(ruleId:string,propertyId:string,config:any){
-
+    setOptionConfig(ruleId:string,propertyId:string,config:any, extraId?:string) {
+        const id = extraId ? `${ruleId}|${extraId}` : ruleId;
         const rule = this.getRuleById(ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
-            if (!rule.optionsConfig[ruleId]) rule.optionsConfig[ruleId] = {};
+            if (!rule.optionsConfig[id]) rule.optionsConfig[id] = {};
 
-            rule.optionsConfig[ruleId][propertyId] = config;
+            rule.optionsConfig[id][propertyId] = config;
             this.plugin.saveSettings();
         }
     }
 
-    hasOptionConfig(ruleId:string):boolean{
+    hasOptionConfig(ruleId:string, extraId?:string):boolean{
+        const id = extraId ? `${ruleId}|${extraId}` : ruleId;
         const rule = this.getRuleById(ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
-            if (!rule.optionsConfig[ruleId]) rule.optionsConfig[ruleId] = {};
-            return Object.keys(rule.optionsConfig[ruleId]).length > 0;
+            if (!rule.optionsConfig[id]) rule.optionsConfig[id] = {};
+            return Object.keys(rule.optionsConfig[id]).length > 0;
         }
         return false;
     }
 
-    setOptionConfigDefaults(ruleId:string, defaults:any){
+    setOptionConfigDefaults(ruleId:string, defaults:any, extraId?:string): any {
+        const id = extraId ? `${ruleId}|${extraId}` : ruleId;
         const rule = this.getRuleById(ruleId);
         if (rule) {
             if (!rule.optionsConfig) rule.optionsConfig = {}
-            rule.optionsConfig[ruleId] = Object.assign({}, defaults, rule.optionsConfig[ruleId] || {});
-            return rule.optionsConfig[ruleId];
+            rule.optionsConfig[id] = Object.assign({}, defaults, rule.optionsConfig[id] || {});
+            return rule.optionsConfig[id];
         }
         return {};
     }
@@ -805,7 +808,8 @@ export class RulesTable extends PluginSettingTab {
                     filter = filter.toLowerCase();
                     const ruleSettings = row.payload;
                     if (ruleSettings.content.toLowerCase().contains(filter)) return true;
-                    if (ruleSettings.value.toString().toLowerCase().contains(filter)) return true;
+                    if (ruleSettings?.property && ruleSettings.property.toLowerCase().contains(filter)) return true;
+                    if (ruleSettings?.value && ruleSettings.value.toString().toLowerCase().contains(filter)) return true;
                     const rule = rulesManager.getRuleById(row.payload.content);
                     if (!rule) return false;
                     if (rule.name.toLowerCase().contains(filter)) return true;
@@ -844,6 +848,7 @@ export class RulesTable extends PluginSettingTab {
             .addExtraButtonToHeader((el) => {
                 el.addExtraButton(btn => btn
                     .setIcon("circle-help")
+                    .setTooltip("Help (experimental)")
                     .onClick(async () => {
                         let markdown = "Could not load help from GitHub.";
                         //markdown = await fetchMarkdownFromGitHub("https://raw.githubusercontent.com/Christian-Me/obsidian-front-matter-automate/main/doc/README.md");
@@ -851,6 +856,84 @@ export class RulesTable extends PluginSettingTab {
                         new MarkdownHelpModal(this.app, this.plugin, markdown, "README.md").open();
                     })
                 );
+            })
+            .addExtraButtonToFolders((el, folder) => {
+                el.addExtraButton(btn => { btn
+                    .setIcon("copy-minus")
+                    .setTooltip("Exclude files and folders from rules inside this folder")
+                    .onClick(async () => {                 
+                        if (!folder.payload) folder.payload = {};
+                        if (!folder.payload.exclude) folder.payload.exclude = {};
+                        if (!folder.payload.include) folder.payload.include = {};
+
+                        const settings = folder.payload;
+                        openDirectorySelectionModal(
+                            this.app,
+                            settings.exclude.selectedFolders || [],
+                            settings.exclude.selectedFiles || [],
+                            {
+                                selectionMode: settings.exclude.mode || 'exclude',
+                                displayMode: settings.exclude.display || 'folders',
+                                optionSelectionMode: false,
+                                optionShowFiles: true
+                            },
+                            (result: DirectorySelectionResult | null) => {
+                                if (!result) return;
+                                settings.exclude.selectedFolders = result.folders;
+                                settings.exclude.selectedFiles = result.files;
+                                settings.exclude.mode = result.mode;
+                                settings.exclude.display = result.display;
+                                this.plugin.saveSettings();
+                                this.display();
+                            }
+                        );
+                    });
+                    if ((folder.payload?.exclude?.selectedFolders && folder.payload.exclude.selectedFolders.length > 0) ||
+                        (folder.payload?.exclude?.selectedFiles && folder.payload.exclude.selectedFiles.length > 0)) {
+                        btn.extraSettingsEl.addClass('FMA-mod-cta');
+                    } else {
+                        btn.extraSettingsEl.removeClass('mod-cta');
+                    }
+                });
+            })
+            .addExtraButtonToFolders((el, folder) => {
+                el.addExtraButton(btn => { btn
+                    .setIcon("copy-plus")
+                    .setTooltip("Include files and folders in rules inside this folder")
+                    .onClick(async () => {
+                        if (!folder.payload) folder.payload = {};
+                        if (!folder.payload.exclude) folder.payload.exclude = {};
+                        if (!folder.payload.include) folder.payload.include = {};
+
+                        const settings = folder.payload;
+                        openDirectorySelectionModal(
+                            this.app,
+                            settings.include.selectedFolders || [],
+                            settings.include.selectedFiles || [],
+                            { 
+                                selectionMode: settings.include.mode || 'include',
+                                displayMode: settings.include.display || 'folders',
+                                optionSelectionMode: false,
+                                optionShowFiles: true,
+                            },
+                            (result: DirectorySelectionResult | null) => {
+                                if (!result) return;
+                                settings.include.selectedFolders = result.folders;
+                                settings.include.selectedFiles = result.files;
+                                settings.include.mode = result.mode;
+                                settings.include.display = result.display;
+                                this.plugin.saveSettings();
+                                this.display();
+                            }
+                        );
+                    });
+                    if ((folder.payload?.include?.selectedFolders && folder.payload.include.selectedFolders.length > 0) ||
+                        (folder.payload?.include?.selectedFiles && folder.payload.include.selectedFiles.length > 0)) {
+                        btn.extraSettingsEl.addClass('FMA-mod-cta');
+                    } else {
+                        btn.extraSettingsEl.removeClass('mod-cta');
+                    }
+                });
             });
         if (this.plugin.settings.folderConfig.rows.length === 0 && this.plugin.settings.rules.length > 0) {
             // If there are rules but no folder config, create default rows
@@ -888,9 +971,9 @@ export class RulesTable extends PluginSettingTab {
     }
 
     private updateFilterIndicator(activeFile:TFile | null, propertiesListEl: HTMLDivElement) {
-        if (activeFile) { //TODO: fix for new sortable Table
-            this.plugin.settings.folderConfig.rows.forEach((row: TreeHierarchyRow, index: number) => {
-                const rule = row.payload as FrontmatterAutomateRuleSettings;
+        if (activeFile) {
+            const rules = this.plugin.getRuleList(activeFile, this.plugin.settings.folderConfig);
+            rules.forEach((rule: FrontmatterAutomateRuleSettings, index: number) => {
                 if (!rule || !rule.id) {
                     logger.log(WARNING, `updateFilterIndicator: Rule with id ${rule?.id} not found in folderConfig rows.`);
                     return; // Skip if no rule or id is not set

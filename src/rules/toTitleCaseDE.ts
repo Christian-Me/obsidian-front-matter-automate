@@ -48,12 +48,12 @@ export class RuleToTitleCaseDE extends RulePrototype {
         this.type = ['text', 'tags', 'aliases', 'multitext'];
         this.configElements = this.defaultConfigElements({});
     };
-    
-    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any) { // do not change this line!
+
+    fx (app: App | undefined, file: TFile, tools: ScriptingTools, input: any, extraId?: string) { // do not change this line!
         const toTitleCase = (str: string) => {
             const ruleId = tools.getRule()?.id;
-            const doNotCapitalizeSmallWords = tools.getOptionConfig(ruleId, 'doNotCapitalizeSmallWords');
-            return this.titleCaps(str, doNotCapitalizeSmallWords ? tools.getOptionConfig(ruleId,'smallWords') : undefined);
+            const doNotCapitalizeSmallWords = tools.getOptionConfig(ruleId, 'doNotCapitalizeSmallWords', extraId) || false;
+            return this.titleCaps(str, doNotCapitalizeSmallWords ? tools.getOptionConfig(ruleId,'smallWords', extraId) : undefined);
         };
         let result: any = input;
         if (typeof input === 'string') {
@@ -69,20 +69,20 @@ export class RuleToTitleCaseDE extends RulePrototype {
         return result;
     };
 
-    configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
+    configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any, extraId?: string) {
         optionEL.empty();
         // Create a setting for the small words
         that.setOptionConfigDefaults(rule.id, {
             smallWords: 'der|die|das|den|dem|des|einer|eines|deren|ein|eine|einem|einer|eines|einer|und|oder|aber|denn|sondern|sowie|weder|noch|entweder|oder|dass|weil|obwohl|wenn|als|nachdem|bevor|während|bis|damit|um|zu|sobald|solange|da|indem|so|dass|ohne|zu|durch|für|gegen|ohne|um|bis|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|anstatt|aufgrund|außerhalb|innerhalb|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen',
             doNotCapitalizeSmallWords: true,
-        })
+        }, extraId);
         new Setting(optionEL)
             .setName('Do not capitalize small words')
             .setDesc('If enabled, small words will not be capitalized. If disabled, all words will be capitalized.')
             .addToggle(toggle => toggle
-                .setValue(that.getOptionConfig(rule.id ,'doNotCapitalizeSmallWords') || false)
+                .setValue(that.getOptionConfig(rule.id ,'doNotCapitalizeSmallWords', extraId) || false)
                 .onChange(async (value) => {
-                    that.setOptionConfig(rule.id,'doNotCapitalizeSmallWords', value);
+                    that.setOptionConfig(rule.id ,'doNotCapitalizeSmallWords', value, extraId);
                     that.updatePreview(rule, previewComponent);
                 })
             );
@@ -91,9 +91,9 @@ export class RuleToTitleCaseDE extends RulePrototype {
             .setName('List of small words')
             .setDesc('Enter a list of small words to be excluded from capitalization. Use "|" as separator.')
             .addText(text => text
-                .setValue(that.getOptionConfig(rule.id ,'smallWords') || '')
+                .setValue(that.getOptionConfig(rule.id ,'smallWords', extraId) || '')
                 .onChange(async (value) => {
-                    that.setOptionConfig(rule.id,'smallWords', value);
+                    that.setOptionConfig(rule.id ,'smallWords', value, extraId);
                     that.updatePreview(rule, previewComponent);
                 })
             );

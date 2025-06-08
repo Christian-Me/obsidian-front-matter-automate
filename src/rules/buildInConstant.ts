@@ -50,15 +50,21 @@ export class RuleBuildInConstant extends RulePrototype {
             logger.log(LOG, 'RuleBuildInConstant: No constant values configured.');
             return tools.getCurrentContent();
         }
+        const values = constantValues.map(value => {
+            if (typeof value === 'object' && value !== null && 'name' in value) {
+                return value.name;
+            }
+            return value;
+        });
         switch (tools.getCurrentContentType()) {
             case ('text'):
-                return constantValues.join(tools.getOptionConfig(this.id, 'delimiter'));
+                return values.join(tools.getOptionConfig(this.id, 'delimiter'));
             case ('tags'):
             case ('aliases'):
             case ('multitext'):
-                return constantValues;
+                return values;
         }
-        return constantValues;
+        return values;
     };
     configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
         optionEL.empty();
@@ -86,9 +92,9 @@ export class RuleBuildInConstant extends RulePrototype {
             })
             .onRenderRow((setting, value, idx, onChange) => {
                 setting.addText(text => {
-                    text.setValue(value)
+                    text.setValue(value.name)
                         .onChange(val =>{
-                            onChange(val);
+                            onChange({id: val, name: val},idx);
                             multiProp.updatePlusButtonState();
                         });
                 });

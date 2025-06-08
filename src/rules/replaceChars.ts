@@ -47,12 +47,12 @@ export class RuleReplaceChars extends RulePrototype {
         this.configElements = this.defaultConfigElements({});
     };
     
-    fx (app: App | undefined, file: any, tools: ScriptingTools, input?:any) { // Default function signature
-        const replace = tools.getOptionConfig(tools.getRule()?.id, 'replace');
+    fx (app: App | undefined, file: any, tools: ScriptingTools, input:any, extraId: string) { // Default function signature
+        const replace = tools.getOptionConfig(tools.getRule()?.id, 'replace', extraId);
         if (!replace || replace === '') {
             return input;
         }
-        const replaceBy = tools.getOptionConfig(tools.getRule()?.id, 'replaceBy');
+        const replaceBy = tools.getOptionConfig(tools.getRule()?.id, 'replaceBy', extraId);
         try {
             const regex = new RegExp(replace, 'g');
             return input.replace(regex, replaceBy);
@@ -62,22 +62,22 @@ export class RuleReplaceChars extends RulePrototype {
         }
     };
 
-    configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any) {
+    configTab(optionEL: HTMLElement, rule: FrontmatterAutomateRuleSettings, that: any, previewComponent: any, extraId: string) {
         optionEL.empty();
         // Create a setting for the small words
         that.setOptionConfigDefaults(rule.id, {
             replace: '', // search for this string
             replaceBy: '', // replace with this string
-        })
+        }, extraId)
 
         new Setting(optionEL)
             .setName('search for')
             .setDesc('Character to search for in the input value (Regex supported)')
             .addText(text => text
                 .setPlaceholder('search for')
-                .setValue(that.getOptionConfig(rule.id ,'replace') || '')
+                .setValue(that.getOptionConfig(rule.id,'replace', extraId) || '')
                 .onChange(async (value) => {
-                    that.setOptionConfig(rule.id,'replace', value);
+                    that.setOptionConfig(rule.id,'replace', value, extraId);
                     that.updatePreview(rule, previewComponent);
                 })
             );
@@ -87,9 +87,9 @@ export class RuleReplaceChars extends RulePrototype {
             .setDesc('Character to replace matches')
             .addText(text => text
                 .setPlaceholder('replace by')
-                .setValue(that.getOptionConfig(rule.id ,'replaceBy') || '')
+                .setValue(that.getOptionConfig(rule.id, 'replaceBy', extraId) || '')
                 .onChange(async (value) => {
-                    that.setOptionConfig(rule.id,'replaceBy', value);
+                    that.setOptionConfig(rule.id, 'replaceBy', value, extraId);
                     that.updatePreview(rule, previewComponent);
                 })
             );
