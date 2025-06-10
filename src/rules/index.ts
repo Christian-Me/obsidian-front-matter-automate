@@ -29,6 +29,7 @@ import { RuleBuildInPath } from "./buildInPath";
 import { RuleBuildInPathFolderNotes } from "./buildInPathFolderNotes";
 import { RuleBuildInRootFolder } from "./buildInRootFolder";
 import { RuleBuildInScript } from "./buildInScript";
+import { RuleRemoveLink } from "./removeLink";
 import { RuleReplaceChars } from "./replaceChars";
 import { RuleReplaceSpaces } from "./replaceSpaces";
 import { RuleReplaceSpecialChars } from "./replaceSpecialChars";
@@ -46,7 +47,7 @@ import { RuleToTitleCaseEN } from "./toTitleCaseEN";
 import { RuleToUpperCase } from "./toUpperCase";
 
 // List of all rule classes
-const ruleClasses = [RuleAddPrefix, RuleAddSuffix, RuleAutomationAutoLink, RuleBuildInAutoCompleteModal, RuleBuildInConcatProperties, RuleBuildInConstant, RuleBuildInDateTimeCreated, RuleBuildInDateTimeModified, RuleBuildInDefault, RuleBuildInFileSizeBytes, RuleBuildInFileSizeString, RuleBuildInFolder, RuleBuildInFolderFolderNotes, RuleBuildInFolders, RuleBuildInFullPath, RuleBuildInFullPathExt, RuleBuildInFullPathExtFolderNotes, RuleBuildInFullPathFolderNotes, RuleBuildInGetProperties, RuleBuildInGetProperty, RuleBuildInIsRoot, RuleBuildInLinkToFile, RuleBuildInName, RuleBuildInNameExt, RuleBuildInPath, RuleBuildInPathFolderNotes, RuleBuildInRootFolder, RuleBuildInScript, RuleReplaceChars, RuleReplaceSpaces, RuleReplaceSpecialChars, RuleToCamelCase, RuleToLinkMarkdown, RuleToLinkOriginal, RuleToLinkSimple, RuleToLinkWiki, RuleToLowerCase, RuleToOriginal, RuleToPascalCase, RuleToTitleCase, RuleToTitleCaseDE, RuleToTitleCaseEN, RuleToUpperCase];
+const ruleClasses = [RuleAddPrefix, RuleAddSuffix, RuleAutomationAutoLink, RuleBuildInAutoCompleteModal, RuleBuildInConcatProperties, RuleBuildInConstant, RuleBuildInDateTimeCreated, RuleBuildInDateTimeModified, RuleBuildInDefault, RuleBuildInFileSizeBytes, RuleBuildInFileSizeString, RuleBuildInFolder, RuleBuildInFolderFolderNotes, RuleBuildInFolders, RuleBuildInFullPath, RuleBuildInFullPathExt, RuleBuildInFullPathExtFolderNotes, RuleBuildInFullPathFolderNotes, RuleBuildInGetProperties, RuleBuildInGetProperty, RuleBuildInIsRoot, RuleBuildInLinkToFile, RuleBuildInName, RuleBuildInNameExt, RuleBuildInPath, RuleBuildInPathFolderNotes, RuleBuildInRootFolder, RuleBuildInScript, RuleRemoveLink, RuleReplaceChars, RuleReplaceSpaces, RuleReplaceSpecialChars, RuleToCamelCase, RuleToLinkMarkdown, RuleToLinkOriginal, RuleToLinkSimple, RuleToLinkWiki, RuleToLowerCase, RuleToOriginal, RuleToPascalCase, RuleToTitleCase, RuleToTitleCaseDE, RuleToTitleCaseEN, RuleToUpperCase];
 
 // Register each rule class
 ruleClasses.forEach((RuleClass) => {

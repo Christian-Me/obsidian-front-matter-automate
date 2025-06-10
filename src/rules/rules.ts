@@ -1,7 +1,7 @@
 import { App, Plugin, TFile } from "obsidian";
 import { parseJSCode, ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings, ObsidianPropertyTypes } from "../types";
-import { ERROR, logger, WARNING } from "../Log";
+import { ERROR, logger, TRACE, WARNING } from "../Log";
 
 export type FrontmatterAutomateRuleTypes = 'buildIn' | 'buildIn.inputProperty' | 'autocomplete.modal' | 'automation' | 'script' | 'formatter' | 'linkFormatter' ;
 /**
@@ -217,7 +217,7 @@ export class Rules {
     getRuleById(id: string): RulePrototype | undefined {
         const ruleObject = this.rules.find(rule => rule.id === id);
         if (!ruleObject) {
-            logger.log(WARNING,`Rule with id "${id}" not found.`);
+            logger.log(TRACE,`Rule with id "${id}" not found.`);
             return undefined;
         }
         return ruleObject;

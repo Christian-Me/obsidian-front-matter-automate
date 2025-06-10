@@ -524,7 +524,7 @@ export function resolveFile(app: App, file_str: string): TFile {
           return await this.app!.vault.create(folder.path + '/' + fileNameOnly, templateContent); // create the file from the template
         }
         return fileExists; // return the file if it already exists
-    }; // create the file if it does not exist
+    }; 
     /**
      * * Fetches custom property information from all markdown files in the vault.
      *

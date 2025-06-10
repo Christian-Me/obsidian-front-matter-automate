@@ -35,8 +35,8 @@ export class RuleBuildInGetProperty extends RulePrototype {
     super();
     this.id = 'getProperty';
     this.ruleType = 'buildIn';
-    this.name = 'Get property';
-    this.description = 'Gets a property from selected property.';
+    this.name = 'Get Property';
+    this.description = 'Gets the value from a selected property.';
     this.source = "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const propertyId = tools.getOptionConfig(tools.getRule()?.id,'inputProperty'); \n if (propertyId === undefined || propertyId === '') { \n return 'Property not set'; \n } \n const result = tools.getFrontmatterProperty(propertyId); \n if (result === undefined) { \n return 'Property not found'; \n } \n return result; \n }";
     this.type = ['text', 'tags', 'aliases', 'multitext'];
     this.configElements = this.defaultConfigElements({});
@@ -80,5 +80,6 @@ export class RuleBuildInGetProperty extends RulePrototype {
         const item = that.knownProperties[key] as PropertyTypeInfo;
         inputPropertiesDropdown.addOption(item.name, item.name);
     });
+    inputPropertiesDropdown.setValue(that.getOptionConfig(rule.id, 'inputProperty') || '');
   };
 }

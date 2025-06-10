@@ -957,7 +957,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "fileSize",
-          "value": 186,
+          "value": 224,
           "customProperty": "",
           "type": "number",
           "typeProperty": {
@@ -1014,7 +1014,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "fileSizeText",
-          "value": "186 Bytes",
+          "value": "224 Bytes",
           "customProperty": "",
           "typeProperty": {
             "name": "",
@@ -1127,7 +1127,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "dateTimeModified",
-          "value": "2025-06-08T13:02:47.472",
+          "value": "2025-06-10T08:00:10.070",
           "customProperty": "",
           "type": "datetime",
           "typeProperty": {
@@ -1270,8 +1270,8 @@
           "lowercaseTags": false,
           "formatters": [
             {
-              "id": "toOriginal",
-              "name": "toOriginal",
+              "id": "replaceChars",
+              "name": "Replace Characters",
               "payload": {}
             }
           ],
@@ -1281,6 +1281,9 @@
           "useCustomCode": false,
           "optionsConfig": {
             "1f186520-863e-43d6-91d3-c6621b226743": {
+              "replace": "[",
+              "replaceBy": "",
+              "useRegex": false,
               "addExtension": true
             }
           },
@@ -1389,7 +1392,7 @@
           "formatters": [
             {
               "id": "toOriginal",
-              "name": "toOriginal",
+              "name": "no change",
               "payload": {}
             }
           ],
@@ -1401,7 +1404,14 @@
             "name",
             "File name without extension",
             "Returns the file name without all extensions. I.e. example.note.md => example"
-          ]
+          ],
+          "optionsConfig": {
+            "1ae521c4-e7f4-453f-8566-5c98009c4b6c": {
+              "replace": "",
+              "replaceBy": "",
+              "useRegex": true
+            }
+          }
         }
       },
       {
@@ -1572,6 +1582,69 @@
             "Parent folder",
             "Returns the parent folder of the file."
           ]
+        }
+      },
+      {
+        "id": "636b1ca6-4a6f-4ca5-9036-cfe8a7ff81db",
+        "folderId": "1180bf9a-afad-4c2e-a1d6-0ea52c56f73c",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "1b44dafc-582f-4573-9aaa-a72a7443fbef",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "linkRemoved",
+          "value": "Tests/Links & Folders.md",
+          "customProperty": "",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "getProperty",
+          "buildInCode": "function(app: App | undefined, file: TFile, tools: ScriptingTools) { // do not change this line! \n const propertyId = tools.getOptionConfig(tools.getRule()?.id,'inputProperty'); \n if (propertyId === undefined || propertyId === '') { \n return 'Property not set'; \n } \n const result = tools.getFrontmatterProperty(propertyId); \n if (result === undefined) { \n return 'Property not found'; \n } \n return result; \n }",
+          "jsCode": "",
+          "showContent": false,
+          "exclude": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "exclude",
+            "display": "folders"
+          },
+          "include": {
+            "selectedFolders": [],
+            "selectedFiles": [],
+            "mode": "include",
+            "display": "folders"
+          },
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "removeLink",
+              "name": "Remove Links",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "1b44dafc-582f-4573-9aaa-a72a7443fbef": {
+              "result": "path",
+              "inputProperty": "link"
+            }
+          },
+          "keywords": [
+            "getProperty",
+            "Get property",
+            "Gets a property from selected property."
+          ],
+          "type": "text"
         }
       },
       {

@@ -54,8 +54,13 @@ export class RuleReplaceChars extends RulePrototype {
         }
         const replaceBy = tools.getOptionConfig(tools.getRule()?.id, 'replaceBy', extraId);
         try {
-            const regex = new RegExp(replace, 'g');
-            return input.replace(regex, replaceBy);
+            if (tools.getOptionConfig(tools.getRule()?.id, 'useRegex', extraId)) {
+                // If useRegex is true, treat replace as a regex pattern
+                const regex = new RegExp(replace, 'g');
+                return input.replace(regex, replaceBy);
+            } else {
+                return input.split(replace).join(replaceBy);
+            }
         } catch (e) {
             logger.log(ERROR,`Error in RuleReplaceChars: Invalid regex pattern "${replace}"`, e);
             return input;
@@ -68,6 +73,7 @@ export class RuleReplaceChars extends RulePrototype {
         that.setOptionConfigDefaults(rule.id, {
             replace: '', // search for this string
             replaceBy: '', // replace with this string
+            useRegex: true, // whether to use regex for the search
         }, extraId)
 
         new Setting(optionEL)
@@ -90,6 +96,17 @@ export class RuleReplaceChars extends RulePrototype {
                 .setValue(that.getOptionConfig(rule.id, 'replaceBy', extraId) || '')
                 .onChange(async (value) => {
                     that.setOptionConfig(rule.id, 'replaceBy', value, extraId);
+                    that.updatePreview(rule, previewComponent);
+                })
+            );
+
+        new Setting(optionEL)
+            .setName('Use Regex')
+            .setDesc('Whether to use regex for the search')
+            .addToggle(toggle => toggle
+                .setValue(that.getOptionConfig(rule.id, 'useRegex', extraId) || true)
+                .onChange(async (value) => {
+                    that.setOptionConfig(rule.id, 'useRegex', value, extraId);
                     that.updatePreview(rule, previewComponent);
                 })
             );
