@@ -1,3 +1,18 @@
+.FMA-multi-property-settings-div {
+    margin-left: 10%;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 10px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+.FMA-multi-property-settings-div.open {
+    opacity: 1;
+    padding: 10px;
+    /* max-height will be set dynamically via JS */
+}
+
 .FMA-mod-cta {
     background-color: var(--interactive-accent);
     color: var(--text-on-accent);
@@ -146,6 +161,25 @@
 .FMA-tri-state-checkbox.FMA-property-value-input svg {
     margin-left: 0;
     margin-right: auto;
+}
+.FMA-tri-state-checkbox {
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: white;
+}
+.FMA-tri-state-checkbox svg {
+    width: 20px;
+    height: 20px;
+    display: block;
 }
 .FMA-rule-area {
     display: flex;
@@ -483,12 +517,15 @@
     list-style-type: none;
     padding-left: 0;
     margin-left: 0;
+    opacity: 1 !important;
 }
 
 .directory-selection-modal li {
     /* Spacing between tree items */
     margin-top: 2px;
     margin-bottom: 2px;
+    opacity: 1 !important; /* Ensure items are fully opaque */
+
 }
 
 .directory-selection-modal .tree-node-container {
@@ -497,7 +534,7 @@
     align-items: center;
     padding: 3px 5px; /* Add some padding inside the node */
     border-radius: var(--radius-s); /* Small radius for hover effect */
-    transition: background-color 0.1s ease-in-out, opacity 0.2s ease-in-out; /* Smooth hover and opacity transition */
+    transition: background-color 0.4s ease-in-out, opacity 0.4s ease-in-out; /* Smooth hover and opacity transition */
 }
 
 .directory-selection-modal .tree-node-container:hover {
@@ -529,7 +566,7 @@
 }
 
 .directory-selection-modal .is-disabled > .tree-node-container > label {
-  opacity: .9;
+  opacity: 1;
   text-decoration: line-through;
   /* Make label text non-interactive visually */
   pointer-events: none;
@@ -539,7 +576,28 @@
 .directory-selection-modal .is-excluded > .tree-node-container {
     /* Make exclusion more obvious than just disabled */
     /* Example: Add a subtle red background tint */
-     background-color: rgba(var(--color-red-rgb), 0.1);
+    background-color: rgba(var(--color-red-rgb), 0.2);
+}
+
+/* --- Specific Styling for Excluded Items (Exclude Mode) --- */
+.directory-selection-modal .is-included > .tree-node-container {
+    /* Make inclusion more obvious than just disabled */
+    /* Example: Add a subtle green background tint */
+     background-color: rgba(var(--color-green-rgb), 0.2);
+}
+
+/* --- Specific Styling for Excluded Items (Exclude Mode) --- */
+.directory-selection-modal .is-inherited-excluded > .tree-node-container {
+    /* Make exclusion more obvious than just disabled */
+    /* Example: Add a subtle red background tint */
+    background-color: rgba(var(--color-red-rgb), 0.1);
+}
+
+/* --- Specific Styling for Excluded Items (Exclude Mode) --- */
+.directory-selection-modal .is-inherited-included > .tree-node-container {
+    /* Make inclusion more obvious than just disabled */
+    /* Example: Add a subtle green background tint */
+     background-color: rgba(var(--color-green-rgb), 0.1);
 }
 
 .directory-selection-modal .is-excluded > .tree-node-container > label {

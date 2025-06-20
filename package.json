@@ -1,6 +1,6 @@
 {
 	"name": "front-matter-automate",
-	"version": "0.0.0.29",
+	"version": "0.0.0.30",
 	"description": "Plugin to automate front matter properties automatically",
 	"main": "main.js",
 	"scripts": {

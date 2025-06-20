@@ -819,38 +819,20 @@
     }
   ],
   "useTextArea": false,
-  "exclude": {
-    "selectedFolders": [
-      "/global"
-    ],
-    "selectedFiles": [],
-    "mode": "exclude"
-  },
-  "include": {
-    "selectedFolders": [],
-    "selectedFiles": [],
-    "mode": "include"
-  },
   "configuredProperties": [
     {
       "name": ""
     }
   ],
-  "debugLevel": 4,
+  "debugLevel": 5,
   "delayCreateEvent": 1000,
   "folderConfig": {
     "folders": [
       {
-        "id": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
-        "name": "Tests",
-        "disabled": false,
-        "collapsed": false
-      },
-      {
         "id": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
         "name": "Constant Values",
         "disabled": false,
-        "collapsed": false,
+        "collapsed": true,
         "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
         "payload": {
           "exclude": {
@@ -866,7 +848,19 @@
               "Tests/Testing Constant Value(s).md"
             ],
             "mode": "include"
-          }
+          },
+          "stateIncludeExclude": [
+            {
+              "path": "Tests/Testing Constant Value(s).md",
+              "type": "file",
+              "state": "include"
+            },
+            {
+              "path": "/",
+              "type": "folder",
+              "state": "inheritedExclude"
+            }
+          ]
         }
       },
       {
@@ -889,7 +883,19 @@
               "Tests/Testing Concat.md"
             ],
             "mode": "include"
-          }
+          },
+          "stateIncludeExclude": [
+            {
+              "path": "/",
+              "type": "folder",
+              "state": "inheritedExclude"
+            },
+            {
+              "path": "Tests/Testing Concat.md",
+              "type": "file",
+              "state": "include"
+            }
+          ]
         }
       },
       {
@@ -903,7 +909,7 @@
         "name": "Links & Folders",
         "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
         "disabled": false,
-        "collapsed": false,
+        "collapsed": true,
         "payload": {
           "exclude": {
             "selectedFolders": [
@@ -918,7 +924,19 @@
               "Tests/Links & Folders.md"
             ],
             "mode": "include"
-          }
+          },
+          "stateIncludeExclude": [
+            {
+              "path": "/",
+              "type": "folder",
+              "state": "inheritedExclude"
+            },
+            {
+              "path": "Tests/Testing Links & Folders.md",
+              "type": "file",
+              "state": "include"
+            }
+          ]
         }
       },
       {
@@ -926,7 +944,7 @@
         "name": "Miscellaneous",
         "parentId": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
         "disabled": false,
-        "collapsed": false,
+        "collapsed": true,
         "payload": {
           "exclude": {
             "selectedFolders": [
@@ -941,11 +959,169 @@
               "Tests/Testing Miscellaneous.md"
             ],
             "mode": "include"
-          }
+          },
+          "stateIncludeExclude": [
+            {
+              "path": "/",
+              "type": "folder",
+              "state": "inheritedExclude"
+            },
+            {
+              "path": "Tests/Testing Miscellaneous.md",
+              "type": "file",
+              "state": "exclude"
+            }
+          ]
+        }
+      },
+      {
+        "id": "ecda9949-6de3-4ce2-9276-4e228585ee7d",
+        "name": "Tiere",
+        "disabled": false,
+        "collapsed": false,
+        "payload": {
+          "exclude": {},
+          "include": {},
+          "stateIncludeExclude": [
+            {
+              "path": "/",
+              "type": "folder",
+              "state": "exclude"
+            },
+            {
+              "path": "/Tiere",
+              "type": "folder",
+              "state": "include"
+            }
+          ]
+        }
+      },
+      {
+        "id": "94139330-92af-46bb-a1e5-424312cf2df8",
+        "name": "Global Rules",
+        "disabled": false,
+        "collapsed": false
+      },
+      {
+        "id": "ca50dd2c-7c3e-4420-8615-1d00bf3f550d",
+        "name": "Tests",
+        "disabled": false,
+        "collapsed": false,
+        "payload": {
+          "exclude": {},
+          "include": {},
+          "stateIncludeExclude": [
+            {
+              "path": "/",
+              "type": "folder",
+              "state": "exclude"
+            }
+          ]
         }
       }
     ],
     "rows": [
+      {
+        "id": "1eaf92cc-ae62-4664-9a8a-71dfa6898d37",
+        "folderId": "94139330-92af-46bb-a1e5-424312cf2df8",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "7b7700a9-9499-433f-8cd1-14f378976f4e",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "isroot",
+          "value": false,
+          "customProperty": "",
+          "type": "checkbox",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "isRoot",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  let parts = file.path.split('/');\n  return parts.length === 1;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "stateIncludeExclude": [],
+          "displayIncludeExclude": "folders",
+          "keywords": [
+            "isRoot",
+            "File in Root folder",
+            "Check if the file is in the root folder."
+          ]
+        }
+      },
+      {
+        "id": "2609db64-ecc2-487a-84aa-b8162bcef989",
+        "folderId": "ecda9949-6de3-4ce2-9276-4e228585ee7d",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "4e76b950-afd2-443c-acef-3f00aacac8ad",
+          "active": true,
+          "asLink": false,
+          "addContent": "end",
+          "property": "tags",
+          "value": [
+            "Tests"
+          ],
+          "customProperty": "",
+          "type": "tags",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "folders",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  // acquire file path\n  const path = file.path;\n  const result = path.split('/');\n  result.pop(); // remove the file name\n  return result;\n}",
+          "jsCode": "",
+          "showContent": false,
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "replaceSpecialChars",
+              "name": "Replace Special Characters",
+              "payload": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": false,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "4e76b950-afd2-443c-acef-3f00aacac8ad": {
+              "specialCharReplacement": "-"
+            }
+          },
+          "stateIncludeExclude": [],
+          "displayIncludeExclude": "folders",
+          "keywords": [
+            "folders",
+            "All folders of the file as a list",
+            "Returns all folders the file is stored in as a list."
+          ]
+        }
+      },
       {
         "id": "484b8335-39d7-4d83-9a82-8cc9f1b7a9fb",
         "folderId": "8bd61637-b1b0-496a-a0ad-08cafe20aa78",
@@ -957,7 +1133,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "fileSize",
-          "value": 224,
+          "value": 220,
           "customProperty": "",
           "type": "number",
           "typeProperty": {
@@ -1014,7 +1190,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "fileSizeText",
-          "value": "224 Bytes",
+          "value": "220 Bytes",
           "customProperty": "",
           "typeProperty": {
             "name": "",
@@ -1240,7 +1416,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "link",
-          "value": "[[Tests/Links & Folders.md|Links & Folders]]",
+          "value": "Tests/Testing Links & Folders.md|Testing Links & Folders]]",
           "customProperty": "",
           "type": "multitext",
           "typeProperty": {
@@ -1305,7 +1481,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "fileNameExt",
-          "value": "Links & Folders.md",
+          "value": "Testing Links & Folders.md",
           "customProperty": "",
           "typeProperty": {
             "name": "",
@@ -1361,7 +1537,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "fileName",
-          "value": "Links & Folders",
+          "value": "Testing Links & Folders",
           "customProperty": "",
           "type": "text",
           "typeProperty": {
@@ -1482,7 +1658,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "path",
-          "value": "Tests/Links & Folders.md",
+          "value": "Tests/Testing Links & Folders.md",
           "customProperty": "",
           "type": "text",
           "typeProperty": {
@@ -1641,8 +1817,8 @@
           },
           "keywords": [
             "getProperty",
-            "Get property",
-            "Gets a property from selected property."
+            "Get Property",
+            "Gets the value from a selected property."
           ],
           "type": "text"
         }
@@ -1658,7 +1834,14 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "Concat-List",
-          "value": [],
+          "value": [
+            "L1-A",
+            "L2-A",
+            "L2-B",
+            "L3-A",
+            "L3-B",
+            "L3-C"
+          ],
           "customProperty": "",
           "type": "multitext",
           "typeProperty": {
@@ -1736,7 +1919,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "Concat-Text",
-          "value": "",
+          "value": "L1/A|L2/A|L2/B|L3/A|L3/B|L3/C",
           "customProperty": "",
           "type": "text",
           "typeProperty": {
@@ -1777,8 +1960,6 @@
           "useCustomCode": false,
           "optionsConfig": {
             "cd20c914-2e93-4d58-9bc2-330e7b26fa52": {
-              "replace": "-",
-              "replaceBy": "/",
               "propertyDelimiter": ".",
               "inputProperties": [
                 {
@@ -1802,6 +1983,8 @@
               ],
               "onlyWhenAllPropertiesExist": false,
               "delimiter": "|",
+              "replace": "-",
+              "replaceBy": "/",
               "constantValue": "",
               "constantValues": []
             }
@@ -1824,7 +2007,7 @@
           "asLink": false,
           "addContent": "overwrite",
           "property": "Text",
-          "value": "",
+          "value": "L1-A,L2-A,L2-B",
           "customProperty": "",
           "type": "text",
           "typeProperty": {
@@ -1893,6 +2076,88 @@
         }
       },
       {
+        "id": "752e3128-2b61-4444-9109-2c7bbfb0aaa2",
+        "folderId": "6b347cd1-a79b-485b-818b-0619a7fd0ce0",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "0c957c32-9c1f-4d50-beeb-2db73bd57f31",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "title",
+          "value": "PREFIX-tests/testing XonXat.md-ENDE",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "fullPathExt",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  return `${file.path}`;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toLowerCase",
+              "name": "To Lower Case",
+              "payload": {},
+              "settingsDiv": {}
+            },
+            {
+              "id": "replaceChars",
+              "name": "Replace Characters",
+              "payload": {
+                "id": "3c690fb7-f14d-4a66-a859-9e10ca0bd321"
+              },
+              "settingsDiv": {}
+            },
+            {
+              "id": "addSuffix",
+              "name": "Add a Suffix",
+              "payload": {
+                "id": "01882402-5e53-468e-a24a-e7cad29d8ccf"
+              },
+              "settingsDiv": {}
+            },
+            {
+              "id": "addPrefix",
+              "name": "Add a Prefix",
+              "payload": {
+                "id": "9745c135-1374-40f6-8afb-3b3bebb2d1c1"
+              },
+              "settingsDiv": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "stateIncludeExclude": [],
+          "keywords": [
+            "fullPathExt",
+            "Full path, filename and extension",
+            "Returns the full path of the file, including its filename and extension."
+          ],
+          "optionsConfig": {
+            "0c957c32-9c1f-4d50-beeb-2db73bd57f31|3c690fb7-f14d-4a66-a859-9e10ca0bd321": {
+              "replace": "c",
+              "replaceBy": "X",
+              "useRegex": false
+            },
+            "0c957c32-9c1f-4d50-beeb-2db73bd57f31": {
+              "prefix": "PREFIX-",
+              "suffix": "-ENDE"
+            }
+          }
+        }
+      },
+      {
         "id": "5ad96b0d-1828-45ad-bac6-2d6644fa6b27",
         "folderId": "f7bee2a6-b7e1-4f46-bfc8-92bd0ce65f12",
         "keywords": [],
@@ -1922,8 +2187,7 @@
           "exclude": {
             "selectedFolders": [],
             "selectedFiles": [],
-            "mode": "exclude",
-            "display": "folders"
+            "mode": "exclude"
           },
           "include": {
             "selectedFolders": [],
@@ -1970,7 +2234,8 @@
             "constant",
             "Constant value(s)",
             "Returns a constant value instead of the frontmatter parameter."
-          ]
+          ],
+          "stateIncludeExclude": []
         }
       },
       {
@@ -2261,8 +2526,84 @@
             }
           }
         }
+      },
+      {
+        "id": "d74d7ffc-7918-4d9a-8577-369111ac46ef",
+        "keywords": [],
+        "disabled": false,
+        "payload": {
+          "id": "e70ae2e0-a245-4198-bdb3-97c5662569cc",
+          "active": true,
+          "asLink": false,
+          "addContent": "overwrite",
+          "property": "autocompleteTest",
+          "value": "PREFIX-tests/testing XonXat.md-ENDE",
+          "customProperty": "",
+          "type": "text",
+          "typeProperty": {
+            "name": "",
+            "type": "text",
+            "source": "registered"
+          },
+          "content": "getProperties",
+          "buildInCode": "function (app, file, tools) { // do not change this line!\n  const propertyIds = tools.getOptionConfig(tools.getRule()?.id,'inputProperties');\n  if (!Array.isArray(propertyIds) || propertyIds.length === 0) {\n    return 'No properties selected';\n  }\n  const delimiter = tools.getOptionConfig(tools.getRule()?.id,'delimiter');\n  const onlyWhenAllPropertiesExist = tools.getOptionConfig(tools.getRule()?.id, 'onlyWhenAllPropertiesExist') || false;\n  if (onlyWhenAllPropertiesExist) {\n    // Check if all properties exist\n    const allExist = propertyIds.every(id => { \n      if (id === undefined || id === null || id === '') {\n        return true; // Skip empty or undefined property IDs\n      }\n      const propertyValue = tools.getFrontmatterProperty(id);\n      const result = propertyValue !== undefined && propertyValue !== null && propertyValue !== '';\n      return result;\n    });\n    if (!allExist) {\n      return '';\n    }\n  }\n  const result = propertyIds.map(id => {\n    let value = tools.getFrontmatterProperty(id);\n    if (value === undefined || value === null || value === '') {\n      return ''; // Skip empty or undefined properties\n    }\n    return value.toString();\n  }).filter(res => res !== undefined).join(delimiter);\n  return result;\n};",
+          "jsCode": "",
+          "showContent": false,
+          "prefix": "",
+          "spaceReplacement": "",
+          "specialCharReplacement": "",
+          "lowercaseTags": false,
+          "formatters": [
+            {
+              "id": "toOriginal",
+              "name": "toOriginal",
+              "payload": {},
+              "settingsDiv": {}
+            }
+          ],
+          "linkFormatter": "toOriginalLink",
+          "inputProperty": "",
+          "onlyModify": true,
+          "useCustomCode": false,
+          "optionsConfig": {
+            "e70ae2e0-a245-4198-bdb3-97c5662569cc": {
+              "propertyDelimiter": ".",
+              "inputProperties": [
+                {
+                  "id": "title",
+                  "name": "title",
+                  "payload": {
+                    "id": "ec78b779-92d1-4a29-8ede-1ba33ad6655f"
+                  },
+                  "settingsDiv": {}
+                }
+              ],
+              "onlyWhenAllPropertiesExist": false,
+              "delimiter": ""
+            }
+          },
+          "stateIncludeExclude": [],
+          "displayIncludeExclude": "folders",
+          "keywords": [
+            "getProperties",
+            "Get Properties",
+            "Retrieves multiple frontmatter properties (Multitext, Tags, Aliases)."
+          ]
+        }
       }
     ]
+  },
+  "stateIncludeExclude": [],
+  "displayIncludeExclude": "folders",
+  "exclude": {
+    "selectedFolders": [],
+    "selectedFiles": [],
+    "mode": "exclude"
+  },
+  "include": {
+    "selectedFolders": [],
+    "selectedFiles": [],
+    "mode": "includeAndExclude"
   },
   "liveRules": [],
   "selectedFolders": [

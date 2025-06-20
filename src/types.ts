@@ -1,4 +1,4 @@
-import { DirectoryDisplayMode, DirectorySelectionMode } from './directorySelectionModal';
+import { DirectoryDisplayMode, DirectorySelectionMode, DirectorySelectionState } from './uiDirectorySelectionModal';
 import { TreeHierarchyData } from './uiTreeHierarchySortableSettings';
 import { WARNING } from './Log';
 import { AnyNsRecord } from 'dns';
@@ -7,7 +7,7 @@ import { MultiPropertyItem } from './uiMultiPropertySetting';
 export const versionString = "0.0.26";
 
 export type ObsidianPropertyTypes = "aliases"|"checkbox"|"date"|"datetime"|"multitext"|"number"|"tags"|"text";
-export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all';
+export type FrontmatterAutomateEvents = 'create' | 'rename' | 'active-leaf-change' | 'metadata-changed' | 'delete' | 'modify' | 'preview' | 'all' | 'getOldResults';
 
 export interface FilterFilesAndFolders {
     selectedFolders: string[],
@@ -32,12 +32,12 @@ export interface FrontmatterAutomateSettings {
     knownProperties: PropertyTypeInfo[];
     rules: FrontmatterAutomateRuleSettings[];
     useTextArea: boolean;
-    exclude: FilterFilesAndFolders;
-    include: FilterFilesAndFolders;
     configuredProperties: Array<{ name: string; value: any }>;
     debugLevel: number;
     delayCreateEvent: number; // optional delay for create events
     folderConfig: TreeHierarchyData;
+    stateIncludeExclude: DirectorySelectionState[]; // used to store the state of include/exclude for the settings
+    displayIncludeExclude: DirectoryDisplayMode; // used to store the display mode for the rule
 }
 
 export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings = {
@@ -50,22 +50,12 @@ export const DEFAULT_FRONTMATTER_AUTOMATE_SETTINGS: FrontmatterAutomateSettings 
     knownProperties: [],
     rules: [],
     useTextArea: false,
-    exclude: {
-        selectedFolders: [],
-        selectedFiles: [],
-        mode: 'exclude',
-        display: 'folders',
-    },
-    include: {
-        selectedFolders: [],
-        selectedFiles: [],
-        mode: 'include',
-        display: 'folders',
-    },
     configuredProperties: [],
     debugLevel: WARNING,
     delayCreateEvent: 0, // default to no delay
     folderConfig: {folders: [], rows: []},
+    stateIncludeExclude: [],
+    displayIncludeExclude: 'folders',
 };
 
 export interface FrontmatterAutomateRuleSettings {
@@ -82,8 +72,6 @@ export interface FrontmatterAutomateRuleSettings {
     buildInCode: string;
     jsCode: string;
     showContent: boolean;
-    exclude: FilterFilesAndFolders;
-    include: FilterFilesAndFolders;
     prefix: string;
     spaceReplacement: string;
     specialCharReplacement: string;
@@ -95,6 +83,8 @@ export interface FrontmatterAutomateRuleSettings {
     onlyModify: boolean;
     useCustomCode: boolean;
     optionsConfig: any | undefined; // used for custom code options, can be any type
+    stateIncludeExclude: DirectorySelectionState[]; // used to store the state of include/exclude for the rule
+    displayIncludeExclude: DirectoryDisplayMode; // used to store the display mode for the rule
 }
 
 export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
@@ -111,18 +101,6 @@ export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
     buildInCode: '',
     jsCode: '',
     showContent: false,
-    exclude: {
-        selectedFolders: [],
-        selectedFiles: [],
-        mode: 'exclude',
-        display: 'folders',
-    },
-    include: {
-        selectedFolders: [],
-        selectedFiles: [],
-        mode: 'include',
-        display: 'folders',
-    },
     prefix: '',
     spaceReplacement: '',
     specialCharReplacement: '',
@@ -134,6 +112,8 @@ export const DEFAULT_RULE_DEFINITION : FrontmatterAutomateRuleSettings = {
     onlyModify: true,
     useCustomCode: false,
     optionsConfig: undefined,
+    stateIncludeExclude: [],
+    displayIncludeExclude: 'folders',
 }
 
 export type PropertyInfo = {

@@ -6,6 +6,7 @@ export interface MultiPropertyItem {
     id: string;
     name: string;
     payload?: any;
+    settingsDiv?: HTMLElement; // Optional, used for custom settings in the row
 }
 
 export class MultiPropertySetting {
@@ -14,10 +15,13 @@ export class MultiPropertySetting {
     private desc: string = "";
     private value: MultiPropertyItem[] = [];
     private onChangeCb: (val: MultiPropertyItem[]) => void = () => {};
+    private onAddCb: (val: MultiPropertyItem) => MultiPropertyItem = (val) => {
+        return val;
+    };
     private options: MultiPropertyItem[] = [];
     private container: HTMLElement;
     private plusButtonComponent?: ExtraButtonComponent;
-    private extraButtonCbs: ((setting: Setting, idx: number) => void)[] = [];
+    private extraButtonCbs: ((setting: Setting, idx: number, item: MultiPropertyItem) => void)[] = [];
     private onRenderRowCb?: (
         setting: Setting,
         value: MultiPropertyItem,
@@ -92,11 +96,17 @@ export class MultiPropertySetting {
         this.render();
         return this;
     }
+    
+    onAdd(cb: (item: MultiPropertyItem) => MultiPropertyItem) {
+        this.onAddCb = cb;
+        return this;
+    }
+
     /**
      * Allows adding extra buttons to each row.
      * The callback receives the Setting and the row index.
      */
-    addExtraButton(cb: (setting: Setting, idx: number) => void) {
+    addExtraButton(cb: (setting: Setting, idx: number, item: MultiPropertyItem) => void) {
         this.extraButtonCbs.push(cb);
         this.render();
         return this;
@@ -117,6 +127,26 @@ export class MultiPropertySetting {
             el.extraSettingsEl.setAttr('aria-disabled', 'false');
         }
     }
+    openOptions(optionEL: HTMLDivElement) {
+        optionEL.style.display = 'block';
+        optionEL.classList.add('open');
+        // Set max-height to scrollHeight for smooth transition
+        optionEL.style.maxHeight = optionEL.scrollHeight + 'px';
+        optionEL.style.opacity = '1';
+    }
+
+    closeOptions(optionEL: HTMLDivElement) {
+        // Set max-height to 0 for smooth transition
+        optionEL.style.maxHeight = '0px';
+        optionEL.style.opacity = '0';
+        // After transition, hide the element
+        setTimeout(() => {
+            optionEL.style.display = 'none';
+            optionEL.empty(); // Now it's safe to empty
+            optionEL.classList.remove('open');
+        }, 300); // Match your transition duration
+    }
+
     public updatePlusButtonState() {
         if (this.plusButtonComponent) {
             const arr = this.value;
@@ -140,22 +170,7 @@ export class MultiPropertySetting {
                     this.value = arr;
                     this.onChangeCb([...arr]);
                 });
-            } /*else {
-                // Default: dropdown
-                setting.addDropdown(dd => {
-                    this.options.forEach((item: any) => {
-                        dd.addOption(item.id, item.name);
-                    });
-                    dd.setValue(selected.id || "");
-                    dd.onChange((val) => {
-                        const found = (this.options as MultiPropertyItem[]).find(opt => opt.id === val);
-                        arr[idx] = found ? { ...found } : { id: val, name: val };
-                        this.value = arr;
-                        this.onChangeCb([...arr]);
-                    });
-                });
-            }*/
-            
+            }
             if (idx > 0) {
                 setting.settingEl.style.borderTop = 'none'; // Remove border for all but the first item
                 setting.settingEl.style.padding = '0 0 0.75em'; // Remove margin for all but the first item
@@ -210,7 +225,10 @@ export class MultiPropertySetting {
             });
 
             // Call extra button callbacks for this row
-            this.extraButtonCbs.forEach(cb => cb(setting, idx));
+            this.extraButtonCbs.forEach(cb => cb(setting, idx, selected));
+
+            selected.settingsDiv = this.settingEl.createDiv(); // Store the settings div in the item
+            selected.settingsDiv.addClass('FMA-multi-property-settings-div');
         });
 
         // Plus button under the last row
@@ -226,7 +244,8 @@ export class MultiPropertySetting {
                     .setDisabled(arr[arr.length - 1].id === "" || arr[arr.length - 1].name === "")
                     .onClick(() => {
                         if (arr[arr.length - 1].id !== "" && arr[arr.length - 1].name !== "") {
-                            arr.push({ id: "", name: "", payload: {id : randomUUID()} });
+                            const newItem = this.onAddCb({ id: "", name: "", payload: {id : randomUUID()} });
+                            arr.push(newItem);
                             this.value = arr;
                             this.onChangeCb([...arr]);
                             this.render();

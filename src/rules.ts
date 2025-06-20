@@ -5,7 +5,7 @@ import { AutocompleteModal, autocompleteModalResult, openAutocompleteModal } fro
 import { codeEditorModalResult } from './editorModal';
 import { FolderSuggest } from "./suggesters/FolderSuggester";
 import { FileSuggest } from "./suggesters/FileSuggester";
-import { DirectorySelectionResult, openDirectorySelectionModal } from './directorySelectionModal';
+import { DirectorySelectionResult, openDirectorySelectionModal } from './uiDirectorySelectionModal';
 import { AlertModal } from './alertBox';
 import { rulesManager } from './rules/rules';
 import { DEBUG, ERROR, logger, TRACE } from './Log';
@@ -117,7 +117,7 @@ export function executeRuleObject (
   if (!rule) return currentContent;
   if (!rule.active) return currentContent;
   if (!currentFile) return currentContent;
-  if (!checkIfFileAllowed(currentFile, settings, rule)) return currentContent;
+  
   const tools = new ScriptingTools(app, plugin, settings, rule, frontMatter);
   let result = currentContent;
   let oldResult:any = undefined;
@@ -140,7 +140,9 @@ export function executeRuleObject (
     logger.log(DEBUG,`executeRuleObject: Merging result for rule ${rule.property}|${rule.content} with old result`, oldResult, result);
     result = rulesManager.mergeResult(result, oldResult, currentContent, rule); // merge the result with the current content. Remove old result if necessary
   } else {
-    result = rulesManager.mergeResult(result, result, currentContent, rule); // merge the result with the current content. Remove old result if necessary
+    if (event !== 'getOldResults') {
+      result = rulesManager.mergeResult(result, result, currentContent, rule); // merge the result with the current content. Remove old result if necessary
+    }
   }
   return result;
 }
@@ -317,113 +319,6 @@ export function removeRule (app, settings, currentFile: TFile, returnResult: any
 
 }
 */
-/**
- * Filters a given file and returns true if it is included in a folder or file list
- * @param file 
- * @param filterMode 'exclude'|'include'
- * @param type 'folders'|'files'
- * @returns 
- */
-export function filterFile(file: TFile, fileList: any, filterMode: string, type:string):boolean {
-    let result = false;
-    const filterArray = (type==='folders') ? fileList[filterMode].selectedFolders : fileList[filterMode].selectedFiles;
-    if (filterArray.length === 0) return (filterMode === 'include')? false : true;
-    const filePath = file.path;
-    const fileFolder = getFolderFromPath(file.path); // this.tools.addLeadingSlash(getFolderFromPath(file.path));
-    const fileName = file.basename + '.' + file.extension;
-    
-    if (type === 'files') {
-        result = filterArray.includes(filePath);
-    }
-    if (type === 'folders') {
-        for (let path of filterArray) {
-            result = fileFolder?.startsWith(path.slice(1)) || false; // remove root '/'
-            if (result === true) return (filterMode === 'exclude')? !result : result;
-        };
-    };
-    return (filterMode === 'exclude')? !result : result;
-}
-
-export function checkIncludeExclude(file: TFile, settings: any): boolean {
-    let result = true;
-    if (!file) return false;
-    if (settings) {
-      try {
-        if (settings.exclude?.selectedFiles && settings.exclude?.selectedFolders) {
-          if (settings.exclude.selectedFiles.length > 0) { // there are files in the exclude files list.
-            result = filterFile(file, settings, 'exclude', 'files');
-          }
-          if (settings.exclude.selectedFolders.length > 0) { // there are folders in the exclude folders list.
-            result = filterFile(file, settings, 'exclude', 'folders');
-          }
-        }
-        if (settings.include?.selectedFiles && settings.include?.selectedFolders) {
-          if (settings.include.selectedFiles.length > 0) { // there are files in the include files list
-            result = filterFile(file, settings, 'include', 'files');
-          }
-          if (settings.include.selectedFolders.length > 0) { // there are folders in the include folders list
-            result = filterFile(file, settings, 'include', 'folders');
-          }
-        }
-        logger.log(TRACE,`check file ${file.path} against settings result = ${result}`, settings.include, settings.exclude);
-      } catch (error) {
-        logger.log(ERROR,`Error filtering file ${file.path} globally: ${error}`);
-        return false; // default to false if there is an error
-      }
-    }
-    return result;
-  }
-
-export function checkIfFileAllowed(file: TFile, settings?:FrontmatterAutomateSettings, rule?:FrontmatterAutomateRuleSettings):boolean {
-      let result = true;
-      if (!file) return false;
-      if (settings) {
-        result = checkIncludeExclude(file, settings);
-        /*
-        try {
-          //logger.log(DEBUG,`check file ${file.path} against settings`, settings.include, settings.exclude);
-          if (settings.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
-              result = filterFile(file, settings, 'exclude', 'files');    
-          }        
-          if (result && settings.exclude.selectedFolders.length>0) { // there are folders in the exclude folders list.
-              result = filterFile(file, settings, 'exclude', 'folders');
-          }
-          if (!result && settings.include.selectedFiles.length>0) { // there are files in the include files list
-              result = filterFile(file, settings, 'include', 'files');
-          }
-          if (!result && settings.include.selectedFolders.length>0) { // there are folders in the include folders list
-              result = filterFile(file, settings, 'include', 'folders');
-          }
-          // if (result === false) return false; // if the file is excluded, return false
-        } catch (error) {
-          logger.log(ERROR,`Error filtering file ${file.path} globally: ${error}`);
-          return false; // default to false if there is an error
-        } */
-      }
-      if(rule) {
-        result = checkIncludeExclude(file, rule);
-        /*
-        try {
-          //logger.log(DEBUG,`check file ${file.path} against rule`, rule.include, rule.exclude);
-          if (result && rule.exclude.selectedFiles.length>0) { // there are files in the exclude files list.
-              result = filterFile(file, rule, 'exclude', 'files');
-          }        
-          if (result && rule.exclude.selectedFolders.length>0) { // there are folders in the include folders list.
-              result = filterFile(file, rule, 'exclude', 'folders');
-          }
-          if (!result && rule.include.selectedFiles.length>0) { // file is excluded but there are files in the include files list
-              result = filterFile(file, rule, 'include', 'files');
-          }
-          if (!result && rule.include.selectedFolders.length>0) { // file is excluded but there are folders in the include folders list
-              result = filterFile(file, rule, 'include', 'folders');
-          }
-        } catch (error) {
-          logger.log(ERROR,`Error filtering file ${file.path} by rule ${rule.property}|${rule.content}: ${error}`);
-          return false; // default to false if there is an error
-        } */
-      }
-      return result;
-}
 
 function defaultConfigElements(modifiers:ConfigElements | any):ConfigElements {
   const configElements: ConfigElements = {

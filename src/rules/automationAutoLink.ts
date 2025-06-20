@@ -3,7 +3,7 @@ import { ScriptingTools } from "../tools";
 import { FrontmatterAutomateRuleSettings } from "../types";
 import { App, SearchComponent, Setting, TFile } from "obsidian";
 import { FolderSuggest } from "../suggesters/FolderSuggester";
-import { DirectorySelectionResult, openDirectorySelectionModal } from "../directorySelectionModal";
+import { DirectorySelectionResult, openDirectorySelectionModal } from "../uiDirectorySelectionModal";
 import { FileSuggest } from "../suggesters/FileSuggester";
 import { AlertModal } from "../alertBox";
 import { DEBUG, ERROR, logger, TRACE } from "../Log";

@@ -122,6 +122,9 @@ export class TreeHierarchySortableSettings {
         this.render();
         return this
     }
+    getFolderById(folderId: string | undefined): TreeHierarchyFolder | undefined {
+        return this.data.folders.find(f => f.id === folderId);
+    }
     setData(data: TreeHierarchyData) {
         this.data = data;
         this.render();

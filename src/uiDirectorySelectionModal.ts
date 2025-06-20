@@ -1,21 +1,22 @@
 import exp from 'constants';
-import { App, Modal, Setting, TAbstractFile, TFile, TFolder, Vault, setIcon } from 'obsidian'; // Added setIcon
+import { App, Modal, Setting, TAbstractFile, TFile, TFolder, ToggleComponent, Vault, setIcon } from 'obsidian'; // Added setIcon
+import { DEBUG, logger } from './Log';
 
 // Define the structure for tree nodes
 interface TreeNode {
     path: string;
     name: string;
-    type: string; // 'folder' | 'file';
+    directoryType: DirectorySelectionType; // 'folder' | 'file';
     children?: TreeNode[];
     element: HTMLElement; // Reference to the list item element (li)
-    checkbox: HTMLInputElement;
+    checkbox: HTMLButtonElement | HTMLInputElement; // Reference to the checkbox element
     label: HTMLLabelElement;
     container: HTMLElement; // Reference to the container div holding checkbox and label
 }
 
-export type DirectorySelectionMode = 'include' | 'exclude'; // Define selection modes
+export type DirectorySelectionMode = 'include' | 'exclude' | 'includeAndExclude';
 export type DirectoryDisplayMode = 'folders' | 'files' | 'folder' | 'file'; // Define display modes
-export interface DirectorySelectionOptions {
+export interface uiDirectorySelectionOptions {
     title?: string; // Title of the modal
     selectionMode: DirectorySelectionMode; // 'include' or 'exclude'
     displayMode: DirectoryDisplayMode; // 'folders' or 'files'
@@ -23,28 +24,41 @@ export interface DirectorySelectionOptions {
     optionShowFiles: boolean; // Show files option
 }
 // Define the result structure returned by the modal
+export type DirectorySelectionState = {path: string, type: DirectorySelectionType, state: DirectorySelectionStateType};
 export interface DirectorySelectionResult {
     folders: string[];
     files: string[];
+    state: DirectorySelectionState[]; // Array of objects with path, type, and state
     mode: DirectorySelectionMode;
     display: DirectoryDisplayMode;
 }
 
-/**
+export type DirectorySelectionType = 'folder' | 'file';
+export type DirectorySelectionStateType = 'include' | 'exclude' | 'none' | 'inheritedInclude' | 'inheritedExclude'; // State of the item in the selection
+export interface DirectorySelectionItem {
+    type: DirectorySelectionType; // Type of the item
+    state: DirectorySelectionStateType; // State of the item in the selection
+    source?: string; // Optional source for the item, e.g., 'inherited' for inherited state
+}
+
+/**     
  * Obsidian Modal for selecting directories and files from the vault structure.
  */
 export class DirectorySelectionModal extends Modal {
     // Initial state passed to the modal (stored for reset functionality)
     private readonly initialFoldersSnapshot: ReadonlySet<string>;
     private readonly initialFilesSnapshot: ReadonlySet<string>;
+    private readonly initialStateSnapshot: ReadonlyMap<string, DirectorySelectionItem>;
     private readonly initialModeSnapshot: DirectorySelectionMode;
     private readonly initialDisplaySnapshot: DirectoryDisplayMode;
-    private readonly options: DirectorySelectionOptions; // Options for the modal
+    private readonly options: uiDirectorySelectionOptions; // Options for the modal
     private readonly okCallback: (result: DirectorySelectionResult | null) => void;
 
     // Current state being modified within the modal
     private currentFolders!: Set<string>;
     private currentFiles!: Set<string>;
+    private currentState!: Map<string, DirectorySelectionItem>;
+    private inheritedState!: Map<string, DirectorySelectionItem>;
     private currentMode!: DirectorySelectionMode;
     private currentDisplay!: DirectoryDisplayMode;
     private includeExcludeSelectable!: boolean;
@@ -54,6 +68,7 @@ export class DirectorySelectionModal extends Modal {
     private treeRootElement!: HTMLElement; // Container for the tree view
     private treeNodes: Map<string, TreeNode> = new Map(); // Map path to node info for quick access
     private modeDropdown: Setting | null = null; // Reference to update dropdown on reset
+    private showFilesBtn: ToggleComponent | null = null; // Reference to update show files toggle on reset
 
     /**
      * Creates an instance of the DirectorySelectionModal.
@@ -67,21 +82,83 @@ export class DirectorySelectionModal extends Modal {
         app: App,
         initialFolders: string[],
         initialFiles: string[],
-        initialOptions: DirectorySelectionOptions,
-        okCallback: (result: DirectorySelectionResult | null) => void
+        initialOptions: uiDirectorySelectionOptions,
+        okCallback: (result: DirectorySelectionResult | null) => void,
+        initialState: DirectorySelectionState[] = [],
+        inheritedState: DirectorySelectionState[] | undefined = undefined,
     ) {
         super(app);
         // Store initial state for reset
         this.initialFoldersSnapshot = new Set(initialFolders);
         this.initialFilesSnapshot = new Set(initialFiles);
+
         this.initialModeSnapshot = initialOptions.selectionMode;
         this.initialDisplaySnapshot = initialOptions.displayMode;
-        this.showFiles = initialOptions.displayMode==='files' || initialOptions.displayMode==='file'|| initialFiles.length>0;
+        this.showFiles = initialOptions.displayMode==='files' || 
+            initialOptions.displayMode==='file'|| 
+            initialFiles.length>0 || 
+            countStateItems(initialState, 'file', 'include') > 0 || 
+            countStateItems(initialState, 'file', 'exclude') > 0; 
+
         this.options = initialOptions;
         this.okCallback = okCallback;
 
+        switch (initialOptions.selectionMode) {
+            case 'includeAndExclude':
+            case 'include':
+                this.addToCurrentState(this.currentState, initialFolders, 'folder', 'include');
+                this.addToCurrentState(this.currentState, initialFiles, 'file', 'include');
+                break;
+            case 'exclude':
+                this.addToCurrentState(this.currentState, initialFolders, 'folder', 'exclude');
+                this.addToCurrentState(this.currentState, initialFiles, 'file', 'exclude');
+                break;
+        }
+        if (initialOptions.selectionMode === 'includeAndExclude') {
+            if (!this.currentState) {
+                this.currentState = new Map<string, DirectorySelectionItem>();
+            }
+            initialState.forEach(item => {
+                this.addToCurrentState(this.currentState, item.path, item.type, item.state);
+            });
+            if (inheritedState) {
+                inheritedState.forEach(item => {
+                    if (!this.inheritedState) {
+                        this.inheritedState = new Map<string, DirectorySelectionItem>();
+                    }
+                    this.addToCurrentState(this.inheritedState, item.path, item.type, item.state);
+                });
+            }
+        }
+        this.initialStateSnapshot = new Map<string, DirectorySelectionItem>(this.currentState);
         // Initialize current state from initial state for editing
         this.resetSelectionToInitial(); // Use a method for initialization and reset
+        return this;
+    }
+
+    addInheritedState(inheritedState: DirectorySelectionState[], source: string = 'inherited'): void {
+        if (!this.inheritedState) {
+            this.inheritedState = new Map<string, DirectorySelectionItem>();
+        }
+        inheritedState.forEach(item => {
+            this.addToCurrentState(this.inheritedState, item.path, item.type, item.state, source);
+        });
+        this.showFiles = this.showFiles ||
+            countStateItems(inheritedState, 'file', 'include') > 0 ||
+            countStateItems(inheritedState, 'file', 'exclude') > 0;
+        if (this.showFilesBtn) {
+            this.showFilesBtn.setValue(this.showFiles); // Update the toggle state
+        }
+        this.renderTree(); // Re-render the tree to reflect inherited state
+        this.updateTreeAppearance();
+    }
+
+    private addToCurrentState(stateMap: Map<string, DirectorySelectionItem>, pathArray: string[] | string, type: DirectorySelectionType, state: DirectorySelectionStateType, source?: string): void {
+        const paths = Array.isArray(pathArray) ? pathArray : [pathArray];
+        paths.forEach(path => {
+            const item: DirectorySelectionItem = { type, state, source };
+            stateMap.set(path, item);
+        });
     }
 
     /**
@@ -90,6 +167,7 @@ export class DirectorySelectionModal extends Modal {
     private resetSelectionToInitial(): void {
         this.currentFolders = new Set(this.initialFoldersSnapshot);
         this.currentFiles = new Set(this.initialFilesSnapshot);
+        this.currentState = new Map(this.initialStateSnapshot);
         this.currentMode = this.initialModeSnapshot;
         // Note: showFiles is not reset by this action, user can toggle it independently
     }
@@ -101,6 +179,7 @@ export class DirectorySelectionModal extends Modal {
         this.currentFolders = new Set([]);
         this.currentFiles = new Set([]);
         this.currentMode = this.initialModeSnapshot;
+        this.currentState = new Map<string, DirectorySelectionItem>();
         // Note: showFiles is not reset by this action, user can toggle it independently
     }
 
@@ -155,9 +234,10 @@ export class DirectorySelectionModal extends Modal {
                     dropdown
                         .addOption('exclude', 'exclude')
                         .addOption('include', 'include')
+                        .addOption('includeAndExclude', 'include & exclude')
                         .setValue(this.currentMode) // Set initial value
                         .onChange(value => {
-                            this.currentMode = value as 'include' | 'exclude';
+                            this.currentMode = value as DirectorySelectionMode; // Update current mode
                             this.updateTreeAppearance(); // Update tree visuals based on new mode
                         });
                 });
@@ -191,6 +271,7 @@ export class DirectorySelectionModal extends Modal {
                             this.showFiles = value;
                             this.buildAndRenderTree();
                         });
+                    this.showFilesBtn = toggle; // Store reference for reset
                 });
         }
     }
@@ -256,7 +337,7 @@ export class DirectorySelectionModal extends Modal {
         const vaultRootNode: TreeNode = {
             path: '/', // Root folder path
             name: this.app.vault.getName() || 'Vault', // Use vault name or default
-            type: 'folder',
+            directoryType: 'folder',
             children: [],
             // Placeholder elements, will be assigned during rendering
             element: null!,
@@ -286,7 +367,7 @@ export class DirectorySelectionModal extends Modal {
                     const newFolderNode: TreeNode = {
                         path: currentPath,
                         name: part,
-                        type: 'folder',
+                        directoryType: 'folder',
                         children: [],
                         element: null!,
                         checkbox: null!,
@@ -319,7 +400,7 @@ export class DirectorySelectionModal extends Modal {
                 const fileNode: TreeNode = {
                     path: file.path,
                     name: file.name,
-                    type: 'file',
+                    directoryType: 'file',
                     element: null!,
                     checkbox: null!,
                     label: null!,
@@ -337,8 +418,8 @@ export class DirectorySelectionModal extends Modal {
 
         // --- Step 3: Sort children alphabetically (folders first, then files) ---
         const sortNodes = (a: TreeNode, b: TreeNode) => {
-            if (a.type === 'folder' && b.type === 'file') return -1;
-            if (a.type === 'file' && b.type === 'folder') return 1;
+            if (a.directoryType === 'folder' && b.directoryType === 'file') return -1;
+            if (a.directoryType === 'file' && b.directoryType === 'folder') return 1;
             return a.name.localeCompare(b.name);
         };
 
@@ -364,13 +445,14 @@ export class DirectorySelectionModal extends Modal {
          rootUl.style.paddingLeft = '0'; // Remove default list indentation
 
          // Render the root folder itself
-         //this.renderTreeNode(treeData, rootUl, 0, this.currentMode === 'include' ? this.currentFolders : this.currentFiles);
-         this.renderTreeNode(treeData, rootUl, 0, this.currentFolders, this.currentFiles); //TODO: expand this to include files as well
+         this.renderTreeNode(treeData, rootUl, 0, this.currentFolders, this.currentFiles); 
 
          // Render children of the root folder
+         /*
          treeData.children?.forEach(childNode => {
-             //this.renderTreeNode(childNode, rootUl, 1, this.currentMode === 'include' ? this.currentFolders : this.currentFiles); // Start rendering at level 1
+             this.renderTreeNode(childNode, rootUl, 1, this.currentFolders, this.currentFiles); // Start rendering at level 1
          });
+            */
     }
 
     /**
@@ -379,10 +461,10 @@ export class DirectorySelectionModal extends Modal {
      * @param parentElement - The HTML `ul` element to append this node's `li` to.
      * @param level - The current indentation level.
      */
-    private renderTreeNode(node: TreeNode, parentElement: HTMLElement, level: number, selectedPaths: Set<string>, selectedfiles: Set<string>) {
+    private renderTreeNode(node: TreeNode, parentElement: HTMLElement, level: number, selectedPaths: Set<string>, selectedFiles: Set<string>) {
         const li = parentElement.createEl('li');
         li.style.marginLeft = `${level * 20}px`; // Apply indentation based on level
-        li.addClass(`tree-node-${node.type}`); // Add class for type (folder/file)
+        li.addClass(`tree-node-${node.directoryType}`); // Add class for type (folder/file)
 
         const container = li.createDiv({ cls: 'tree-node-container' });
         container.style.display = 'flex';
@@ -393,14 +475,14 @@ export class DirectorySelectionModal extends Modal {
         let toggleButton: HTMLElement | null = null;
         let isCollapsed = true; // Default state is collapsed
 
-        if (node.type === 'folder') {
+        if (node.directoryType === 'folder') {
             toggleButton = container.createSpan({ cls: 'tree-toggle-button' });
             toggleButton.textContent = '▶'; // Right-pointing triangle
             toggleButton.style.cursor = 'pointer';
             toggleButton.style.marginRight = '5px';
 
             // Check if this folder or any of its children are selected
-            const shouldExpand = this.shouldExpandFolder(node, selectedPaths, selectedfiles);
+            const shouldExpand = (this.currentMode === 'includeAndExclude') ? this.shouldExpandFolderByState(node, this.currentState, this.inheritedState) : this.shouldExpandFolder(node, selectedPaths, selectedFiles);
             if (shouldExpand) {
                 isCollapsed = false;
             }
@@ -413,14 +495,96 @@ export class DirectorySelectionModal extends Modal {
         }
 
         // --- Checkbox ---
-        const checkbox = container.createEl('input', { type: 'checkbox' });
+        let checkbox: HTMLButtonElement | HTMLInputElement;
+        if (this.currentMode === 'includeAndExclude') {
+            // Determine current state for this node
+            const currentState = this.currentState.get(node.path);
+            let state: DirectorySelectionStateType = currentState?.state || 'none';
+
+            checkbox = container.createEl('button');
+            checkbox.className = 'FMA-tri-state-checkbox';
+            this.getTriStateIcon(state, checkbox);
+
+            checkbox.onclick = (event) => {
+                const target = event.currentTarget as HTMLButtonElement;
+                const path = target.dataset.path!;
+                const currentState = this.currentState.get(path);
+                const type = currentState?.type || node.directoryType;
+                let state = currentState?.state || 'none';
+                switch (state) {
+                    case 'include':
+                        state = 'none'; 
+                        const inheritedItem = this.inheritedState?.get(path);
+                        // If the item is inherited, toggle to inherited state
+                        switch (inheritedItem?.state) {
+                            case 'include':
+                                state = 'inheritedInclude';
+                                break;
+                            case 'exclude':
+                                state = 'inheritedExclude';
+                                break;
+                        }
+                        break;
+                    case 'exclude':
+                        state = 'include'; 
+                        break;
+                    case 'inheritedInclude':
+                        state = 'exclude'; 
+                        break;
+                    case 'inheritedExclude':
+                        state = 'exclude'; 
+                        break;
+                    case 'none':
+                        state = 'exclude'; 
+                        break;
+                    default:
+                        state = 'include'; 
+                };
+                this.currentState.set(path, { type, state });
+                this.getTriStateIcon(state, checkbox as HTMLButtonElement);
+                this.updateTreeAppearance();
+                logger.log(DEBUG, `Checkbox clicked for ${path}, new state: ${state}`);
+            };
+            // Store reference if needed
+            node.checkbox = checkbox as any;
+        } else {
+            checkbox = container.createEl('input', { type: 'checkbox' });
+            checkbox.style.top = '0px'; // Align checkbox vertically
+             // --- Add event listener for checkbox changes ---
+            checkbox.onchange = (event) => {
+                const target = event.target as HTMLInputElement;
+                const path = target.dataset.path!;
+                const type = target.dataset.type as DirectorySelectionType; // Get type from data attribute
+
+                // Update the current selection sets
+                if (target.checked) {
+                    if (type === 'folder'){
+                        if (this.options.displayMode === 'folder') {
+                            this.currentFolders.clear(); // Clear previous selection if only one folder can be selected
+
+                        }
+                        this.currentFolders.add(path);
+                    } else {
+                        if (this.options.displayMode === 'file') {
+                            this.currentFiles.clear(); // Clear previous selection if only one file can be selected
+                        }
+                        this.currentFiles.add(path);
+                    }
+                } else {
+                    if (type === 'folder') this.currentFolders.delete(path);
+                    else this.currentFiles.delete(path);
+                }
+                // Update the visual state of the entire tree after a change
+                this.updateTreeAppearance();
+            };
+        }
         checkbox.id = `tree-cb-${node.path.replace(/[^a-zA-Z0-9]/g, '-')}`; // Create a safe ID
         checkbox.dataset.path = node.path; // Store path in data attribute
-        checkbox.dataset.type = node.type; // Store type
+        checkbox.dataset.type = node.directoryType; // Store type
 
         // --- Label ---
         const label = container.createEl('label');
-        label.textContent = `${node.type === 'folder' ? '📁' : '📄'} ${node.name}`;
+        label.textContent = `${node.directoryType === 'folder' ? '📁' : '📄'} ${node.name}`;
         // label.textContent = node.name;
         label.htmlFor = checkbox.id; // Link label to checkbox
         label.style.marginLeft = '5px';
@@ -435,54 +599,57 @@ export class DirectorySelectionModal extends Modal {
         this.treeNodes.set(node.path, node);
 
         // --- Set initial checked state based on current selection ---
-        if (node.type === 'folder') {
-            checkbox.checked = this.currentFolders.has(node.path);
+        this.setCheckbox(checkbox,node); // Set checkbox state based on current selection)
+        if (node.directoryType === 'folder') {
+            //checkbox.checked = this.currentFolders.has(node.path);
         } else { // file
-            checkbox.checked = this.currentFiles.has(node.path);
+            //checkbox.checked = this.currentFiles.has(node.path);
         }
 
-        // --- Add event listener for checkbox changes ---
-        checkbox.onchange = (event) => {
-            const target = event.target as HTMLInputElement;
-            const path = target.dataset.path!;
-            const type = target.dataset.type as 'folder' | 'file';
-
-            // Update the current selection sets
-            if (target.checked) {
-                if (type === 'folder'){
-                    if (this.options.displayMode === 'folder') {
-                        this.currentFolders.clear(); // Clear previous selection if only one folder can be selected
-
-                    }
-                    this.currentFolders.add(path);
-                } else {
-                    if (this.options.displayMode === 'file') {
-                        this.currentFiles.clear(); // Clear previous selection if only one file can be selected
-                    }
-                    this.currentFiles.add(path);
-                }
-            } else {
-                if (type === 'folder') this.currentFolders.delete(path);
-                else this.currentFiles.delete(path);
-            }
-            // Update the visual state of the entire tree after a change
-            this.updateTreeAppearance();
-        };
+       
 
         // --- Render children recursively if it's a folder ---
         let childrenUl: HTMLElement | null = null;
-        if (node.type === 'folder' && node.children && node.children.length > 0) {
+        if (node.directoryType === 'folder' && node.children && node.children.length > 0) {
             childrenUl = li.createEl('ul');
             childrenUl.style.listStyle = 'none';
             childrenUl.style.paddingLeft = '0'; // Reset padding for nested list
             childrenUl.style.marginLeft = '0'; // Prevent double indentation from default UL styles
             childrenUl.style.display = isCollapsed ? 'none' : 'block'; // Show/hide children based on initial state
 
-            node.children.forEach(child => this.renderTreeNode(child, childrenUl!, level + 1, selectedPaths, selectedfiles)); // Increase level for children
+            node.children.forEach(child => this.renderTreeNode(child, childrenUl!, level + 1, selectedPaths, selectedFiles)); // Increase level for children
+        }
+    }
+
+    private setCheckbox(checkbox: HTMLButtonElement | HTMLInputElement, node: TreeNode) {
+        if (checkbox instanceof HTMLInputElement) {
+            if (node.directoryType === 'folder') {
+                checkbox.checked = this.currentFolders.has(node.path);
+            } else {
+                checkbox.checked = this.currentFiles.has(node.path);
+            }
         }
     }
 
     // Helper method to determine if a folder should be expanded
+    private shouldExpandFolderByState(node: TreeNode, currentState: Map<string, DirectorySelectionItem>, inheritedState: Map<string, DirectorySelectionItem>): boolean {
+        if (currentState.get(node.path)?.state === 'include' || currentState.get(node.path)?.state === 'exclude') {
+            return true; 
+        }
+        if (inheritedState && (inheritedState.get(node.path)?.state === 'include' || inheritedState.get(node.path)?.state === 'exclude')) {
+            return true; 
+        }
+
+        if (node.children) {
+            for (const child of node.children) {
+                if (this.shouldExpandFolderByState(child, currentState, inheritedState)) {
+                    return true; // A child is selected
+                }
+            }
+        }
+
+        return false; // Neither the folder nor its children are selected
+    }
     private shouldExpandFolder(node: TreeNode, selectedPaths: Set<string>, selectedFiles: Set<string>): boolean {
         if (selectedPaths.has(node.path) || selectedFiles.has(node.path)) {
             return true; // The folder itself is selected
@@ -498,7 +665,46 @@ export class DirectorySelectionModal extends Modal {
 
         return false; // Neither the folder nor its children are selected
     }
-
+    /**
+     * Checks if a file or folder is effectively included or excluded based on currentState.
+     * @param path - The file or folder path to check.
+     * @param currentState - The Map<string, DirectorSelectionItem> with state info.
+     * @returns true if included, false if excluded or not included.
+     */
+    private isPathEffectivelyIncludedOrExcluded(
+        node: TreeNode,
+        currentState: Map<string, DirectorySelectionItem>,
+        inheritedState: Map<string, DirectorySelectionItem>
+    ): DirectorySelectionStateType {
+        let current = node.path;
+        let effectiveState: DirectorySelectionStateType = 'none';
+        while (true) {
+            const stateItem = currentState.get(current);
+            if (stateItem) {
+                if (stateItem.state === 'exclude' || stateItem.state === 'include') {
+                    return stateItem.state; // Return the state if found in currentState
+                }
+            }
+            if (inheritedState) {
+                const inheritedItem = inheritedState?.get(current);
+                if (inheritedItem) {
+                    // If inherited state is set, use it
+                    if (inheritedItem.state === 'exclude' && effectiveState !== 'inheritedInclude') effectiveState = 'inheritedExclude';
+                    if (inheritedItem.state === 'include') effectiveState = 'inheritedInclude';
+                }
+            }
+            // Move up to parent path
+            if (current === '/' || current === '') break;
+            let parentPath = current.substring(0, current.lastIndexOf('/')) || '/';
+            if (!parentPath.startsWith('/')) {
+                // Ensure parent path is always absolute
+                parentPath = '/' + parentPath;
+            }
+            if (parentPath === current) break;
+            current = parentPath;
+        }
+        return effectiveState;
+    }
 
     /**
      * Updates the visual appearance (enabled/disabled/styling) of all nodes
@@ -512,8 +718,25 @@ export class DirectorySelectionModal extends Modal {
 
             // Determine if an ancestor FOLDER of this node is selected
             let ancestorFolderSelected = false;
-            let currentPath = node.path;
+            let currentPath = "";
+            if (node.directoryType === 'folder') {
+                currentPath = node.path;
+            } else {
+                currentPath = "/" + node.path.substring(0, node.path.lastIndexOf('/'));
+                if (currentPath === '/') {
+                    if (this.currentFolders.has(currentPath)) {
+                        ancestorFolderSelected = true;
+                    }
+                }
+            }
+
             while (currentPath !== '/') {
+                // check if the folder of the file is selected
+                if (node.directoryType === 'file' && this.currentFolders.has(currentPath)) {
+                    ancestorFolderSelected = true; // If the file itself is selected, no need to check further
+                    break;
+                }
+                 // Check if the parent folder is selected
                  const parentPath = currentPath.substring(0, currentPath.lastIndexOf('/')) || '/';
                  if (this.currentFolders.has(parentPath)) {
                      ancestorFolderSelected = true;
@@ -524,34 +747,94 @@ export class DirectorySelectionModal extends Modal {
             }
 
             // Check if the node itself is selected
-            const nodeSelected = node.type === 'folder'
+            const nodeSelected = node.directoryType === 'folder'
                 ? this.currentFolders.has(node.path)
                 : this.currentFiles.has(node.path);
 
             // --- Apply Logic Based on Mode ---
-            if (this.currentMode === 'exclude') {
-                // EXCLUDE Mode: A node is considered excluded if it OR an ancestor FOLDER is selected.
-                // Visually disable (grey out) nodes that are excluded.
-                isEffectivelyExcluded = nodeSelected || ancestorFolderSelected;
-                isDisabled = isEffectivelyExcluded;
-            } else { // INCLUDE Mode
-                // INCLUDE Mode: A node is considered included if it OR an ancestor FOLDER is selected.
-                // Visually disable (grey out) nodes that are NOT included.
-                if (node.type === 'folder') {
-                    isEffectivelyIncluded = nodeSelected || ancestorFolderSelected;
-                } else { // file
+            switch (this.currentMode) {
+                case 'exclude': {
+                    // EXCLUDE Mode: A node is considered excluded if it OR an ancestor FOLDER is selected.
+                    // Visually disable (grey out) nodes that are excluded.
+                    isEffectivelyExcluded = nodeSelected || ancestorFolderSelected;
+                    isDisabled = isEffectivelyExcluded;
+                    break;
+                }
+                case 'include': { // INCLUDE Mode
+                    // INCLUDE Mode: A node is considered included if it OR an ancestor FOLDER is selected.
+                    // Visually disable (grey out) nodes that are NOT included.
+                    if (node.directoryType === 'folder') {
+                        isEffectivelyIncluded = nodeSelected || ancestorFolderSelected;
+                    } else { // file
                     // File included if selected OR parent path is included
                     const parentPath = node.path.substring(0, node.path.lastIndexOf('/')) || '/';
-                    const parentEffectivelyIncluded = this.isPathEffectivelyIncluded(parentPath); // Check parent folder status
+                    const parentEffectivelyIncluded = this.isPathEffectivelyIncluded('/' + parentPath); // Check parent folder status
                     isEffectivelyIncluded = nodeSelected || parentEffectivelyIncluded;
+                    }
+                    isDisabled = !isEffectivelyIncluded;
+                    break;
                 }
-                isDisabled = !isEffectivelyIncluded;
+                case 'includeAndExclude':
+                    let state = this.isPathEffectivelyIncludedOrExcluded(node, this.currentState, this.inheritedState);
+                    if (node.checkbox instanceof HTMLButtonElement) {
+                        // For tri-state button, update icon based on state
+                        // this.getTriStateIcon(this.currentState.get(node.path)?.state || 'none', node.checkbox as HTMLButtonElement);
+                        let buttonState: DirectorySelectionStateType = 'none';
+                        const inheritedStateItem = this.inheritedState?.get(node.path);
+                        if (inheritedStateItem) {
+                            // If inherited state is set, use it
+                            switch (inheritedStateItem.state) {
+                                case 'include':
+                                    buttonState = 'inheritedInclude';
+                                    break;
+                                case 'exclude':
+                                    buttonState = 'inheritedExclude';
+                                    break;
+                            }
+                            node.checkbox.ariaLabel = `Inherited from ${inheritedStateItem.source || 'unknown'}`;
+                        }
+                        switch(this.currentState.get(node.path)?.state) {
+                            case 'include':
+                                buttonState = 'include';
+                                break;
+                            case 'exclude':
+                                buttonState = 'exclude';
+                                break;
+                            case 'none':
+                                buttonState = 'none';
+                                break;
+                        }
+                        this.getTriStateIcon(buttonState, node.checkbox as HTMLButtonElement);
+
+                    }
+                    node.element.classList.remove('is-included', 'is-excluded', 'is-inherited-included', 'is-inherited-excluded');
+                    switch (state) {
+                        case 'include':
+                            node.element.addClass('is-included');
+                            break;
+                        case 'exclude':
+                            node.element.addClass('is-excluded');
+                            break;
+                        case 'inheritedInclude':
+                            node.element.addClass('is-inherited-included');
+                            break;
+                        case 'inheritedExclude':
+                            node.element.addClass('is-inherited-excluded');
+                            break;
+                    }
+                    return;
+
             }
 
             // --- Apply Visual Styles ---
             // Checkbox itself should always be clickable to change selection state
             node.checkbox.disabled = false;
-            node.checkbox.checked = nodeSelected;
+            if (node.checkbox instanceof HTMLInputElement) {
+                node.checkbox.checked = nodeSelected;
+            } else if (node.checkbox instanceof HTMLButtonElement) {
+                // For tri-state button, update icon based on state
+                this.getTriStateIcon(this.currentState.get(node.path)?.state || 'none', node.checkbox);
+            }
 
             // Apply styling to the container (label, icon) based on disabled state
             if (isDisabled) {
@@ -646,7 +929,7 @@ export class DirectorySelectionModal extends Modal {
      * Combines building the tree data, rendering the DOM, and applying initial appearance.
      */
     private buildAndRenderTree() {
-        // logger.log(DEBUG,'Building and rendering tree...');
+        logger.log(DEBUG,'Building and rendering tree...');
         this.renderTree(); // Build data and render DOM elements
         this.updateTreeAppearance(); // Apply styles based on current mode/selection
     }
@@ -660,6 +943,11 @@ export class DirectorySelectionModal extends Modal {
         const result: DirectorySelectionResult = {
             folders: Array.from(this.currentFolders),
             files: Array.from(this.currentFiles),
+            state: Array.from(this.currentState.entries()).map(([path, item]) => ({
+                path,
+                type: item.type,
+                state: item.state,
+            })).filter(item => item.state !== 'none'), // Filter out 'none' states
             mode: this.currentMode,
             display: this.currentDisplay,
         };
@@ -669,6 +957,36 @@ export class DirectorySelectionModal extends Modal {
         contentEl.empty(); // Clear the modal's content
         this.treeNodes.clear(); // Clear the node map to free memory
         this.modeDropdown = null; // Clear reference
+    }
+
+    getTriStateIcon(state: DirectorySelectionStateType, button: HTMLButtonElement): void {
+        // Remove previous icon if any
+        button.innerHTML = "";
+        let icon = "circle";
+        let color = "";
+        switch (state) {
+            case "include":
+                icon = "circle-check";
+                color = "var(--color-green, #4caf50)";
+                break;
+            case "exclude":
+                icon = "circle-x";
+                color = "var(--color-red, #e53935)";
+                break;
+            case "inheritedInclude":
+                icon = "circle-check";
+                color = "var(--background-modifier-border, #ccc)";
+                break;
+            case "inheritedExclude":
+                icon = "circle-x";
+                color = "var(--background-modifier-border, #ccc)";
+                break;
+            default:
+                icon = "circle";
+                color = "var(--background-modifier-border, #ccc)";
+        }
+        setIcon(button, icon);
+        button.style.backgroundColor = color;
     }
 }
 
@@ -685,106 +1003,28 @@ export function openDirectorySelectionModal(
     app: App,
     initialFolders: string[],
     initialFiles: string[],
-    options: DirectorySelectionOptions,
-    okCallback: (result: DirectorySelectionResult | null) => void
-): void {
+    options: uiDirectorySelectionOptions,
+    okCallback: (result: DirectorySelectionResult | null) => void,
+    initialState: DirectorySelectionState[] = [],
+    inheritedState: DirectorySelectionState[] | undefined = undefined,
+) {
     // Create and open the modal instance
-    new DirectorySelectionModal(
+    const modal = new DirectorySelectionModal(
         app,
         initialFolders,
         initialFiles,
         options,
-        okCallback
-    ).open();
+        okCallback,
+        initialState,
+        inheritedState
+    );
+    modal.open();
+    return modal; // Return the modal instance for further manipulation if needed
 }
 
-/*
-// --- Example Usage in your Plugin's Settings Tab ---
-// (Place this in your settings tab file, e.g., settings.ts)
-
-import { App, PluginSettingTab, Setting } from 'obsidian';
-import { openDirectorySelectionModal, DirectorySelectionResult } from './DirectorySelectionModal'; // Adjust path as needed
-import YourPlugin from './main'; // Adjust path to your main plugin file
-
-// --- Example Plugin Settings Interface (in your main.ts or settings file) ---
-export interface YourPluginSettings {
-    selectedFolders: string[];
-    selectedFiles: string[];
-    selectionMode: 'include' | 'exclude';
-    // ... other settings for your plugin
-}
-
-export const DEFAULT_SETTINGS: YourPluginSettings = {
-    selectedFolders: [],
-    selectedFiles: [],
-    selectionMode: 'exclude', // Default mode is often 'exclude'
-    // ... other default settings
-}
-
-
-export class YourPluginSettingsTab extends PluginSettingTab {
-    plugin: YourPlugin;
-
-    constructor(app: App, plugin: YourPlugin) {
-        super(app, plugin);
-        this.plugin = plugin;
+export function countStateItems(stateArray: DirectorySelectionState[], type: DirectorySelectionType, state: DirectorySelectionStateType): number {
+    if (!stateArray || !Array.isArray(stateArray)) {
+        return 0; // Return 0 if the stateArray is not valid
     }
-
-    display(): void {
-        const { containerEl } = this;
-        containerEl.empty();
-
-        containerEl.createEl('h2', { text: 'Einstellungen für Mein Plugin' }); // Settings Title in German
-
-        // --- Button to Open the Modal ---
-        new Setting(containerEl)
-            .setName('Verzeichnisse/Dateien konfigurieren') // Setting Name in German
-            .setDesc('Klicke auf den Button, um die Auswahl zu bearbeiten.') // Setting Description in German
-            .addButton(button => {
-                button
-                    .setButtonText('Auswahl öffnen') // Button Text in German
-                    .setCta() // Makes the button more prominent
-                    .onClick(() => {
-                        // Retrieve current settings to pre-populate the modal
-                        const currentFolders = this.plugin.settings.selectedFolders || [];
-                        const currentFiles = this.plugin.settings.selectedFiles || [];
-                        const currentMode = this.plugin.settings.selectionMode || 'exclude'; // Use default if not set
-
-                        // Open the modal
-                        openDirectorySelectionModal(
-                            this.app,
-                            currentFolders,
-                            currentFiles,
-                            currentMode,
-                            // This is the okCallback function:
-                            (result: DirectorySelectionResult) => {
-                                logger.log(DEBUG,'Auswahl bestätigt:', result); // Log result in German console
-
-                                // --- IMPORTANT: Save the results back to your plugin settings ---
-                                this.plugin.settings.selectedFolders = result.folders;
-                                this.plugin.settings.selectedFiles = result.files;
-                                this.plugin.settings.selectionMode = result.mode;
-                                this.plugin.saveSettings(); // Persist the changes
-
-                                // Optionally, re-render the settings tab to show the updated selection
-                                this.display(); // Re-render settings tab
-                            }
-                        );
-                    });
-            });
-
-         // --- Display Current Selection (Read-only) ---
-         const selectionInfoEl = containerEl.createDiv({ cls: 'settings-selection-info' });
-         selectionInfoEl.createEl('h4', { text: 'Aktuelle Auswahl:' }); // Section Title in German
-         const modeText = `Modus: ${this.plugin.settings.selectionMode || 'Nicht festgelegt'}`; // Text in German
-         // Truncate long lists for display if necessary
-         const folderText = `Ausgewählte Ordner: ${(this.plugin.settings.selectedFolders?.length || 0)} Stück`; // Text in German
-         const fileText = `Ausgewählte Dateien: ${(this.plugin.settings.selectedFiles?.length || 0)} Stück`; // Text in German
-
-         selectionInfoEl.createEl('p', { text: modeText });
-         selectionInfoEl.createEl('p', { text: folderText });
-         selectionInfoEl.createEl('p', { text: fileText });
-         // You could add a small button/link here to view the full list if it's long
-    }
+    return stateArray.filter(item => item.type === type && item.state === state).length;
 }
-*/

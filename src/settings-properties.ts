@@ -1,7 +1,7 @@
 import { App, Plugin, PluginSettingTab, Setting, DropdownComponent, TextComponent, ButtonComponent, ToggleComponent, setIcon, apiVersion, TFile, getIconIds } from 'obsidian';
-import { openDirectorySelectionModal, DirectorySelectionResult } from './directorySelectionModal';
+import { openDirectorySelectionModal, DirectorySelectionResult, countStateItems } from './uiDirectorySelectionModal';
 import { versionString, FrontmatterAutomateRuleSettings, DEFAULT_RULE_DEFINITION, PropertyTypeInfo, ObsidianPropertyTypes, DEFAULT_FILTER_FILES_AND_FOLDERS, PropertyInfo} from './types';
-import { checkIfFileAllowed, executeRuleObject } from './rules';
+import { executeRuleObject } from './rules';
 import { AlertModal } from './alertBox';
 import { randomUUID } from 'crypto';
 import { codeEditorModal, codeEditorModalResult, openCodeEditorModal } from './editorModal';
@@ -9,10 +9,11 @@ import { copyFileSync } from 'fs';
 import { ScriptingTools } from './tools';
 import { updatePropertyIcon } from './uiElements';
 import { RulePrototype, rulesManager } from './rules/rules';
-import { DEBUG, logger, WARNING } from './Log';
+import { DEBUG, logger, TRACE, WARNING } from './Log';
 import { MultiPropertySetting } from './uiMultiPropertySetting';
-import { TreeHierarchyData, TreeHierarchySortableSettings, ROOT_FOLDER, TreeHierarchyRow } from './uiTreeHierarchySortableSettings';
+import { TreeHierarchyData, TreeHierarchySortableSettings, ROOT_FOLDER, TreeHierarchyRow, TreeHierarchyFolder } from './uiTreeHierarchySortableSettings';
 import { MarkdownHelpModal } from './uiMarkdownHelpModal';
+import { filter } from './includeExclude';
 
 export class RulesTable extends PluginSettingTab {
     plugin: any;
@@ -273,25 +274,34 @@ export class RulesTable extends PluginSettingTab {
                         multiProp.render();
                         // formatRule = rulesManager.getRuleById(rule.formatters[0].id ?? "toOriginal");
                         this.updatePreview(rule, previewComponent);
+                    })
+                    .onAdd((item) => {
+                        item.id = 'toOriginal';
+                        item.name = 'toOriginal';
+                        return item;
                     });
-                multiProp.addExtraButton((setting, idx) => {
+                multiProp.addExtraButton((setting, idx, item) => {
                         setting.addExtraButton(btn => {
                             btn.setIcon('gear')
-                            .setTooltip('Options')
+                            .setTooltip('Open Options')
                             .setDisabled(!rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal")?.hasOwnConfigTab() || false)
                             .onClick(() => {
-                                converterOptionDiv.style.display = 'block';
-                                converterOptionDiv.empty(); // clear previous options
-                                formatRule = rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal");
-                                formatRule?.configTab(converterOptionDiv, rule, this, previewComponent, rule?.formatters?.[idx].payload.id );
+                                if (item?.settingsDiv) {
+                                    const isHidden = !item.settingsDiv.style.display || item.settingsDiv.style.display === 'none';
+                                    if (isHidden) {
+                                        item.settingsDiv.empty(); // clear previous options
+                                        formatRule = rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal");
+                                        formatRule?.configTab(item.settingsDiv, rule, this, previewComponent, rule?.formatters?.[idx].payload.id);
+                                        multiProp.openOptions(item.settingsDiv as HTMLDivElement);
+                                    } else {
+                                        multiProp.closeOptions(item.settingsDiv as HTMLDivElement);
+                                    }
+                                }
                             });
                             multiProp.styleDisabled(btn, !rulesManager.getRuleById(rule?.formatters?.[idx].id ?? "toOriginal")?.hasOwnConfigTab() || false);
                         });
                     });
             }
-            let converterOptionDiv = optionEL.createDiv({ cls: 'property-converter-option' });
-            converterOptionDiv.style.display = 'none';
-            converterOptionDiv.style.marginLeft = '20px';
             
             if (ruleFn.useRuleOption('resultAsLink')) {
                 new Setting(optionEL)
@@ -333,82 +343,42 @@ export class RulesTable extends PluginSettingTab {
         if (ruleFn.useRuleOption('excludeFolders')) {
             const excludeEL = new Setting(optionEL)
                 .setName('Exclude Files and Folders from this rule')
-                .setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
+                .setDesc(`Currently ${countStateItems(rule.stateIncludeExclude, 'folder', 'exclude')} folders and ${countStateItems(rule.stateIncludeExclude, 'file', 'exclude')} files will be excluded and ${countStateItems(rule.stateIncludeExclude, 'folder', 'include')} folders and ${countStateItems(rule.stateIncludeExclude, 'file', 'include')} files will be included even if they are excluded.`)
                 .addButton(button => {
                     button
-                        .setIcon('folder-x')
-                        .setButtonText('Exclude')
-                        .setCta() // Makes the button more prominent
+                        .setIcon('folder-check')
                         .onClick(() => {
                             openDirectorySelectionModal(
                                 this.app,
-                                rule.exclude?.selectedFolders || [],
-                                rule.exclude?.selectedFiles || [],
+                                [],
+                                [],
                                 { 
-                                    selectionMode: 'exclude',
-                                    displayMode: rule.exclude?.display || 'folders',
+                                    selectionMode: 'includeAndExclude',
+                                    displayMode: rule.displayIncludeExclude || 'folders',
                                     optionSelectionMode: false,
                                     optionShowFiles: true,
                                 },
                                 (result: DirectorySelectionResult | null) => {
                                     if (!result) return;
-                                    if (!rule.exclude) {
-                                        rule.exclude=Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
-                                            mode : 'exclude'
-                                        });
-                                    };
-                                    rule.exclude.selectedFolders = result.folders;
-                                    rule.exclude.selectedFiles = result.files;
-                                    rule.exclude.mode = 'exclude';
-                                    rule.exclude.display = result.display;
+                                    rule.stateIncludeExclude = result.state; // Save the state of include/exclude
+                                    rule.displayIncludeExclude = result.display; // Save the display mode
                                     this.plugin.saveSettings();
-                                    logger.log(DEBUG,rule.exclude);
+                                    if (rule.stateIncludeExclude && rule.stateIncludeExclude.length > 0) {
+                                        button.setCta(); // Makes the button more prominent
+                                    } else {
+                                        button.removeCta(); // Makes the button less prominent
+                                    }
+                                    logger.log(DEBUG, rule.stateIncludeExclude);
                                     this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
-                                    excludeEL.setDesc(`Currently ${rule.exclude?.selectedFolders.length || 0} folders and ${rule.exclude?.selectedFiles.length || 0} files will be ${rule.exclude?.mode || 'exclude'}d.`)
+                                    excludeEL.setDesc(`Currently ${countStateItems(rule.stateIncludeExclude, 'folder', 'exclude')} folders and ${countStateItems(rule.stateIncludeExclude, 'file', 'exclude')} files will be excluded and ${countStateItems(rule.stateIncludeExclude, 'folder', 'include')} folders and ${countStateItems(rule.stateIncludeExclude, 'file', 'include')} files will be included even if they are excluded.`)
                                 }
                             );
                         });
+                    if (rule.stateIncludeExclude && rule.stateIncludeExclude.length > 0) {
+                        button.setCta(); // Makes the button more prominent
+                    }
                 });   
-        }
-        if (ruleFn.useRuleOption('includeFolders')) {
-            const includeEL = new Setting(optionEL)
-                .setName('Include Files and Folders for this rule ')
-                .setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d even if they are excluded globally.`)
-                .addButton(button => {button
-                    .setIcon('folder-check')
-                    .setButtonText('Include')
-                    .setCta() // Makes the button more prominent
-                    .onClick(() => {
-                        openDirectorySelectionModal(
-                            this.app,
-                            rule.include?.selectedFolders || [],
-                            rule.include?.selectedFiles || [],
-                            { 
-                                selectionMode: 'include',
-                                displayMode: rule.include?.display || 'folders',
-                                optionSelectionMode: false,
-                                optionShowFiles: true,
-                            },
-                            (result: DirectorySelectionResult | null) => {
-                                if (!result) return;
-                                if (!rule.include) {
-                                    rule.include = Object.assign({}, DEFAULT_FILTER_FILES_AND_FOLDERS, {
-                                        mode : 'include',
-                                    });
-                                };
-                                rule.include.selectedFolders = result.folders;
-                                rule.include.selectedFiles = result.files;
-                                rule.include.mode = 'include';
-                                rule.include.display = result.display;
-                                this.plugin.saveSettings();
-                                logger.log(DEBUG,rule.include);
-                                this.updateFilterIndicator(this.activeFile, this.propertiesListEl);
-                                includeEL.setDesc(`Currently ${rule.include?.selectedFolders.length || 0} folders and ${rule.include?.selectedFiles.length || 0} files will be ${rule.include?.mode || 'include'}d.`)
-                            }
-                        );
-                    });
-            }); 
-        }      
+        }     
         if (ruleFn.useRuleOption('script')) {
             new Setting(optionEL)
                 .setName('Script')
@@ -775,7 +745,7 @@ export class RulesTable extends PluginSettingTab {
                 row.payload.keywords.push(rule.name);
                 row.payload.keywords.push(rule.description);
             }
-            logger.log(DEBUG, 'Updated keywords for rule', row.payload.id, row.payload.keywords);
+            logger.log(TRACE, 'Updated keywords for rule', row.payload.id, row.payload.keywords);
         }
     }
 
@@ -859,7 +829,7 @@ export class RulesTable extends PluginSettingTab {
             })
             .addExtraButtonToFolders((el, folder) => {
                 el.addExtraButton(btn => { btn
-                    .setIcon("copy-minus")
+                    .setIcon("folder-check")
                     .setTooltip("Exclude files and folders from rules inside this folder")
                     .onClick(async () => {                 
                         if (!folder.payload) folder.payload = {};
@@ -867,68 +837,44 @@ export class RulesTable extends PluginSettingTab {
                         if (!folder.payload.include) folder.payload.include = {};
 
                         const settings = folder.payload;
-                        openDirectorySelectionModal(
+                        const modal = openDirectorySelectionModal(
                             this.app,
-                            settings.exclude.selectedFolders || [],
-                            settings.exclude.selectedFiles || [],
+                            [],
+                            [],
                             {
-                                selectionMode: settings.exclude.mode || 'exclude',
-                                displayMode: settings.exclude.display || 'folders',
+                                selectionMode: 'includeAndExclude',
+                                displayMode: settings.displayIncludeExclude || 'folders',
                                 optionSelectionMode: false,
                                 optionShowFiles: true
                             },
                             (result: DirectorySelectionResult | null) => {
                                 if (!result) return;
-                                settings.exclude.selectedFolders = result.folders;
-                                settings.exclude.selectedFiles = result.files;
-                                settings.exclude.mode = result.mode;
-                                settings.exclude.display = result.display;
+                                settings.stateIncludeExclude = result.state;
+                                settings.exclude.displayIncludeExclude = result.display;
                                 this.plugin.saveSettings();
+                                if (folder.payload?.stateIncludeExclude && folder.payload.stateIncludeExclude.length > 0) {
+                                    btn.extraSettingsEl.addClass('FMA-mod-cta');
+                                } else {
+                                    btn.extraSettingsEl.removeClass('mod-cta');
+                                }
                                 this.display();
-                            }
-                        );
-                    });
-                    if ((folder.payload?.exclude?.selectedFolders && folder.payload.exclude.selectedFolders.length > 0) ||
-                        (folder.payload?.exclude?.selectedFiles && folder.payload.exclude.selectedFiles.length > 0)) {
-                        btn.extraSettingsEl.addClass('FMA-mod-cta');
-                    } else {
-                        btn.extraSettingsEl.removeClass('mod-cta');
-                    }
-                });
-            })
-            .addExtraButtonToFolders((el, folder) => {
-                el.addExtraButton(btn => { btn
-                    .setIcon("copy-plus")
-                    .setTooltip("Include files and folders in rules inside this folder")
-                    .onClick(async () => {
-                        if (!folder.payload) folder.payload = {};
-                        if (!folder.payload.exclude) folder.payload.exclude = {};
-                        if (!folder.payload.include) folder.payload.include = {};
-
-                        const settings = folder.payload;
-                        openDirectorySelectionModal(
-                            this.app,
-                            settings.include.selectedFolders || [],
-                            settings.include.selectedFiles || [],
-                            { 
-                                selectionMode: settings.include.mode || 'include',
-                                displayMode: settings.include.display || 'folders',
-                                optionSelectionMode: false,
-                                optionShowFiles: true,
                             },
-                            (result: DirectorySelectionResult | null) => {
-                                if (!result) return;
-                                settings.include.selectedFolders = result.folders;
-                                settings.include.selectedFiles = result.files;
-                                settings.include.mode = result.mode;
-                                settings.include.display = result.display;
-                                this.plugin.saveSettings();
-                                this.display();
-                            }
+                            settings.stateIncludeExclude || [],
+                            [],
                         );
+                        modal.addInheritedState(this.plugin.settings.stateIncludeExclude || [], 'Global Include/Exclude');
+                        
+                        function addChildState(parentId: string) {
+                            const parent = folderList.getFolderById(parentId);
+                            if (parent && parent.payload?.stateIncludeExclude) {
+                                modal.addInheritedState(parent.payload.stateIncludeExclude, `Parent Folder: ${parent.name}`);
+                            }
+                        }
+                        if (folder.parentId) {
+                            addChildState(folder.parentId);
+                        }
                     });
-                    if ((folder.payload?.include?.selectedFolders && folder.payload.include.selectedFolders.length > 0) ||
-                        (folder.payload?.include?.selectedFiles && folder.payload.include.selectedFiles.length > 0)) {
+                    if (folder.payload?.stateIncludeExclude && folder.payload.stateIncludeExclude.length > 0) {
                         btn.extraSettingsEl.addClass('FMA-mod-cta');
                     } else {
                         btn.extraSettingsEl.removeClass('mod-cta');
@@ -972,19 +918,19 @@ export class RulesTable extends PluginSettingTab {
 
     private updateFilterIndicator(activeFile:TFile | null, propertiesListEl: HTMLDivElement) {
         if (activeFile) {
-            const rules = this.plugin.getRuleList(activeFile, this.plugin.settings.folderConfig);
-            rules.forEach((rule: FrontmatterAutomateRuleSettings, index: number) => {
-                if (!rule || !rule.id) {
-                    logger.log(WARNING, `updateFilterIndicator: Rule with id ${rule?.id} not found in folderConfig rows.`);
-                    return; // Skip if no rule or id is not set
-                }
+            const rows = this.plugin.settings.folderConfig.rows as TreeHierarchyRow[];
+            propertiesListEl.removeClass('property-left-container-allowed');
+
+            rows.forEach((row: TreeHierarchyRow, index: number) => {
+                filter.fillFilterMap(this.plugin.settings, row.folderId, row.payload as FrontmatterAutomateRuleSettings);
+
                 const propertyRowElements = propertiesListEl.getElementsByClassName('property-setting-row');
-                const propertyRowEl = Array.from(propertyRowElements).filter(el => el.id === rule.id)[0] as HTMLDivElement;
+                const propertyRowEl = Array.from(propertyRowElements).filter(el => el.id === row.payload.id)[0] as HTMLDivElement;
                 if (!propertyRowEl) {
                     return; // Skip if no row found for this rule
                 }
                 const propertyLeftDiv = propertyRowEl.querySelector('.property-left-container');
-                if (checkIfFileAllowed(activeFile, this.plugin.settings, rule)) {
+                if (filter.file(activeFile.path)) {
                     propertyLeftDiv?.addClass('property-left-container-allowed');
                 } else {
                     propertyLeftDiv?.removeClass('property-left-container-allowed');
